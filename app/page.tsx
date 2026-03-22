@@ -70,7 +70,7 @@ export default function Home() {
     {/* ── DUBAI SKYLINE ── */}
     <div style={{width:'100%',position:'relative',height:'280px',overflow:'hidden',borderTop:'1px solid #1e1e1e',borderBottom:'1px solid #1e1e1e'}}>
       <img
-        src="/images/img-dubai.jpg"
+        src="/Images/IMG-20.png"
         alt="Dubai — Tergo Media headquarters"
         style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 60%',display:'block'}}
       />
@@ -247,8 +247,8 @@ export default function Home() {
     <div className="fw fw-grid g2">
       <div className="cell pad-lg">
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-          <ImgPh label="IMG-04" desc="Francesco Terragni" h={360} src="/images/img-04.jpg" />
-          <ImgPh label="IMG-19" desc="Co-founder" h={360} src="/images/img-19.jpg" />
+          <ImgPh label="IMG-04" desc="Francesco Terragni" h={360} src="/Images/IMG-04.png" />
+          <ImgPh label="IMG-19" desc="Co-founder" h={360} src="/Images/IMG-19.png" />
         </div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginTop:8}}>
           <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>

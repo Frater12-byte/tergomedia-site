@@ -176,11 +176,13 @@ export function Calculator({
 
 /* ─── IMAGE PLACEHOLDER ─── */
 export function ImgPh({ label, desc, h = 200, src }: { label: string; desc: string; h?: number; src?: string }) {
-  if (src) return (
+  const [broken, setBroken] = useState(false);
+  if (src && !broken) return (
     <div style={{ width: '100%', overflow: 'hidden', backgroundColor: '#111' }}>
       <img
         src={src}
         alt={label}
+        onError={() => setBroken(true)}
         style={{
           width: '100%',
           height: 'auto',

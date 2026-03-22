@@ -49,7 +49,7 @@ export default function Tools() { return (<>
       <a className="btn btn-r" href="https://alerts.tergomedia.com" target="_blank" rel="noreferrer">Launch Conflict Watch →</a>
     </div>
     <div className="cell pad-lg">
-      <ImgPh label="IMG-023" desc="Conflict Watch dashboard screenshot" h={320} src="/images/img-023.jpg" />
+      <ImgPh label="IMG-23" desc="Conflict Watch dashboard screenshot" h={320} src="/Images/IMG-23.png" />
     </div>
   </div>
   <CtaBar h="Want a lead-gen tool for your business?" sub="We build these as part of our client engagement packages. Book a call and tell us what tool would be most useful for your prospects." />

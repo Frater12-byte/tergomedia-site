@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/components/Graphics';
 import ROICalculator from '@/components/ROICalculator';
+import OfficeMap from '@/components/OfficeMap';
 
 export const metadata: Metadata = {
   title: 'Tergo Media — AI Automation & Custom Software | Dubai',
@@ -67,21 +68,8 @@ export default function Home() {
       ))}
     </div>
 
-    {/* ── DUBAI SKYLINE ── */}
-    <div style={{width:'100%',position:'relative',height:'420px',overflow:'hidden',borderTop:'1px solid #1e1e1e',borderBottom:'1px solid #1e1e1e'}}>
-      <img
-        src="/Images/IMG-05.png"
-        alt="Dubai — Tergo Media headquarters"
-        style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 60%',display:'block'}}
-      />
-      <div style={{position:'absolute',inset:0,background:'linear-gradient(to right, rgba(8,8,8,0.85) 0%, rgba(8,8,8,0.3) 50%, rgba(8,8,8,0.1) 100%)'}}>
-        <div style={{position:'absolute',bottom:40,left:'clamp(24px,5vw,72px)'}}>
-          <div style={{fontSize:10,fontWeight:700,letterSpacing:3,color:'var(--y)',textTransform:'uppercase',marginBottom:10}}>Headquarters</div>
-          <div style={{fontSize:'clamp(24px,3vw,36px)' as string,fontWeight:900,color:'#fff',textTransform:'uppercase',letterSpacing:-1,lineHeight:1.05}}>Dubai, UAE</div>
-          <div style={{fontSize:14,color:'#888',marginTop:8}}>Also in Bucharest · Milano</div>
-        </div>
-      </div>
-    </div>
+    {/* ── OFFICE MAP ── */}
+    <OfficeMap />
 
     {/* ── SERVICES ── */}
     <div className="sec">What we do</div>
@@ -185,21 +173,25 @@ export default function Home() {
 
     {/* ── TESTIMONIALS ── */}
     <div className="sec">What clients say</div>
-    <div className="fw fw-grid g3">
-      {[
-        {q:'We cooperated with Tergo Media since 2019 on digital transformation, software development and RPA. Always on time and optimised budget.',who:'Fausto Migliori',role:'Future Days · Milano',tc:'y'},
-        {q:'The automation they built handles 80% of our lead follow-up without anyone touching it. Response times went from hours to under a minute.',who:'Senior Partner',role:'Dubai real estate brokerage',tc:'c'},
-        {q:'We went from 6-hour manual reports to automated dashboards in two weeks. The team is sharp, fast, and they genuinely understand the business.',who:'Operations Director',role:'European travel operator',tc:'p'},
-      ].map(t=>(
-        <div className={`cell at-${t.tc} pad-lg`} key={t.who}>
-          <span className="pull-quote-mark" style={{color:`var(--${t.tc})`}}>&ldquo;</span>
-          <p className="pull-quote-text">{t.q}</p>
-          <div style={{borderTop:'1px solid var(--b)',paddingTop:16}}>
-            <div style={{fontSize:13,fontWeight:800,color:'#fff'}}>{t.who}</div>
-            <div style={{fontSize:12,color:'var(--m)',marginTop:4}}>{t.role}</div>
+    <div className="reviews-scroll-wrap">
+      <div className="reviews-scroll-track">
+        {[
+          {q:'We cooperated with Tergo Media since 2019 on digital transformation, software development and RPA. Always on time and optimised budget.',who:'Fausto Migliori',role:'Future Days · Milano',tc:'y'},
+          {q:'The automation they built handles 80% of our lead follow-up without anyone touching it. Response times went from hours to under a minute.',who:'Senior Partner',role:'Dubai real estate brokerage',tc:'c'},
+          {q:'We went from 6-hour manual reports to automated dashboards in two weeks. The team is sharp, fast, and they genuinely understand the business.',who:'Operations Director',role:'European travel operator',tc:'p'},
+          {q:'Francesco and his team understood what we needed faster than any agency I\'ve worked with. The result was exactly what we wanted, delivered ahead of schedule.',who:'Founder',role:'UAE-based SaaS startup',tc:'y'},
+          {q:'Tergo built our entire operations portal in six weeks. Solid architecture, clean code, and they actually pushed back when our brief had gaps — that\'s rare.',who:'CEO',role:'Agriculture platform · South Africa',tc:'c'},
+        ].map(t=>(
+          <div className={`review-card at-${t.tc}`} key={t.who}>
+            <span className="pull-quote-mark" style={{color:`var(--${t.tc})`}}>&ldquo;</span>
+            <p className="pull-quote-text">{t.q}</p>
+            <div style={{borderTop:'1px solid var(--b)',paddingTop:16,marginTop:'auto'}}>
+              <div style={{fontSize:13,fontWeight:800,color:'#fff'}}>{t.who}</div>
+              <div style={{fontSize:12,color:'var(--m)',marginTop:4}}>{t.role}</div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
 
     {/* ── CO-FOUNDERS ── */}
@@ -212,7 +204,7 @@ export default function Home() {
         </div>
         <div className="fw-grid g2" style={{gap:8,margin:0,padding:0,maxWidth:'100%',border:'none',marginTop:8}}>
           <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
-            <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Francesco Terragni</div>
+            <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Francesco</div>
             Co-founder · Product · CTO
           </div>
           <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
@@ -224,10 +216,10 @@ export default function Home() {
       <div className="cell pad-lg" style={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
         <div className="eyebrow y">Built by operators</div>
         <h2 style={{marginBottom:20}}>We&apos;ve built and exited products.<br/>We know what shipping means.</h2>
-        <p style={{marginBottom:16}}><strong>Francesco Terragni</strong> builds technology companies from the ground up — CTO, engineer, and co-founder. Previously at KAYAK, he scaled Skipodium to $7M before exit. <strong>Maria Terragni</strong>, CEO, brings 12+ years in operations and business transformation in the travel industry, with a track record of building efficient organisations and enabling data-driven leadership.</p>
+        <p style={{marginBottom:16}}><strong>Francesco</strong> builds technology companies from the ground up — CTO, engineer, and co-founder. Previously at KAYAK, he scaled Skipodium to $7M before exit. <strong>Maria</strong>, CEO, brings 12+ years in operations and business transformation in the travel industry, with a track record of building efficient organisations and enabling data-driven leadership.</p>
         <p style={{marginBottom:24}}>Between the two: deep technical execution, commercial leadership, and operational excellence — across Europe and the GCC.</p>
         <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-          <span className="tag y">Francesco — CTO</span>
+          <span className="tag y">Francesco — Co-founder & CTO</span>
           <span className="tag y">Node.js · Python · React · AI</span>
           <span className="tag c">Maria — CEO</span>
           <span className="tag c">Operations · Transformation · GCC</span>

@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { LOGO_SRC } from './logo';
 
 const links = [
   { href: '/', label: 'Home' },
@@ -33,7 +32,7 @@ export default function Nav() {
       <div className="nav-wrap">
         <div className="nav-inner">
           <div className="nav-logo">
-            <Link href="/"><img src={LOGO_SRC} alt="Tergo Media" /></Link>
+            <Link href="/"><img src="/logo.png" alt="Tergo Media" style={{height:42,width:'auto',objectFit:'contain'}} /></Link>
           </div>
 
           {/* Desktop nav */}

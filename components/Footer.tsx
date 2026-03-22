@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { LOGO_SRC } from './logo';
 
 const SERVICES = [
   { href: '/services/ai-automation',          label: 'AI & Automation' },
@@ -29,13 +28,13 @@ export default function Footer() {
 
         {/* Brand column */}
         <div className="footer-brand">
-          <img src={LOGO_SRC} alt="Tergo Media" />
+          <img src="/logo.png" alt="Tergo Media" style={{height:36,width:'auto',objectFit:'contain'}} />
           <p className="footer-tagline">
             AI · Automation · Custom Software<br />
             Dubai · Bucharest · Milano
           </p>
           <div className="footer-social">
-            <a href="https://www.linkedin.com/company/tergo-media" target="_blank" rel="noreferrer" title="LinkedIn">in</a>
+            <a href="https://www.linkedin.com/company/tergomedia" target="_blank" rel="noreferrer" title="LinkedIn">in</a>
             <a href="mailto:hello@tergomedia.com" title="Email">@</a>
             <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer" title="Book a call">↗</a>
           </div>
@@ -65,10 +64,10 @@ export default function Footer() {
             <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer">Book a discovery call →</a>
           </div>
           <div className="footer-contact-item" style={{ marginTop: 8 }}>
-            <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer">Francesco Terragni — CTO</a>
+            <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer">Francesco — CTO</a>
           </div>
           <div className="footer-contact-item">
-            <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer">Maria Terragni — CEO</a>
+            <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer">Maria — CEO</a>
           </div>
         </div>
 

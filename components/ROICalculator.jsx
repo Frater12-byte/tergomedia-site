@@ -84,11 +84,14 @@ export default function ROICalculator() {
   const [sector, setSector]  = useState('');
   const [employees, setEmpl] = useState(15);
   const [margin, setMargin]  = useState(45);
+  const [chartKey, setChartKey] = useState(0);
 
-  const result = useMemo(
-    () => sector ? calcROI(sector, employees, margin) : null,
-    [sector, employees, margin]
-  );
+  const result = useMemo(() => {
+    const r = sector ? calcROI(sector, employees, margin) : null;
+    if (r) setChartKey(k => k + 1);
+    return r;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sector, employees, margin]);
 
   return (
     <div className="roi-wrap">
@@ -166,7 +169,7 @@ export default function ROICalculator() {
                 </div>
 
                 <div className="roi-chart-wrap">
-                  <ROIChart monthly={result.monthly} cumulative={result.cumulative} setup={result.setup} />
+                  <ROIChart key={chartKey} monthly={result.monthly} cumulative={result.cumulative} setup={result.setup} />
                   <div className="roi-chart-note">Bars = monthly savings &nbsp;·&nbsp; Line = cumulative net &nbsp;·&nbsp; Dashed = breakeven threshold</div>
                 </div>
 

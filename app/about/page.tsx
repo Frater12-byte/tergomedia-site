@@ -27,7 +27,7 @@ export default function About() { return (<>
         <h3 style={{marginBottom:10}}>Francesco Terragni</h3>
         <p style={{marginBottom:14}}>Builds technology companies from the ground up — product, teams, architecture, and the culture that makes them last. 10+ years spanning CTO roles, co-founded startups (one exited), and hands-on engineering in JavaScript, Node.js, Python &amp; React.</p>
         <p>Scaled distributed engineering teams across Europe and the GCC. Shipped AI automation pipelines, IoT systems, and SaaS platforms across travel tech, real estate, agriculture, and finance. Previously at KAYAK.</p>
-        <div style={{marginTop:16}}><span className="tag y">CTO</span><span className="tag y">Node.js · Python · React</span><span className="tag y">AI Automation</span><span className="tag y">SaaS</span></div>
+        <div style={{marginTop:16}}><span className="tag y">Co-founder & CTO</span><span className="tag y">Node.js · Python · React</span><span className="tag y">AI Automation</span><span className="tag y">SaaS</span></div>
       </div>
     </div>
     <div className="cell at-c pad-lg">

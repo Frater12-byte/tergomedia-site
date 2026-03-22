@@ -113,7 +113,7 @@ export default function Home() {
         <div className={`cell at-${p.tc}`} key={p.t}>
           <div style={{fontSize:9,color:'var(--m)',letterSpacing:2,textTransform:'uppercase',marginBottom:10}}>{p.cat}</div>
           <h3>{p.t}</h3><p>{p.d}</p>
-          <ImgPh label={p.img.toUpperCase()} desc={`${p.t} screenshot`} h={140} />
+          <ImgPh label={p.img.toUpperCase()} desc={`${p.t} screenshot`} h={140} src={`/Images/${p.img.toUpperCase()}.png`} />
           <div style={{marginTop:12}}><Link href="/portfolio" style={{fontSize:11,fontWeight:800,color:`var(--${p.tc})`,textDecoration:'none',textTransform:'uppercase',letterSpacing:1}}>View case →</Link></div>
         </div>
       ))}

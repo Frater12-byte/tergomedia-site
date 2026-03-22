@@ -25,7 +25,7 @@ export default function Tools() { return (<>
       <div style={{display:"flex",gap:10,marginBottom:10,marginTop:10}}><span className="tag y">AI analysis</span><span className="tag y">Revenue leakage</span><span className="tag y">Dubai market</span></div>
       <div style={{marginTop:20}}><a className="btn btn-y" href="https://analyzer.tergomedia.com" target="_blank" rel="noreferrer">Launch the tool →</a></div>
     </div>
-    <div className="cell pad-lg"><ImgPh label="IMG-13" desc="Brokerage Revenue Analyzer screenshot" h={320} /></div>
+    <div className="cell pad-lg"><ImgPh label="IMG-13" desc="Brokerage Revenue Analyzer screenshot" h={320} src="/Images/IMG-13.png" /></div>
   </div>
   <div className="fw fw-grid g2" style={{borderTop:"none"}}>
     <div className="cell pad-lg"><ImgPh label="IMG-14" desc="SaaS Stack Auditor screenshot" h={320} /></div>

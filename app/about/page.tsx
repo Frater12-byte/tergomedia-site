@@ -15,7 +15,7 @@ export default function About() { return (<>
         <p className="hero-desc">We&apos;ve <strong>built and run our own products</strong>, scaled a company to $7M and exited, and worked inside companies like KAYAK. We know what it means to ship under pressure.</p>
         <div className="btn-row"><Link href="/contact" className="btn btn-y">Work with us →</Link></div>
       </div>
-      <ImgPh label="IMG-04" desc="Francesco — founder headshot" h={340} />
+      <ImgPh label="IMG-04" desc="Francesco — founder headshot" h={340} src="/Images/IMG-04.png" />
     </div>
   </div>
   <div className="sec">The team</div>
@@ -31,12 +31,12 @@ export default function About() { return (<>
       <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:14}}>Development team · Bucharest</div>
       <h3>Engineering</h3>
       <p style={{marginBottom:14}}>Our core engineering team is based in Bucharest — senior developers in React, Node.js, Python, PHP, iOS, and Android. Fast, rigorous, battle-tested on real production systems.</p>
-      <ImgPh label="IMG-15" desc="Team photo — Bucharest office" h={160} />
+      <ImgPh label="IMG-15" desc="Team photo — Bucharest office" h={160} src="/Images/IMG-15.png" />
     </div>
   </div>
   <div className="sec">Our offices</div>
   <div className="fw fw-grid g3">
-    {[{tc:"y",role:"Headquarters",city:"Dubai, UAE",desc:"Primary base. Serving the GCC market — real estate, finance, travel, and professional services.",img:"IMG-16",imgDesc:"Dubai skyline"},{tc:"c",role:"Engineering hub",city:"Bucharest, Romania",desc:"Core engineering team. Registered as Tergo Invest S.R.L. — all development operations run from here.",img:"IMG-17",imgDesc:"Bucharest city"},{tc:"p",role:"Partner office",city:"Milano, Italy",desc:"European client base. Partnerships with Future Days and Ennea Capital.",img:"IMG-18",imgDesc:"Milano city"}].map(o=>(<div className={`cell at-${o.tc}`} key={o.city}><ImgPh label={o.img} desc={o.imgDesc} h={180} /><div style={{marginTop:16}}><div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:"uppercase",color:`var(--${o.tc})`,marginBottom:6}}>{o.role}</div><h4>{o.city}</h4><p>{o.desc}</p></div></div>))}
+    {[{tc:"y",role:"Headquarters",city:"Dubai, UAE",desc:"Primary base. Serving the GCC market — real estate, finance, travel, and professional services.",img:"IMG-16",imgDesc:"Dubai skyline"},{tc:"c",role:"Engineering hub",city:"Bucharest, Romania",desc:"Core engineering team. Registered as Tergo Invest S.R.L. — all development operations run from here.",img:"IMG-17",imgDesc:"Bucharest city"},{tc:"p",role:"Partner office",city:"Milano, Italy",desc:"European client base. Partnerships with Future Days and Ennea Capital.",img:"IMG-18",imgDesc:"Milano city"}].map(o=>(<div className={`cell at-${o.tc}`} key={o.city}><ImgPh label={o.img} desc={o.imgDesc} h={180} src={`/Images/${o.img}.png`} /><div style={{marginTop:16}}><div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:"uppercase",color:`var(--${o.tc})`,marginBottom:6}}>{o.role}</div><h4>{o.city}</h4><p>{o.desc}</p></div></div>))}
   </div>
   <div className="sec">Track record</div>
   <div className="fw fw-grid g1">

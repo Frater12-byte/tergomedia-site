@@ -24,7 +24,7 @@ export default function CtoAdvisory() { return (<>
   </div>
   <div className="sec">Your advisor</div>
   <div className="fw fw-grid g2">
-    <div className="cell pad-lg"><ImgPh label="IMG-04" desc="Francesco — founder headshot" h={280} /></div>
+    <div className="cell pad-lg"><ImgPh label="IMG-04" desc="Francesco — founder headshot" h={280} src="/Images/IMG-04.png" /></div>
     <div className="cell pad-lg">
       <h3>10+ years building and leading digital products</h3>
       <p style={{marginBottom:14}}>Francesco is a product and operations leader with experience spanning PM, CTO, growth strategy, and full-stack development. Founded Skipodium (scaled to $7M, exited), built HayGuard, authored "The Practical Investor."</p>

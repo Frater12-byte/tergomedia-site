@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { FlowGraphic, Calculator, CtaBar } from '@/components/Graphics';
+import { FlowGraphic, CtaBar } from '@/components/Graphics';
+import RealEstateCalc from './RealEstateCalc';
 export const metadata: Metadata = { title: 'Real Estate · Dubai' };
 export default function RealEstate() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
@@ -24,7 +25,7 @@ export default function RealEstate() { return (<>
   <div className="sec">Free tool — try it now</div>
   <div className="fw fw-grid g2">
     <div className="cell at-y pad-lg"><span className="tag y" style={{marginBottom:14,display:"inline-block"}}>Live tool · Free · No sign-up</span><h3>Brokerage Revenue Analyzer</h3><p style={{marginBottom:16}}>Answer 9 questions about your brokerage. Get a precise <strong>AED revenue leakage figure</strong> and an AI-written diagnosis — in under 3 minutes.</p><a className="btn btn-y" href="https://analyzer.tergomedia.com" target="_blank" rel="noreferrer">Launch the analyzer →</a></div>
-    <div className="cell"><Calculator labelA="Leads recovered / mo" labelB="Revenue unlocked" prefixB="AED " sl1Label="Monthly leads" sl1Min={10} sl1Max={300} sl1Val={80} sl2Label="Resp. time (hrs)" sl2Min={1} sl2Max={8} sl2Val={4} formulaA={(s1,s2)=>Math.round(s1*0.35)} formulaB={(s1,s2)=>Math.round(s1*0.35*1500)} /></div>
+    <div className="cell"><RealEstateCalc /></div>
   </div>
   <div className="sec">Case studies</div>
   <div className="fw fw-grid g3">

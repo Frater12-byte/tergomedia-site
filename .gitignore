@@ -1,5 +1,5 @@
 node_modules/
-.next/
+# .next/ — committed so cPanel doesn't need to build
 .env
 .env.local
 .DS_Store

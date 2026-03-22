@@ -65,11 +65,11 @@ export default function Home() {
         {c:'p',label:'Agriculture',t:'Agri businesses',d:'IoT monitoring, automated alerts, portals.',href:'/sectors/agriculture'},
         {c:'r',label:'Professional services',t:'Service firms',d:'Invoice automation, KPI reporting, onboarding.',href:'/sectors/professional-services'},
       ].map(s=>(
-        <div className="cell" key={s.t} style={{cursor:'pointer'}} onClick={()=>window.location.href=s.href}>
+        <Link href={s.href} className="cell" key={s.t} style={{display:'block',textDecoration:'none'}}>
           <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:`var(--${s.c})`,marginBottom:10}}>{s.label}</div>
           <h3 style={{fontSize:16}}>{s.t}</h3><p>{s.d}</p>
           <div style={{marginTop:12,fontSize:11,fontWeight:800,color:`var(--${s.c})`,textTransform:'uppercase',letterSpacing:1}}>Explore →</div>
-        </div>
+        </Link>
       ))}
     </div>
 

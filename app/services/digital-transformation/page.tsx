@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Calculator, Stepper, CtaBar } from '@/components/Graphics';
+import { Stepper, CtaBar } from '@/components/Graphics';
+import DigiCalc from './DigiCalc';
 export const metadata: Metadata = { title: 'Digital Transformation' };
 export default function DigitalTransformation() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
@@ -11,7 +12,7 @@ export default function DigitalTransformation() { return (<>
         <p className="hero-desc">We audit your operations, map your inefficiencies, and implement the <strong>systems, tools, and workflows</strong> that bring your business into the modern era.</p>
         <div className="btn-row"><Link href="/contact" className="btn btn-r">Book a discovery call →</Link></div>
       </div>
-      <div><Calculator labelA="Hours saved / month" labelB="Value recovered" prefixB="AED " sl1Label="Team size" sl1Min={2} sl1Max={60} sl1Val={12} sl2Label="Admin hrs / day" sl2Min={1} sl2Max={6} sl2Val={3} formulaA={(s1,s2)=>s1*s2*0.65*22} formulaB={(s1,s2)=>s1*s2*0.65*22*300} /></div>
+      <div><DigiCalc /></div>
     </div>
   </div>
   <div className="stats-fw fw-grid g4">

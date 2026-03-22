@@ -11,7 +11,7 @@ export default function CustomDev() { return (<>
         <p className="hero-desc">We design and build <strong>custom web apps, mobile apps, and APIs</strong> from scratch. React, Next.js, Node.js, Python, PHP, native iOS &amp; Android — we own the full stack.</p>
         <div className="btn-row"><Link href="/contact" className="btn btn-c">Start a project →</Link><Link href="/portfolio" className="btn btn-outline">See our work</Link></div>
       </div>
-      <div><FlowGraphic color="c" nodes={[{text:'Scope & architecture defined',status:'Week 1'},{text:'UI/UX designed & approved',status:'Week 2'},{text:'Backend APIs built & tested',status:'Weeks 2–3'},{text:'Frontend connected & QA'd',status:'Week 3–4'},{text:'Deployed to production',status:'Week 4–6'}]} title="Typical project timeline" resultLabel="Average delivery" resultText="4–6 weeks from kickoff to production" /></div>
+      <div><FlowGraphic color="c" nodes={[{text:'Scope & architecture defined',status:'Week 1'},{text:'UI/UX designed & approved',status:'Week 2'},{text:'Backend APIs built & tested',status:'Weeks 2–3'},{text:"Frontend connected & QA'd",status:'Week 3–4'},{text:'Deployed to production',status:'Week 4–6'}]} title="Typical project timeline" resultLabel="Average delivery" resultText="4–6 weeks from kickoff to production" /></div>
     </div>
   </div>
   <div className="stats-fw fw-grid g4">

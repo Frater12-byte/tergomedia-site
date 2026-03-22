@@ -121,41 +121,6 @@ export default function Home() {
       ))}
     </div>
 
-    {/* ── FREE TOOLS ── */}
-    <div className="sec">3 live tools — try now</div>
-    <div className="fw fw-grid g3">
-      <div className="cell pad-lg">
-        <span className="tag y" style={{marginBottom:14,display:'inline-block'}}>Live · Real estate</span>
-        <h3>Brokerage Revenue Analyzer</h3>
-        <p>Answer 9 questions about your Dubai brokerage. Get a precise AED revenue leakage figure + AI-written diagnosis in under 3 minutes.</p>
-        <div style={{marginTop:8,marginBottom:20}} className="met">
-          <span className="met-b y">AED 2.3M</span>
-          <span className="met-s">average leakage found</span>
-        </div>
-        <a className="btn btn-y" href="https://analyzer.tergomedia.com" target="_blank" rel="noreferrer">Try it free →</a>
-      </div>
-      <div className="cell pad-lg">
-        <span className="tag c" style={{marginBottom:14,display:'inline-block'}}>Live · All sectors</span>
-        <h3>SaaS Stack Auditor</h3>
-        <p>List your business tools and get an instant AI audit of overlap, waste, and savings — with a recommended leaner stack.</p>
-        <div style={{marginTop:8,marginBottom:20}} className="met">
-          <span className="met-b c">$14K</span>
-          <span className="met-s">average annual saving</span>
-        </div>
-        <a className="btn btn-c" href="https://automate.tergomedia.com" target="_blank" rel="noreferrer">Try it free →</a>
-      </div>
-      <div className="cell pad-lg">
-        <span className="tag r" style={{marginBottom:14,display:'inline-block'}}>Live · Alerts</span>
-        <h3>Conflict Watch</h3>
-        <p>Real-time monitoring that detects conflicts and anomalies in your business data — and alerts your team before they become problems.</p>
-        <div style={{marginTop:8,marginBottom:20}} className="met">
-          <span className="met-b r">&lt; 30 sec</span>
-          <span className="met-s">trigger to notification</span>
-        </div>
-        <a className="btn btn-r" href="https://alerts.tergomedia.com" target="_blank" rel="noreferrer">Try it free →</a>
-      </div>
-    </div>
-
     {/* ── RESULTS ── */}
     <div className="sec">Client results — by the numbers</div>
     <div className="fw fw-grid g3">

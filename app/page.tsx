@@ -70,7 +70,7 @@ export default function Home() {
     {/* ── DUBAI SKYLINE ── */}
     <div style={{width:'100%',position:'relative',height:'280px',overflow:'hidden',borderTop:'1px solid #1e1e1e',borderBottom:'1px solid #1e1e1e'}}>
       <img
-        src="/Images/IMG-20.png"
+        src="/Images/IMG-05.png"
         alt="Dubai — Tergo Media headquarters"
         style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 60%',display:'block'}}
       />

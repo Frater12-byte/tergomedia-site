@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 
-const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/948952c3-47a3-4728-939b-cdd4e72473e0';
+const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/8b37425b-b3b4-4cf9-aa3f-2e42bd888b3b/chat';
 
 type Msg = { role: 'bot' | 'user'; text: string };
 
@@ -37,7 +37,7 @@ export default function Chatbot() {
       const res = await fetch(WEBHOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, source: 'tergomedia.com', timestamp: new Date().toISOString() }),
+        body: JSON.stringify({ chatInput: text, sessionId: 'website-' + Date.now() }),
       });
       const data = await res.json();
       const reply: string =

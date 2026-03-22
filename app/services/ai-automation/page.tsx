@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, BeforeAfter, Stepper, CtaBar, PROCESS_STEPS } from '@/components/Graphics';
+import ToolPills from './ToolPills';
 export const metadata: Metadata = {
   title: 'AI Automation Systems | Lead Capture, Chatbots, Workflows | Tergo Media',
   description: 'AI-powered lead capture, WhatsApp chatbots, document processing, reporting automation. n8n, Make, GPT-4o, Claude. Dubai-based automation agency.',
@@ -34,6 +35,29 @@ export default function AiAutomation() { return (<>
   <div className="fw fw-grid g2">
     <div className="cell pad-lg"><h3>From first call to live system — in weeks, not months</h3><p>Fixed-price proposals. Staging before production. 30-day post-launch support included on every project.</p></div>
     <div className="cell"><Stepper steps={PROCESS_STEPS} color="y" /></div>
+  </div>
+  <div className="sec">Real examples — what automation looks like in practice</div>
+  <div className="fw fw-grid g2">
+    {[
+      {n:'01',tc:'y',t:'Dubai brokerage',s:'Lead comes in from Bayut at 11pm. WhatsApp sent in 47 seconds. AI scores as high-intent. Agent briefed at 8am with full lead context. Viewing booked before the agent has their morning coffee.'},
+      {n:'02',tc:'c',t:'Travel operator',s:'Client submits holiday enquiry. AI generates a personalised 7-day itinerary in 4 minutes. Supplier availability checked automatically. Quote sent. Follow-up sequence starts. Client books.'},
+      {n:'03',tc:'p',t:'Professional services firm',s:'Invoice generated automatically when a project milestone is marked complete. Sent to client. Reminder scheduled for day 7 and day 14. Payment recorded. Accountant notified.'},
+      {n:'04',tc:'r',t:'E-commerce',s:'Order placed. Warehouse notified. Shipping label generated. Customer SMS sent. Review request scheduled for day 5 post-delivery. All without a human.'},
+    ].map(s=>(
+      <div className={`cell at-${s.tc}`} key={s.n}>
+        <div className="num">{s.n}</div>
+        <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:`var(--${s.tc})`,marginBottom:10}}>{s.t}</div>
+        <p style={{fontSize:14,color:'var(--l)',lineHeight:1.85,maxWidth:'100%'}}>{s.s}</p>
+      </div>
+    ))}
+  </div>
+  <div className="sec">Tools we use</div>
+  <div className="fw fw-grid g2">
+    <div className="cell pad-lg">
+      <h3>The right tool for the job — not the most expensive one</h3>
+      <p>We choose tools based on your requirements, budget, and maintenance burden. Self-hosted where it saves you money. SaaS where speed matters. Custom code where nothing else fits.</p>
+    </div>
+    <div className="cell"><ToolPills /></div>
   </div>
   <CtaBar h="Not sure where to start?" sub="Book a free 30-minute automation audit. We'll map one of your workflows live and show you what's possible." />
 </>); }

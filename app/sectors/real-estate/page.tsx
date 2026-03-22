@@ -35,5 +35,37 @@ export default function RealEstate() { return (<>
   <div className="fw fw-grid g3">
     {[{tc:"y",lbl:"Case study · CRM Automation",t:"Lead pipeline in 12 days",mets:[{b:"18 min",bc:"y",s:"avg lead response",was:"was 4+ hours"},{b:"47%",bc:"c",s:"lead-to-viewing rate",was:"was 12%"}],q:"We used to lose leads before we even knew they existed. Now every inquiry gets a response in minutes."},{tc:"c",lbl:"Case study · WhatsApp Bot",t:"Viewings on autopilot",mets:[{b:"60%",bc:"c",s:"bookings without agent input",was:""},{b:"4.8★",bc:"p",s:"client satisfaction from week one",was:""}],q:"The bot handles everything until someone is ready to sign. Our agents only talk to serious buyers now."},{tc:"y",lbl:"Case study · Analytics",t:"22% revenue growth in Q1",mets:[{b:"AED 18K",bc:"y",s:"saved monthly on wasted ad spend",was:""},{b:"+30%",bc:"c",s:"top-agent productivity after dashboards went live",was:""}],q:"We finally know which agents and areas to double down on. This paid for itself in the first month."}].map(cs=>(<div className={`cell at-${cs.tc}`} key={cs.t}><div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>{cs.lbl}</div><h3>{cs.t}</h3>{cs.mets.map((m,i)=>(<div key={i} className="met"><span className={`met-b ${m.bc}`}>{m.b}</span><span className="met-s">{m.s}{m.was&&<span className="met-was">{m.was}</span>}</span></div>))}<blockquote>{cs.q}</blockquote></div>))}
   </div>
+  <div className="sec">What a typical Dubai brokerage gains in 90 days</div>
+  <div className="fw fw-grid g3">
+    {[
+      {tc:'y',m:'Month 1',t:'Zero cold leads',d:'CRM automation live, WhatsApp follow-up running. Every lead gets a response in under 90 seconds. Your team stops chasing and starts closing.'},
+      {tc:'c',m:'Month 2',t:'Full pipeline visibility',d:'Performance dashboard live. Portal ROI tracked per listing. Every agent knows their conversion rate. Management has real numbers, not guesses.'},
+      {tc:'p',m:'Month 3',t:'Admin eliminated',d:'AI document generator deployed. MOUs, offer letters, tenancy contracts generated in 10 seconds. 10+ hours of admin per agent per week — gone.'},
+    ].map(s=>(
+      <div className={`cell at-${s.tc}`} key={s.m}>
+        <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:`var(--${s.tc})`,marginBottom:8}}>{s.m}</div>
+        <h3>{s.t}</h3><p style={{marginTop:8}}>{s.d}</p>
+      </div>
+    ))}
+  </div>
+  <div className="sec">Specifically built for the Dubai market</div>
+  <div className="fw fw-grid g1">
+    <div className="cell pad-lg">
+      <div className="fw-grid g2" style={{background:'transparent',gap:16,border:'none'}}>
+        {[
+          {tc:'y',t:'Bayut & PropertyFinder integration',d:'Listings auto-sync. Leads captured directly from both portals into your CRM. No manual export, no missed inquiries.'},
+          {tc:'c',t:'DLD transaction data',d:'Market intelligence pulled from Dubai Land Department data. Price trends, transaction volumes, area comparisons — built into your dashboard.'},
+          {tc:'y',t:'Multilingual AI responses',d:'Arabic, English, Russian, and Chinese. Your chatbot and follow-up sequences respond in the language your lead used. No manual translation.'},
+          {tc:'p',t:'AED-denominated reporting',d:'All dashboards, revenue figures, and KPIs shown in AED. Commission splits, pipeline value, portal ROI — in your currency.'},
+          {tc:'c',t:'RERA compliance documents',d:'MOU templates, Form A/B/F, tenancy contracts — pre-loaded, auto-filled from lead data, RERA-compliant. Ready in seconds.'},
+        ].map(p=>(
+          <div key={p.t} style={{borderTop:`2px solid var(--${p.tc})`,padding:'20px 0'}}>
+            <div style={{fontSize:11,fontWeight:800,color:`var(--${p.tc})`,marginBottom:6}}>{p.t}</div>
+            <p>{p.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
   <CtaBar h="What could your brokerage look like in 90 days?" sub="Book a free 30-minute discovery call. No commitment — just a clear picture of what is possible." />
 </>); }

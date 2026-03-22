@@ -38,6 +38,28 @@ export default function About() { return (<>
   <div className="fw fw-grid g3">
     {[{tc:"y",role:"Headquarters",city:"Dubai, UAE",desc:"Primary base. Serving the GCC market — real estate, finance, travel, and professional services.",img:"IMG-16",imgDesc:"Dubai skyline"},{tc:"c",role:"Engineering hub",city:"Bucharest, Romania",desc:"Core engineering team. Registered as Tergo Invest S.R.L. — all development operations run from here.",img:"IMG-17",imgDesc:"Bucharest city"},{tc:"p",role:"Partner office",city:"Milano, Italy",desc:"European client base. Partnerships with Future Days and Ennea Capital.",img:"IMG-18",imgDesc:"Milano city"}].map(o=>(<div className={`cell at-${o.tc}`} key={o.city}><ImgPh label={o.img} desc={o.imgDesc} h={180} /><div style={{marginTop:16}}><div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:"uppercase",color:`var(--${o.tc})`,marginBottom:6}}>{o.role}</div><h4>{o.city}</h4><p>{o.desc}</p></div></div>))}
   </div>
+  <div className="sec">Track record</div>
+  <div className="fw fw-grid g1">
+    <div className="cell pad-lg">
+      <div style={{display:'flex',flexDirection:'column',gap:0}}>
+        {[
+          {y:'2015',t:'Started as a digital consultant in Europe',c:'m'},
+          {y:'2017',t:'Joined KAYAK as product manager',c:'y'},
+          {y:'2019',t:'Founded Skipodium — ski sports marketplace',c:'c'},
+          {y:'2021',t:'Scaled Skipodium to $7M revenue — exit achieved',c:'y'},
+          {y:'2022',t:'Built HayGuard farm monitoring platform',c:'c'},
+          {y:'2023',t:'Tergo Media established formally — Dubai office opened',c:'y'},
+          {y:'2024',t:'Brokerage Revenue Analyzer launched — 40+ Dubai brokerages using it',c:'c'},
+          {y:'2025',t:'SaaS Stack Auditor launched, Milano and Bucharest offices active',c:'p'},
+        ].map((e,i)=>(
+          <div key={e.y} style={{display:'flex',gap:24,paddingBottom:i<7?24:0,marginBottom:i<7?24:0,borderBottom:i<7?'1px solid var(--b)':'none'}}>
+            <div style={{fontSize:13,fontWeight:900,color:`var(--${e.c})`,minWidth:40,paddingTop:2}}>{e.y}</div>
+            <div style={{fontSize:14,color:'var(--l)',lineHeight:1.65}}>{e.t}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
   <div className="sec">Referral programme</div>
   <div className="fw fw-grid g2">
     <div className="cell at-y pad-lg">

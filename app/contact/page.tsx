@@ -68,6 +68,20 @@ export default function Contact() {
         </div>
       </div>
     </div>
+    <div className="sec">Common questions</div>
+    <div className="fw fw-grid g2">
+      {[
+        {q:'How quickly can you start?',a:'Once a proposal is signed, we typically kick off within the same week. No lengthy onboarding, no weeks of "discovery" before anything happens.'},
+        {q:'Do you work with companies outside Dubai?',a:'Yes — we have clients across the GCC, Italy, Romania, Germany, and South Africa. All work is remote-first by design.'},
+        {q:'What happens to the code when the project ends?',a:'You own 100% of it. We transfer all repositories, accounts, and credentials at handover. No dependency on us to keep it running.'},
+        {q:'Do you offer ongoing support?',a:'Every project includes 30 days free post-launch support. After that we offer monthly retainers or ad-hoc hours — your choice, no lock-in.'},
+      ].map((faq,i)=>(
+        <div className={`cell at-${['y','c','y','c'][i]}`} key={i}>
+          <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:10,letterSpacing:-.2}}>{faq.q}</div>
+          <p>{faq.a}</p>
+        </div>
+      ))}
+    </div>
     <div className="sec">What happens after you reach out</div>
     <div className="fw fw-grid g4">
       {[{n:"Step 01",t:"We respond within 24h",d:"Every inquiry gets a personal response from a senior team member — not an automated sequence."},{n:"Step 02",t:"30-minute discovery call",d:"We understand your situation, goals, and constraints. You leave with clarity."},{n:"Step 03",t:"Proposal within 5 days",d:"If we're a fit, you get a clear, fixed-price proposal within 5 working days."},{n:"Step 04",t:"Kickoff in week 1",d:"Once approved, we start immediately. Week 1 we're already mapping your system."}].map((s,i)=>(<div className={`cell at-${["y","c","y","c"][i]}`} key={s.n}><div className="num">{s.n}</div><h4>{s.t}</h4><p>{s.d}</p></div>))}

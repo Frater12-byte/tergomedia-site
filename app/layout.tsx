@@ -9,7 +9,11 @@ export const metadata: Metadata = {
   title: { template: '%s — Tergo Media', default: 'Tergo Media — AI, Automation & Custom Software' },
   description: 'AI automation, custom web & mobile apps, and CTO advisory. Based in Dubai, Bucharest, and Milano.',
   keywords: ['AI automation', 'custom software', 'Dubai tech agency', 'CTO advisory', 'Next.js development'],
-  icons: { icon: '/favicon.svg' },
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+    shortcut: '/favicon.png',
+  },
   openGraph: {
     siteName: 'Tergo Media',
     type: 'website',
@@ -23,6 +27,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
         {/* Google Analytics */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}

@@ -29,5 +29,33 @@ export default function CustomDev() { return (<>
   <div className="fw fw-grid g6">
     {[['Frontend','React\nNext.js\nTypeScript\nTailwind'],['Backend','Node.js\nPython\nPHP / Laravel\nFastAPI'],['Mobile','React Native\nSwift\nKotlin\nExpo'],['Data','PostgreSQL\nSupabase\nMongoDB\nRedis'],['AI','OpenAI\nAnthropic\nLangChain\nPinecone'],['Deploy','Vercel\nAWS\nDocker\ncPanel / VPS']].map(([title,items])=>(<div className="cell pad-sm" key={title}><div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'var(--m)',marginBottom:10,paddingBottom:8,borderBottom:'1px solid var(--b)'}}>{title}</div><div style={{fontSize:11,color:'var(--l)',lineHeight:1.8}}>{items.split('\n').map((i:string,idx:number)=><div key={idx}>{i}</div>)}</div></div>))}
   </div>
+  <div className="sec">Recent builds</div>
+  <div className="fw fw-grid g2">
+    {[
+      {n:'01',tc:'y',t:'Brokerage Revenue Analyzer',d:'Next.js + AI. Built in 3 weeks. 40+ Dubai brokerages using it. Zero backend maintenance.',tags:['Next.js','OpenAI','Vercel']},
+      {n:'02',tc:'c',t:'SaaS Stack Auditor',d:'AI-powered audit tool on Vercel serverless. Handles 100+ submissions/day with zero infra management.',tags:['Next.js','Claude API','Serverless']},
+      {n:'03',tc:'p',t:'Farm monitoring system (HayGuard)',d:'React + Node.js + IoT. Real-time sensor data, automated alert system. Under 30 second alert delivery.',tags:['React','Node.js','IoT']},
+      {n:'04',tc:'r',t:'Invoice management system',d:'Multi-currency (EUR/USD/AED/RON), recurring billing, analytics. Runs Tergo Media\'s own agency operations.',tags:['Next.js','PostgreSQL','Stripe']},
+    ].map(s=>(
+      <div className={`cell at-${s.tc}`} key={s.n}>
+        <div className="num">{s.n}</div>
+        <h3>{s.t}</h3><p>{s.d}</p>
+        <div style={{marginTop:10}}>{s.tags.map(t=><span key={t} className={`tag ${s.tc}`}>{t}</span>)}</div>
+      </div>
+    ))}
+  </div>
+  <div className="sec">How we price</div>
+  <div className="fw fw-grid g3">
+    {[
+      {tc:'y',t:'Fixed scope',d:'You know what you want. We define it precisely, price it, and build it. No surprises, no scope creep. Most projects work this way.'},
+      {tc:'c',t:'Time & materials',d:'Exploratory or fast-moving projects where scope evolves. Weekly billing, daily visibility on progress. You can stop anytime.'},
+      {tc:'p',t:'Retainer',d:'Ongoing development and maintenance. Fixed monthly hours, priority response, no onboarding overhead on new requests.'},
+    ].map(p=>(
+      <div className={`cell at-${p.tc} pad-lg`} key={p.t}>
+        <h3>{p.t}</h3>
+        <p style={{marginTop:10}}>{p.d}</p>
+      </div>
+    ))}
+  </div>
   <CtaBar h="Have a product idea?" sub="Tell us what you want to build. We'll scope it, price it, and ship it." />
 </>); }

@@ -1,3 +1,8 @@
+// IMAGES: Put all photos in /public/images/
+// Example: public/images/img-04.jpg
+// Then in any page, update ImgPh to:
+// <ImgPh label="IMG-04" desc="Francesco" h={280} src="/images/img-04.jpg" />
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/components/Graphics';
@@ -110,6 +115,71 @@ export default function Home() {
           <h3>{p.t}</h3><p>{p.d}</p>
           <ImgPh label={p.img.toUpperCase()} desc={`${p.t} screenshot`} h={140} />
           <div style={{marginTop:12}}><Link href="/portfolio" style={{fontSize:11,fontWeight:800,color:`var(--${p.tc})`,textDecoration:'none',textTransform:'uppercase',letterSpacing:1}}>View case →</Link></div>
+        </div>
+      ))}
+    </div>
+
+    <div className="sec">Client results — by the numbers</div>
+    <div className="fw fw-grid g3">
+      <div className="cell at-y">
+        <div style={{fontSize:9,color:'var(--m)',letterSpacing:2,textTransform:'uppercase',marginBottom:12}}>Real estate · Dubai</div>
+        <h3>Lead response time</h3>
+        <div className="met" style={{marginTop:14}}><span className="met-b r">4 hrs</span><span className="met-s">before automation</span></div>
+        <div className="met"><span className="met-b y">90 sec</span><span className="met-s">after our system went live</span></div>
+        <p style={{marginTop:12}}>Leads from Bayut, PropertyFinder, and web forms all captured, scored, and followed up without a human touching anything.</p>
+      </div>
+      <div className="cell at-c">
+        <div style={{fontSize:9,color:'var(--m)',letterSpacing:2,textTransform:'uppercase',marginBottom:12}}>Professional services</div>
+        <h3>Admin hours returned</h3>
+        <div className="met" style={{marginTop:14}}><span className="met-b c">38 hrs</span><span className="met-s">per week, team of 12</span></div>
+        <div className="met"><span className="met-b y">3.2 hrs</span><span className="met-s">daily per person eliminated</span></div>
+        <p style={{marginTop:12}}>Copy-paste, manual reporting, and status updates — all automated. Team redirected to billable work within 30 days.</p>
+      </div>
+      <div className="cell at-p">
+        <div style={{fontSize:9,color:'var(--m)',letterSpacing:2,textTransform:'uppercase',marginBottom:12}}>Brokerage revenue audit</div>
+        <h3>Revenue recovered</h3>
+        <div className="met" style={{marginTop:14}}><span className="met-b p">AED 2.3M</span><span className="met-s">average leakage identified</span></div>
+        <div className="met"><span className="met-b y">per brokerage</span><span className="met-s">via the Revenue Analyzer</span></div>
+        <p style={{marginTop:12}}>Lost leads, slow follow-up, missed upsells — diagnosed and quantified in under 3 minutes using our free tool.</p>
+      </div>
+    </div>
+
+    <div className="sec">Technologies we work with</div>
+    <div className="fw fw-grid g3">
+      <div className="cell pad-lg">
+        <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'var(--y)',marginBottom:14}}>AI & Automation</div>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          {['n8n','Make','Zapier','OpenAI GPT-4o','Anthropic Claude','WhatsApp Business API','Twilio'].map(t=><span key={t} style={{fontSize:13,color:'var(--l)',borderBottom:'1px solid var(--b)',paddingBottom:8}}>{t}</span>)}
+        </div>
+      </div>
+      <div className="cell pad-lg">
+        <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'var(--c)',marginBottom:14}}>Development</div>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          {['React','Next.js','Node.js','Python','PHP / Laravel','iOS (Swift)','Android (Kotlin)','React Native'].map(t=><span key={t} style={{fontSize:13,color:'var(--l)',borderBottom:'1px solid var(--b)',paddingBottom:8}}>{t}</span>)}
+        </div>
+      </div>
+      <div className="cell pad-lg">
+        <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'var(--p)',marginBottom:14}}>Infrastructure</div>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          {['Vercel','AWS','PostgreSQL','Supabase','Docker','cPanel / VPS','MongoDB','Redis'].map(t=><span key={t} style={{fontSize:13,color:'var(--l)',borderBottom:'1px solid var(--b)',paddingBottom:8}}>{t}</span>)}
+        </div>
+      </div>
+    </div>
+
+    <div className="sec">What clients say</div>
+    <div className="fw fw-grid g3">
+      {[
+        {q:'We cooperated with Tergo Media since 2019 on digital transformation, software development and RPA. Always on time and optimised budget.',who:'Fausto Migliori',role:'Future Days · Milano',tc:'y'},
+        {q:'The automation they built handles 80% of our lead follow-up without anyone touching it.',who:'Senior Partner',role:'Dubai real estate brokerage',tc:'c'},
+        {q:'We went from 6-hour manual reports to automated dashboards in two weeks.',who:'Operations Director',role:'European travel operator',tc:'p'},
+      ].map(t=>(
+        <div className={`cell at-${t.tc}`} key={t.who}>
+          <div style={{fontSize:18,color:`var(--${t.tc})`,marginBottom:14,lineHeight:1}}>&ldquo;</div>
+          <p style={{fontSize:14,color:'var(--l)',lineHeight:1.75,fontStyle:'italic',marginBottom:20,maxWidth:'100%'}}>{t.q}</p>
+          <div style={{borderTop:'1px solid var(--b)',paddingTop:14}}>
+            <div style={{fontSize:12,fontWeight:800,color:'#fff'}}>{t.who}</div>
+            <div style={{fontSize:11,color:'var(--m)',marginTop:3}}>{t.role}</div>
+          </div>
         </div>
       ))}
     </div>

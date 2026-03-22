@@ -1,27 +1,90 @@
 import Link from 'next/link';
 import { LOGO_SRC } from './logo';
 
-const pages = [
-  { href: '/', label: 'Home' },
-  { href: '/services', label: 'Services' },
-  { href: '/sectors', label: 'Sectors' },
-  { href: '/tools', label: 'Tools' },
+const SERVICES = [
+  { href: '/services/ai-automation',          label: 'AI & Automation' },
+  { href: '/services/custom-dev',             label: 'Custom Web & Mobile' },
+  { href: '/services/cto-advisory',           label: 'CTO Advisory' },
+  { href: '/services/digital-transformation', label: 'Digital Transformation' },
+];
+
+const SECTORS = [
+  { href: '/sectors/real-estate',          label: 'Real Estate · Dubai' },
+  { href: '/sectors/travel-hospitality',   label: 'Travel & Hospitality' },
+  { href: '/sectors/agriculture',          label: 'Agriculture' },
+  { href: '/sectors/professional-services',label: 'Professional Services' },
+];
+
+const COMPANY = [
+  { href: '/about',     label: 'About us' },
   { href: '/portfolio', label: 'Portfolio' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/tools',     label: 'Free tools' },
+  { href: '/contact',   label: 'Contact' },
 ];
 
 export default function Footer() {
   return (
-    <div className="footer-wrap">
-      <div className="footer-logo">
-        <img src={LOGO_SRC} alt="Tergo Media" />
+    <footer className="footer-outer">
+      <div className="footer-main">
+
+        {/* Brand column */}
+        <div className="footer-brand">
+          <img src={LOGO_SRC} alt="Tergo Media" />
+          <p className="footer-tagline">
+            AI · Automation · Custom Software<br />
+            Dubai · Bucharest · Milano
+          </p>
+          <div className="footer-social">
+            <a href="https://www.linkedin.com/company/tergo-media" target="_blank" rel="noreferrer" title="LinkedIn">in</a>
+            <a href="mailto:hello@tergomedia.com" title="Email">@</a>
+            <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer" title="Book a call">↗</a>
+          </div>
+        </div>
+
+        {/* Services */}
+        <div className="footer-col">
+          <div className="footer-col-title">Services</div>
+          {SERVICES.map(l => <Link key={l.href} href={l.href}>{l.label}</Link>)}
+        </div>
+
+        {/* Sectors */}
+        <div className="footer-col">
+          <div className="footer-col-title">Sectors</div>
+          {SECTORS.map(l => <Link key={l.href} href={l.href}>{l.label}</Link>)}
+          <div className="footer-col-title" style={{ marginTop: 16 }}>Company</div>
+          {COMPANY.map(l => <Link key={l.href} href={l.href}>{l.label}</Link>)}
+        </div>
+
+        {/* Contact */}
+        <div className="footer-col">
+          <div className="footer-col-title">Get in touch</div>
+          <div className="footer-contact-item">
+            <a href="mailto:hello@tergomedia.com">hello@tergomedia.com</a>
+          </div>
+          <div className="footer-contact-item">
+            <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer">Book a discovery call →</a>
+          </div>
+          <div className="footer-contact-item" style={{ marginTop: 8 }}>
+            <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer">Francesco Terragni — CTO</a>
+          </div>
+          <div className="footer-contact-item">
+            <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer">Maria Terragni — CEO</a>
+          </div>
+        </div>
+
       </div>
-      <div className="footer-links">
-        {pages.map(p => <Link key={p.href} href={p.href}>{p.label}</Link>)}
-        <a href="mailto:hello@tergomedia.com">hello@tergomedia.com</a>
+
+      {/* Bottom bar */}
+      <div className="footer-bottom">
+        <div className="footer-bottom-inner">
+          <div className="footer-offices">
+            <span className="footer-office"><span>●</span>Dubai, UAE</span>
+            <span className="footer-office"><span>●</span>Bucharest, Romania</span>
+            <span className="footer-office"><span>●</span>Milano, Italy</span>
+          </div>
+          <div className="footer-copy">© 2026 Tergo Media · All rights reserved</div>
+        </div>
       </div>
-      <div className="footer-copy">© 2025 Tergo Media · Dubai · Bucharest · Milano</div>
-    </div>
+    </footer>
   );
 }

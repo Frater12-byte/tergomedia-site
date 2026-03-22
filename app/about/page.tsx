@@ -23,21 +23,21 @@ export default function About() { return (<>
     <div className="cell at-y pad-lg">
       <ImgPh label="IMG-04" desc="Francesco Terragni" h={280} src="/Images/IMG-04.png" />
       <div style={{marginTop:16}}>
-        <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Co-founder · Product & CTO</div>
+        <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Co-founder · CTO</div>
         <h3 style={{marginBottom:10}}>Francesco Terragni</h3>
-        <p style={{marginBottom:14}}>10+ years in product management, CTO roles, growth strategy, and full-stack development. Founded Skipodium (scaled to $7M, exited), built HayGuard, authored "The Practical Investor."</p>
-        <p>Previous: KAYAK, Cocktail Holidays, Ryte. Based in Dubai.</p>
-        <div style={{marginTop:16}}><span className="tag y">Product</span><span className="tag y">CTO</span><span className="tag y">Full-stack Dev</span><span className="tag y">Growth</span></div>
+        <p style={{marginBottom:14}}>Builds technology companies from the ground up — product, teams, architecture, and the culture that makes them last. 10+ years spanning CTO roles, co-founded startups (one exited), and hands-on engineering in JavaScript, Node.js, Python &amp; React.</p>
+        <p>Scaled distributed engineering teams across Europe and the GCC. Shipped AI automation pipelines, IoT systems, and SaaS platforms across travel tech, real estate, agriculture, and finance. Previously at KAYAK.</p>
+        <div style={{marginTop:16}}><span className="tag y">CTO</span><span className="tag y">Node.js · Python · React</span><span className="tag y">AI Automation</span><span className="tag y">SaaS</span></div>
       </div>
     </div>
     <div className="cell at-c pad-lg">
-      <ImgPh label="IMG-19" desc="Maria — CEO" h={280} src="/Images/IMG-19.png" />
+      <ImgPh label="IMG-19" desc="Maria Terragni — CEO" h={280} src="/Images/IMG-19.png" />
       <div style={{marginTop:16}}>
-        <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>CEO · Business Development</div>
-        <h3 style={{marginBottom:10}}>Maria</h3>
-        <p style={{marginBottom:14}}>Leads business development and client strategy across the GCC market. Deep expertise in building partnerships, managing enterprise accounts, and expanding into the UAE and wider Middle East.</p>
-        <p>Based in Dubai. Fluent in Arabic, English, and Romanian.</p>
-        <div style={{marginTop:16}}><span className="tag c">CEO</span><span className="tag c">Business Dev</span><span className="tag c">GCC market</span><span className="tag c">Partnerships</span></div>
+        <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>CEO · Operations & Strategy</div>
+        <h3 style={{marginBottom:10}}>Maria Terragni</h3>
+        <p style={{marginBottom:14}}>Operations and business transformation professional with 12+ years in the travel and tour operator industry. Combines a strong B2B marketing background with operational strategy and process optimisation.</p>
+        <p>Experienced in improving organisational structures, implementing reporting systems, coordinating ERP development, and supporting talent acquisition during periods of growth and change. Focused on operational efficiency, cost reduction, and enabling data-driven decisions.</p>
+        <div style={{marginTop:16}}><span className="tag c">CEO</span><span className="tag c">Operations</span><span className="tag c">Business Transformation</span><span className="tag c">Travel industry</span></div>
       </div>
     </div>
     <div className="cell pad-lg">

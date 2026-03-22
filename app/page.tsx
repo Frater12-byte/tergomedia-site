@@ -206,11 +206,11 @@ export default function Home() {
     <div className="sec">The team behind it</div>
     <div className="fw fw-grid g2">
       <div className="cell pad-lg">
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+        <div className="fw-grid g2" style={{gap:8,margin:0,padding:0,maxWidth:'100%',border:'none'}}>
           <ImgPh label="IMG-04" desc="Francesco Terragni" h={360} src="/Images/IMG-04.png" />
-          <ImgPh label="IMG-19" desc="Maria — CEO" h={360} src="/Images/IMG-19.png" />
+          <ImgPh label="IMG-19" desc="Maria Terragni — CEO" h={360} src="/Images/IMG-19.png" />
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginTop:8}}>
+        <div className="fw-grid g2" style={{gap:8,margin:0,padding:0,maxWidth:'100%',border:'none',marginTop:8}}>
           <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
             <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Francesco Terragni</div>
             Co-founder · Product · CTO
@@ -224,13 +224,13 @@ export default function Home() {
       <div className="cell pad-lg" style={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
         <div className="eyebrow y">Built by operators</div>
         <h2 style={{marginBottom:20}}>We&apos;ve built and exited products.<br/>We know what shipping means.</h2>
-        <p style={{marginBottom:16}}>Tergo Media is co-founded by <strong>Francesco Terragni</strong> — product leader, engineer, and CTO — and <strong>Maria</strong>, CEO, who leads business development and client strategy across the GCC. Francesco previously built and scaled Skipodium to $7M revenue before exit at KAYAK.</p>
-        <p style={{marginBottom:24}}>Between the two of us: 20+ years of product, engineering, and growth across Europe and the Middle East. We don&apos;t just consult — we&apos;ve done it ourselves.</p>
+        <p style={{marginBottom:16}}><strong>Francesco Terragni</strong> builds technology companies from the ground up — CTO, engineer, and co-founder. Previously at KAYAK, he scaled Skipodium to $7M before exit. <strong>Maria Terragni</strong>, CEO, brings 12+ years in operations and business transformation in the travel industry, with a track record of building efficient organisations and enabling data-driven leadership.</p>
+        <p style={{marginBottom:24}}>Between the two: deep technical execution, commercial leadership, and operational excellence — across Europe and the GCC.</p>
         <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-          <span className="tag y">Francesco Terragni</span>
-          <span className="tag y">Product · CTO · Engineering</span>
+          <span className="tag y">Francesco — CTO</span>
+          <span className="tag y">Node.js · Python · React · AI</span>
           <span className="tag c">Maria — CEO</span>
-          <span className="tag c">Business development · GCC</span>
+          <span className="tag c">Operations · Transformation · GCC</span>
         </div>
       </div>
     </div>

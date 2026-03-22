@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BeforeAfter, CtaBar, ImgPh } from '@/components/Graphics';
-export const metadata: Metadata = { title: 'CTO Advisory' };
+export const metadata: Metadata = {
+  title: 'Fractional CTO Advisory | Technical Leadership Without Full-Time Cost | Tergo Media',
+  description: 'Senior technical leadership on demand. Architecture, team management, vendor evaluation, product roadmap. Dubai & remote.',
+  alternates: { canonical: 'https://tergomedia.com/services/cto-advisory' },
+};
 export default function CtoAdvisory() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
     <div className="hero-inner">

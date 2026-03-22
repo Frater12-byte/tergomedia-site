@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CtaBar, ImgPh } from '@/components/Graphics';
-export const metadata: Metadata = { title: 'Professional Services' };
+export const metadata: Metadata = {
+  title: 'Automation for Agencies & Consultancies | Invoice, Reporting, Onboarding | Tergo Media',
+  description: 'Invoice automation, KPI reporting, client onboarding workflows for professional service firms.',
+  alternates: { canonical: 'https://tergomedia.com/sectors/professional-services' },
+};
 export default function Page() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
     <div className="hero-inner hero-only">

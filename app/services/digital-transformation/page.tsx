@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Stepper, CtaBar } from '@/components/Graphics';
 import DigiCalc from './DigiCalc';
-export const metadata: Metadata = { title: 'Digital Transformation' };
+export const metadata: Metadata = {
+  title: 'Digital Transformation Consulting | Dubai & GCC | Tergo Media',
+  description: 'Full-scope digital audits and transformation programmes. We map your operations and implement the systems and workflows to modernise your business.',
+  alternates: { canonical: 'https://tergomedia.com/services/digital-transformation' },
+};
 export default function DigitalTransformation() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
     <div className="hero-inner">

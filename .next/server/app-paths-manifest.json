@@ -1,18 +1,18 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/contact/page": "app/contact/page.js",
-  "/about/page": "app/about/page.js",
-  "/portfolio/page": "app/portfolio/page.js",
   "/sectors/agriculture/page": "app/sectors/agriculture/page.js",
-  "/page": "app/page.js",
-  "/sectors/page": "app/sectors/page.js",
+  "/about/page": "app/about/page.js",
   "/sectors/professional-services/page": "app/sectors/professional-services/page.js",
+  "/portfolio/page": "app/portfolio/page.js",
   "/sectors/travel-hospitality/page": "app/sectors/travel-hospitality/page.js",
+  "/page": "app/page.js",
   "/services/cto-advisory/page": "app/services/cto-advisory/page.js",
-  "/sectors/real-estate/page": "app/sectors/real-estate/page.js",
   "/services/digital-transformation/page": "app/services/digital-transformation/page.js",
+  "/sectors/real-estate/page": "app/sectors/real-estate/page.js",
+  "/sectors/page": "app/sectors/page.js",
   "/services/ai-automation/page": "app/services/ai-automation/page.js",
-  "/services/custom-dev/page": "app/services/custom-dev/page.js",
   "/services/page": "app/services/page.js",
-  "/tools/page": "app/tools/page.js"
+  "/tools/page": "app/tools/page.js",
+  "/services/custom-dev/page": "app/services/custom-dev/page.js"
 }

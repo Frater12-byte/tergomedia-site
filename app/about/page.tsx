@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CtaBar, ImgPh } from '@/components/Graphics';
-export const metadata: Metadata = { title: 'About' };
+export const metadata: Metadata = {
+  title: 'About Tergo Media — Dubai AI & Software Agency | Francesco Terragni',
+  description: 'Tergo Media is a Dubai-based AI, automation and custom software agency. Founded by Francesco Terragni. Offices in Dubai, Bucharest, and Milano.',
+  alternates: { canonical: 'https://tergomedia.com/about' },
+};
 export default function About() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
     <div className="hero-inner">

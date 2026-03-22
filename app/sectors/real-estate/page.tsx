@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, CtaBar } from '@/components/Graphics';
 import RealEstateCalc from './RealEstateCalc';
-export const metadata: Metadata = { title: 'Real Estate · Dubai' };
+export const metadata: Metadata = {
+  title: 'AI & Automation for Dubai Real Estate Brokerages | Tergo Media',
+  description: 'WhatsApp chatbots, lead automation, CRM sync, and performance dashboards built specifically for Dubai brokerages.',
+  alternates: { canonical: 'https://tergomedia.com/sectors/real-estate' },
+};
 export default function RealEstate() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
     <div className="hero-inner">

@@ -1,3 +1,11 @@
+// To add real images, replace <ImgPh> with <img> or Next.js <Image>:
+// 1. Put your photos in /public/images/ named: img-01.jpg, img-02.jpg etc.
+// 2. In any page.tsx, change:
+//    <ImgPh label="IMG-04" desc="..." h={280} />
+//    to:
+//    <ImgPh label="IMG-04" desc="Francesco" h={280} src="/images/img-04.jpg" />
+// The ImgPh component already handles the src prop — it will show your image automatically.
+
 'use client';
 import { useEffect, useRef, useState } from 'react';
 
@@ -12,10 +20,12 @@ interface FlowProps {
 }
 export function FlowGraphic({ nodes, color = '', title = 'Live automation flow', resultLabel = 'Result', resultText = '' }: FlowProps) {
   const [step, setStep] = useState(-1);
+  const [key, setKey] = useState(0);
   const uid = useRef(`fg${Math.random().toString(36).slice(2,6)}`).current;
 
   useEffect(() => {
     let s = 0;
+    setStep(-1);
     const run = () => {
       setStep(s);
       s = (s + 1) % (nodes.length + 2);
@@ -26,7 +36,7 @@ export function FlowGraphic({ nodes, color = '', title = 'Live automation flow',
       (window as any)[`_ft_${uid}`] = setTimeout(tick, s === 0 ? 1800 : 700);
     }, 800);
     return () => { clearTimeout(id); clearTimeout((window as any)[`_ft_${uid}`]); };
-  }, [nodes.length, uid]);
+  }, [nodes.length, uid, key]);
 
   const cc = color ? ` ${color}` : '';
   return (
@@ -48,6 +58,12 @@ export function FlowGraphic({ nodes, color = '', title = 'Live automation flow',
           <div className="fres-t">{resultText}</div>
         </div>
       )}
+      <button
+        onClick={() => setKey(k => k + 1)}
+        style={{ marginTop: 10, padding: '4px 10px', fontSize: 9, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', background: 'none', border: '1px solid var(--b2)', color: 'var(--m)', cursor: 'pointer', fontFamily: 'Exo, sans-serif', transition: 'color .2s, border-color .2s' }}
+        onMouseOver={e => { (e.target as HTMLButtonElement).style.color = '#fff'; (e.target as HTMLButtonElement).style.borderColor = 'var(--m)'; }}
+        onMouseOut={e => { (e.target as HTMLButtonElement).style.color = 'var(--m)'; (e.target as HTMLButtonElement).style.borderColor = 'var(--b2)'; }}
+      >↺ Replay</button>
     </div>
   );
 }
@@ -200,6 +216,22 @@ export function Ticker({ items }: { items: { text: string; color?: string }[] })
           </span>
         ))}
       </div>
+    </div>
+  );
+}
+
+/* ─── SCROLL REVEAL ─── */
+export function ScrollReveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.1 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={ref} style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(16px)', transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms` }}>
+      {children}
     </div>
   );
 }

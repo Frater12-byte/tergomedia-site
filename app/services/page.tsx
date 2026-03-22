@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BeforeAfter, Stepper, CtaBar, PROCESS_STEPS } from '@/components/Graphics';
-export const metadata: Metadata = { title: 'Services' };
+export const metadata: Metadata = {
+  title: 'AI & Automation Services | Tergo Media Dubai',
+  description: 'AI automation, custom development, CTO advisory, and digital transformation. Four service lines, one team. Dubai-based.',
+  alternates: { canonical: 'https://tergomedia.com/services' },
+};
 export default function Services() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
     <div className="hero-inner">

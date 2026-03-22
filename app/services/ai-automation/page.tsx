@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, BeforeAfter, Stepper, CtaBar, PROCESS_STEPS } from '@/components/Graphics';
-export const metadata: Metadata = { title: 'AI & Automation' };
+export const metadata: Metadata = {
+  title: 'AI Automation Systems | Lead Capture, Chatbots, Workflows | Tergo Media',
+  description: 'AI-powered lead capture, WhatsApp chatbots, document processing, reporting automation. n8n, Make, GPT-4o, Claude. Dubai-based automation agency.',
+  alternates: { canonical: 'https://tergomedia.com/services/ai-automation' },
+};
 export default function AiAutomation() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
     <div className="hero-inner">

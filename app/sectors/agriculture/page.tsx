@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CtaBar, ImgPh } from '@/components/Graphics';
-export const metadata: Metadata = { title: 'Agriculture' };
+export const metadata: Metadata = {
+  title: 'IoT Monitoring & Automation for Agriculture | HayGuard | Tergo Media',
+  description: 'IoT monitoring systems, automated alerts, and distributor portals for agri businesses. Creators of HayGuard.',
+  alternates: { canonical: 'https://tergomedia.com/sectors/agriculture' },
+};
 export default function Page() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
     <div className="hero-inner hero-only">

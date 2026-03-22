@@ -5,9 +5,11 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tergomedia.com'),
   title: { template: '%s — Tergo Media', default: 'Tergo Media — AI, Automation & Custom Software' },
   description: 'AI automation, custom web & mobile apps, and CTO advisory. Based in Dubai, Bucharest, and Milano.',
   keywords: ['AI automation', 'custom software', 'Dubai tech agency', 'CTO advisory', 'Next.js development'],
+  icons: { icon: '/favicon.svg' },
   openGraph: {
     siteName: 'Tergo Media',
     type: 'website',

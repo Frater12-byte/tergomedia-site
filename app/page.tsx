@@ -2,7 +2,20 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/components/Graphics';
 
-export const metadata: Metadata = { title: 'Home' };
+export const metadata: Metadata = {
+  title: 'Tergo Media — AI Automation & Custom Software | Dubai',
+  description: 'AI-powered automation systems, custom web & mobile apps, and fractional CTO advisory. Based in Dubai, serving GCC and European markets. Book a free discovery call.',
+  keywords: ['AI automation Dubai', 'custom software development Dubai', 'Next.js developer Dubai', 'CTO advisory UAE', 'automation agency Dubai'],
+  openGraph: {
+    title: 'Tergo Media — AI Automation & Custom Software',
+    description: 'We build systems that run your business. AI automation, custom apps, CTO advisory — Dubai, Bucharest, Milano.',
+    url: 'https://tergomedia.com',
+    siteName: 'Tergo Media',
+    type: 'website',
+  },
+  twitter: { card: 'summary_large_image', title: 'Tergo Media', description: 'AI automation & custom software. Dubai-based.' },
+  alternates: { canonical: 'https://tergomedia.com' },
+};
 
 export default function Home() {
   return (<>

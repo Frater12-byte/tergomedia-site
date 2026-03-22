@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/components/Graphics';
-import GrowthChart from '@/components/GrowthChart';
+import ROICalculator from '@/components/ROICalculator';
 
 export const metadata: Metadata = {
   title: 'Tergo Media — AI Automation & Custom Software | Dubai',
@@ -147,15 +147,8 @@ export default function Home() {
       </div>
     </div>
 
-    {/* ── GROWTH CHART ── */}
-    <div style={{background:'#07070f',borderTop:'1px solid #12122a',borderBottom:'1px solid #12122a'}}>
-      <div className="sec" style={{borderTop:'none'}}>Estimate your automation ROI</div>
-      <div className="fw fw-grid g1" style={{borderTop:'none',borderBottom:'none'}}>
-        <div className="cell pad-lg">
-          <GrowthChart />
-        </div>
-      </div>
-    </div>
+    {/* ── ROI CALCULATOR ── */}
+    <ROICalculator />
 
     {/* ── HOW WE WORK ── */}
     <div className="sec">How we work</div>

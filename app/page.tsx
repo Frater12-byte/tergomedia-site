@@ -148,10 +148,12 @@ export default function Home() {
     </div>
 
     {/* ── GROWTH CHART ── */}
-    <div className="sec">Growth after automation</div>
-    <div className="fw fw-grid g1">
-      <div className="cell pad-lg">
-        <GrowthChart />
+    <div style={{background:'#07070f',borderTop:'1px solid #12122a',borderBottom:'1px solid #12122a'}}>
+      <div className="sec" style={{borderTop:'none'}}>Estimate your automation ROI</div>
+      <div className="fw fw-grid g1" style={{borderTop:'none',borderBottom:'none'}}>
+        <div className="cell pad-lg">
+          <GrowthChart />
+        </div>
       </div>
     </div>
 
@@ -213,15 +215,15 @@ export default function Home() {
       <div className="cell pad-lg">
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
           <ImgPh label="IMG-04" desc="Francesco Terragni" h={360} src="/Images/IMG-04.png" />
-          <ImgPh label="IMG-19" desc="Co-founder" h={360} src="/Images/IMG-19.png" />
+          <ImgPh label="IMG-19" desc="Maria — CEO" h={360} src="/Images/IMG-19.png" />
         </div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginTop:8}}>
           <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
             <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Francesco Terragni</div>
-            Founder · Product · CTO
+            Co-founder · Product · CTO
           </div>
           <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
-            <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Co-founder</div>
+            <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Maria — CEO</div>
             Business development · GCC
           </div>
         </div>
@@ -229,13 +231,13 @@ export default function Home() {
       <div className="cell pad-lg" style={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
         <div className="eyebrow y">Built by operators</div>
         <h2 style={{marginBottom:20}}>We&apos;ve built and exited products.<br/>We know what shipping means.</h2>
-        <p style={{marginBottom:16}}>Tergo Media is led by <strong>Francesco Terragni</strong> — product leader, engineer, and founder. Previously at KAYAK, he built and scaled Skipodium to $7M revenue before exit. Co-founded with a partner who brings equal depth in business development and client strategy across the GCC market.</p>
+        <p style={{marginBottom:16}}>Tergo Media is co-founded by <strong>Francesco Terragni</strong> — product leader, engineer, and CTO — and <strong>Maria</strong>, CEO, who leads business development and client strategy across the GCC. Francesco previously built and scaled Skipodium to $7M revenue before exit at KAYAK.</p>
         <p style={{marginBottom:24}}>Between the two of us: 20+ years of product, engineering, and growth across Europe and the Middle East. We don&apos;t just consult — we&apos;ve done it ourselves.</p>
         <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
           <span className="tag y">Francesco Terragni</span>
           <span className="tag y">Product · CTO · Engineering</span>
-          <span className="tag c">GCC market</span>
-          <span className="tag c">Business development</span>
+          <span className="tag c">Maria — CEO</span>
+          <span className="tag c">Business development · GCC</span>
         </div>
       </div>
     </div>

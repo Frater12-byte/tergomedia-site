@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CtaBar, ImgPh } from '@/components/Graphics';
 export const metadata: Metadata = {
-  title: 'About Tergo Media — Dubai AI & Software Agency | Francesco Terragni',
-  description: 'Tergo Media is a Dubai-based AI, automation and custom software agency. Founded by Francesco Terragni. Offices in Dubai, Bucharest, and Milano.',
+  title: 'About Tergo Media — Dubai AI & Software Agency | Francesco Terragni & Maria',
+  description: 'Tergo Media is a Dubai-based AI, automation and custom software agency. Founded by Francesco Terragni and Maria. Offices in Dubai, Bucharest, and Milano.',
   alternates: { canonical: 'https://tergomedia.com/about' },
 };
 export default function About() { return (<>
@@ -19,13 +19,26 @@ export default function About() { return (<>
     </div>
   </div>
   <div className="sec">The team</div>
-  <div className="fw fw-grid g2">
+  <div className="fw fw-grid g3">
     <div className="cell at-y pad-lg">
-      <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:14}}>Founder & CEO</div>
-      <h3>Francesco</h3>
-      <p style={{marginBottom:14}}>10+ years in product management, CTO roles, growth strategy, and full-stack development. Founded Skipodium (scaled to $7M, exited), built HayGuard, authored "The Practical Investor."</p>
-      <p>Previous: KAYAK, Cocktail Holidays, Ryte. Based in Dubai, with teams in Bucharest and Milano.</p>
-      <div style={{marginTop:16}}><span className="tag y">Product Management</span><span className="tag y">CTO</span><span className="tag y">Full-stack Dev</span><span className="tag y">Growth Strategy</span></div>
+      <ImgPh label="IMG-04" desc="Francesco Terragni" h={280} src="/Images/IMG-04.png" />
+      <div style={{marginTop:16}}>
+        <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Co-founder · Product & CTO</div>
+        <h3 style={{marginBottom:10}}>Francesco Terragni</h3>
+        <p style={{marginBottom:14}}>10+ years in product management, CTO roles, growth strategy, and full-stack development. Founded Skipodium (scaled to $7M, exited), built HayGuard, authored "The Practical Investor."</p>
+        <p>Previous: KAYAK, Cocktail Holidays, Ryte. Based in Dubai.</p>
+        <div style={{marginTop:16}}><span className="tag y">Product</span><span className="tag y">CTO</span><span className="tag y">Full-stack Dev</span><span className="tag y">Growth</span></div>
+      </div>
+    </div>
+    <div className="cell at-c pad-lg">
+      <ImgPh label="IMG-19" desc="Maria — CEO" h={280} src="/Images/IMG-19.png" />
+      <div style={{marginTop:16}}>
+        <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>CEO · Business Development</div>
+        <h3 style={{marginBottom:10}}>Maria</h3>
+        <p style={{marginBottom:14}}>Leads business development and client strategy across the GCC market. Deep expertise in building partnerships, managing enterprise accounts, and expanding into the UAE and wider Middle East.</p>
+        <p>Based in Dubai. Fluent in Arabic, English, and Romanian.</p>
+        <div style={{marginTop:16}}><span className="tag c">CEO</span><span className="tag c">Business Dev</span><span className="tag c">GCC market</span><span className="tag c">Partnerships</span></div>
+      </div>
     </div>
     <div className="cell pad-lg">
       <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:14}}>Development team · Bucharest</div>

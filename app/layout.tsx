@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <Nav />
-        <main>{children}</main>
+        <main style={{overflowX: 'hidden', width: '100%'}}>{children}</main>
         <Footer />
         <Chatbot />
       </body>

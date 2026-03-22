@@ -37,13 +37,13 @@ export default function Chatbot() {
       const res = await fetch(WEBHOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chatInput: text, sessionId: 'website-' + Date.now() }),
+        body: JSON.stringify({ chatInput: text, sessionId: 'web-' + Math.random().toString(36).slice(2,9) }),
       });
       const data = await res.json();
       const reply: string =
-        (Array.isArray(data) ? data[0]?.reply || data[0]?.message || data[0]?.output || data[0]?.text : null) ||
-        data?.reply || data?.message || data?.output || data?.text ||
-        'Thanks for your message. Our team will follow up shortly.';
+        data?.output || data?.reply || data?.message || data?.text ||
+        (Array.isArray(data) && (data[0]?.output || data[0]?.reply || data[0]?.message || data[0]?.text)) ||
+        'Thanks! Our team will follow up shortly.';
       setMsgs(m => [...m, { role: 'bot', text: reply }]);
       if (!open) setUnread(u => u + 1);
     } catch {

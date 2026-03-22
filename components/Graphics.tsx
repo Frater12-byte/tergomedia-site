@@ -176,7 +176,22 @@ export function Calculator({
 
 /* ─── IMAGE PLACEHOLDER ─── */
 export function ImgPh({ label, desc, h = 200, src }: { label: string; desc: string; h?: number; src?: string }) {
-  if (src) return <img src={src} alt={label} style={{ width: '100%', height: h, objectFit: 'cover', display: 'block' }} />;
+  if (src) return (
+    <div style={{ width: '100%', overflow: 'hidden', backgroundColor: '#111' }}>
+      <img
+        src={src}
+        alt={label}
+        style={{
+          width: '100%',
+          height: 'auto',
+          display: 'block',
+          maxHeight: `${h * 2}px`,
+          objectFit: 'contain',
+          objectPosition: 'center top',
+        }}
+      />
+    </div>
+  );
   return (
     <div className="img-ph" style={{ minHeight: h }}>
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>

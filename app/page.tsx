@@ -33,7 +33,7 @@ export default function Home() {
               <Link href="/tools" className="btn btn-outline">Try our free tools</Link>
             </div>
           </div>
-          <div>
+          <div style={{minWidth: 0, overflow: 'hidden'}}>
             <FlowGraphic
               nodes={[
                 {text:'New lead captured via form',status:'Trigger'},

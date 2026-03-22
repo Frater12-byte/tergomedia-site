@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/components/Graphics';
+import GrowthChart from '@/components/GrowthChart';
 
 export const metadata: Metadata = {
   title: 'Tergo Media — AI Automation & Custom Software | Dubai',
@@ -66,6 +67,22 @@ export default function Home() {
       ))}
     </div>
 
+    {/* ── DUBAI SKYLINE ── */}
+    <div style={{width:'100%',position:'relative',height:'280px',overflow:'hidden',borderTop:'1px solid #1e1e1e',borderBottom:'1px solid #1e1e1e'}}>
+      <img
+        src="/images/img-dubai.jpg"
+        alt="Dubai — Tergo Media headquarters"
+        style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 60%',display:'block'}}
+      />
+      <div style={{position:'absolute',inset:0,background:'linear-gradient(to right, rgba(8,8,8,0.85) 0%, rgba(8,8,8,0.3) 50%, rgba(8,8,8,0.1) 100%)'}}>
+        <div style={{position:'absolute',bottom:40,left:'clamp(24px,5vw,72px)'}}>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:3,color:'var(--y)',textTransform:'uppercase',marginBottom:10}}>Headquarters</div>
+          <div style={{fontSize:'clamp(24px,3vw,36px)' as string,fontWeight:900,color:'#fff',textTransform:'uppercase',letterSpacing:-1,lineHeight:1.05}}>Dubai, UAE</div>
+          <div style={{fontSize:14,color:'#888',marginTop:8}}>Also in Bucharest · Milano</div>
+        </div>
+      </div>
+    </div>
+
     {/* ── SERVICES ── */}
     <div className="sec">What we do</div>
     <div className="fw fw-grid g2" data-section="what-we-do">
@@ -105,27 +122,37 @@ export default function Home() {
     </div>
 
     {/* ── FREE TOOLS ── */}
-    <div className="sec">Free live tools — try now</div>
-    <div className="fw fw-grid g2">
+    <div className="sec">3 live tools — try now</div>
+    <div className="fw fw-grid g3">
       <div className="cell pad-lg">
-        <span className="tag y" style={{marginBottom:18,display:'inline-block'}}>Live · Real estate</span>
+        <span className="tag y" style={{marginBottom:14,display:'inline-block'}}>Live · Real estate</span>
         <h3>Brokerage Revenue Analyzer</h3>
         <p>Answer 9 questions about your Dubai brokerage. Get a precise AED revenue leakage figure + AI-written diagnosis in under 3 minutes.</p>
-        <div style={{marginTop:8,marginBottom:24}} className="met">
+        <div style={{marginTop:8,marginBottom:20}} className="met">
           <span className="met-b y">AED 2.3M</span>
-          <span className="met-s">average leakage found per brokerage</span>
+          <span className="met-s">average leakage found</span>
         </div>
         <a className="btn btn-y" href="https://analyzer.tergomedia.com" target="_blank" rel="noreferrer">Try it free →</a>
       </div>
       <div className="cell pad-lg">
-        <span className="tag c" style={{marginBottom:18,display:'inline-block'}}>Live · All sectors</span>
+        <span className="tag c" style={{marginBottom:14,display:'inline-block'}}>Live · All sectors</span>
         <h3>SaaS Stack Auditor</h3>
         <p>List your business tools and get an instant AI audit of overlap, waste, and savings — with a recommended leaner stack.</p>
-        <div style={{marginTop:8,marginBottom:24}} className="met">
+        <div style={{marginTop:8,marginBottom:20}} className="met">
           <span className="met-b c">$14K</span>
-          <span className="met-s">average annual saving identified</span>
+          <span className="met-s">average annual saving</span>
         </div>
         <a className="btn btn-c" href="https://automate.tergomedia.com" target="_blank" rel="noreferrer">Try it free →</a>
+      </div>
+      <div className="cell pad-lg">
+        <span className="tag r" style={{marginBottom:14,display:'inline-block'}}>Live · Alerts</span>
+        <h3>Conflict Watch</h3>
+        <p>Real-time monitoring that detects conflicts and anomalies in your business data — and alerts your team before they become problems.</p>
+        <div style={{marginTop:8,marginBottom:20}} className="met">
+          <span className="met-b r">&lt; 30 sec</span>
+          <span className="met-s">trigger to notification</span>
+        </div>
+        <a className="btn btn-r" href="https://alerts.tergomedia.com" target="_blank" rel="noreferrer">Try it free →</a>
       </div>
     </div>
 
@@ -152,6 +179,14 @@ export default function Home() {
         <div className="met" style={{marginTop:16}}><span className="met-b p">AED 18K</span><span className="met-s">per month, recovered avg</span></div>
         <div className="met"><span className="met-b y">AED 2.3M</span><span className="met-s">total leakage identified</span></div>
         <p style={{marginTop:14}}>Lost leads, slow follow-up, missed upsells — diagnosed and quantified in under 3 minutes using our free tool.</p>
+      </div>
+    </div>
+
+    {/* ── GROWTH CHART ── */}
+    <div className="sec">Growth after automation</div>
+    <div className="fw fw-grid g1">
+      <div className="cell pad-lg">
+        <GrowthChart />
       </div>
     </div>
 
@@ -205,6 +240,39 @@ export default function Home() {
           </div>
         </div>
       ))}
+    </div>
+
+    {/* ── CO-FOUNDERS ── */}
+    <div className="sec">The team behind it</div>
+    <div className="fw fw-grid g2">
+      <div className="cell pad-lg">
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+          <ImgPh label="IMG-04" desc="Francesco Terragni" h={360} src="/images/img-04.jpg" />
+          <ImgPh label="IMG-19" desc="Co-founder" h={360} src="/images/img-19.jpg" />
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginTop:8}}>
+          <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
+            <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Francesco Terragni</div>
+            Founder · Product · CTO
+          </div>
+          <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
+            <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Co-founder</div>
+            Business development · GCC
+          </div>
+        </div>
+      </div>
+      <div className="cell pad-lg" style={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
+        <div className="eyebrow y">Built by operators</div>
+        <h2 style={{marginBottom:20}}>We&apos;ve built and exited products.<br/>We know what shipping means.</h2>
+        <p style={{marginBottom:16}}>Tergo Media is led by <strong>Francesco Terragni</strong> — product leader, engineer, and founder. Previously at KAYAK, he built and scaled Skipodium to $7M revenue before exit. Co-founded with a partner who brings equal depth in business development and client strategy across the GCC market.</p>
+        <p style={{marginBottom:24}}>Between the two of us: 20+ years of product, engineering, and growth across Europe and the Middle East. We don&apos;t just consult — we&apos;ve done it ourselves.</p>
+        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+          <span className="tag y">Francesco Terragni</span>
+          <span className="tag y">Product · CTO · Engineering</span>
+          <span className="tag c">GCC market</span>
+          <span className="tag c">Business development</span>
+        </div>
+      </div>
     </div>
 
     <CtaBar h="Ready to build something that actually works?" sub="Book a free 30-minute discovery call. No pitch, no commitment — just clarity on what's possible." />

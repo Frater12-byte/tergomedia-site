@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LOGO_SRC } from './logo';
 
 const links = [
@@ -11,11 +11,19 @@ const links = [
   { href: '/tools', label: 'Tools' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => { setOpen(false); }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -27,6 +35,8 @@ export default function Nav() {
           <div className="nav-logo">
             <Link href="/"><img src={LOGO_SRC} alt="Tergo Media" /></Link>
           </div>
+
+          {/* Desktop nav */}
           <div className="nav-links">
             {links.map(l => (
               <Link key={l.href} href={l.href} className={isActive(l.href) ? 'active' : ''}>
@@ -35,30 +45,44 @@ export default function Nav() {
             ))}
             <Link href="/contact" className="btn nav-cta">Book a call</Link>
           </div>
+
+          {/* Hamburger button */}
           <button
-            className="ham"
+            className="ham-btn"
             onClick={() => setOpen(o => !o)}
-            aria-label="Menu"
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              display: 'none', flexDirection: 'column', gap: '5px', padding: '6px'
-            }}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
           >
-            <span style={{ transform: open ? 'rotate(45deg) translate(4px,4px)' : '', transition: 'all .25s' }} />
-            <span style={{ opacity: open ? 0 : 1, transition: 'all .25s' }} />
-            <span style={{ transform: open ? 'rotate(-45deg) translate(4px,-4px)' : '', transition: 'all .25s' }} />
+            <span className={`ham-line ${open ? 'open' : ''}`} />
+            <span className={`ham-line mid ${open ? 'open' : ''}`} />
+            <span className={`ham-line ${open ? 'open' : ''}`} />
           </button>
         </div>
       </div>
-      <nav className={`mob-nav${open ? ' open' : ''}`}>
-        {links.map(l => (
-          <Link key={l.href} href={l.href} onClick={() => setOpen(false)}>
-            {l.label}
-          </Link>
-        ))}
-        <Link href="/contact" className="mob-cta" onClick={() => setOpen(false)}>
-          Book a call →
-        </Link>
+
+      {/* Mobile overlay */}
+      <div className={`mob-overlay ${open ? 'open' : ''}`} onClick={() => setOpen(false)} />
+      <nav className={`mob-menu ${open ? 'open' : ''}`}>
+        <div className="mob-menu-inner">
+          {links.map(l => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className={`mob-link ${isActive(l.href) ? 'mob-active' : ''}`}
+              onClick={() => setOpen(false)}
+            >
+              <span>{l.label}</span>
+              <span className="mob-arrow">→</span>
+            </Link>
+          ))}
+          <div className="mob-cta-wrap">
+            <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer" className="mob-cta-btn">
+              Book a free call →
+            </a>
+            <a href="mailto:hello@tergomedia.com" className="mob-cta-email">hello@tergomedia.com</a>
+            <div className="mob-offices">Dubai · Bucharest · Milano</div>
+          </div>
+        </div>
       </nav>
     </>
   );

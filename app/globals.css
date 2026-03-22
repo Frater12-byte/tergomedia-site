@@ -57,21 +57,102 @@ body {
   padding: 8px 18px; font-size: 10px; font-weight: 800;
   letter-spacing: 1.5px; text-decoration: none;
 }
-.ham {
-  display: none; flex-direction: column; gap: 5px;
-  cursor: pointer; padding: 6px; background: none; border: none;
+/* Hamburger button */
+.ham-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  background: none;
+  border: none;
+  z-index: 201;
 }
-.ham span { display: block; width: 22px; height: 1.5px; background: var(--m); transition: all .25s; }
-.mob-nav { display: none; flex-direction: column; background: var(--card); border-bottom: 1px solid var(--b); }
-.mob-nav a {
-  display: block; padding: 14px 24px;
-  font-size: 11px; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--m); text-decoration: none;
-  border-bottom: 1px solid var(--b); transition: color .15s;
+.ham-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  transform-origin: center;
 }
-.mob-nav a:hover { color: #fff; }
-.mob-nav a.mob-cta { color: var(--y); background: var(--yb); }
-.mob-nav.open { display: flex; }
+.ham-line.open:first-child { transform: rotate(45deg) translate(5px, 5px); }
+.ham-line.mid.open { opacity: 0; transform: scaleX(0); }
+.ham-line.open:last-child { transform: rotate(-45deg) translate(5px, -5px); }
+
+/* Mobile overlay */
+.mob-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 198;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.mob-overlay.open { opacity: 1; }
+
+/* Mobile slide-in menu */
+.mob-menu {
+  display: none;
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(320px, 85vw);
+  background: #0d0d0d;
+  border-left: 1px solid #1e1e1e;
+  z-index: 200;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+.mob-menu.open { transform: translateX(0); }
+.mob-menu-inner { padding: 80px 0 40px; display: flex; flex-direction: column; height: 100%; }
+.mob-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #666;
+  text-decoration: none;
+  border-bottom: 1px solid #141414;
+  transition: color 0.15s, background 0.15s;
+}
+.mob-link:hover { color: #fff; background: #111; }
+.mob-active { color: var(--y) !important; }
+.mob-active .mob-arrow { color: var(--y); }
+.mob-arrow { font-size: 14px; color: #333; transition: transform 0.15s; }
+.mob-link:hover .mob-arrow { transform: translateX(4px); color: #fff; }
+.mob-cta-wrap { margin-top: auto; padding: 32px; border-top: 1px solid #1a1a1a; }
+.mob-cta-btn {
+  display: block;
+  background: var(--y);
+  color: #000;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  text-align: center;
+  text-decoration: none;
+  margin-bottom: 14px;
+  transition: opacity 0.2s;
+}
+.mob-cta-btn:hover { opacity: 0.88; }
+.mob-cta-email {
+  display: block;
+  font-size: 12px;
+  color: #555;
+  text-decoration: none;
+  text-align: center;
+  margin-bottom: 8px;
+  transition: color 0.15s;
+}
+.mob-cta-email:hover { color: #fff; }
+.mob-offices { font-size: 10px; color: #333; letter-spacing: 2px; text-transform: uppercase; text-align: center; }
 
 /* ── LAYOUT ── */
 .inner { max-width: 1100px; margin: 0 auto; padding: 0 clamp(24px, 5vw, 72px); }
@@ -417,8 +498,10 @@ input[type=range] { flex: 1; accent-color: var(--y); height: 3px; }
 /* ── MOBILE ── */
 @media (max-width: 900px) {
   .nav-inner { padding: 0 20px; height: 60px; }
-  .nav-links { display: none; }
-  .ham { display: flex; }
+  .nav-links { display: none !important; }
+  .ham-btn { display: flex !important; }
+  .mob-overlay { display: block; }
+  .mob-menu { display: block; }
   .hero-inner { grid-template-columns: 1fr; gap: 36px; padding: 48px 20px 40px; }
   .hero-inner-mag { padding: 48px 20px 40px; }
   .hero-split { grid-template-columns: 1fr; gap: 32px; margin-top: 28px; }

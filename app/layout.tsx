@@ -3,6 +3,7 @@ import Script from 'next/script';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import Chatbot from '@/components/Chatbot';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tergomedia.com'),
@@ -10,9 +11,9 @@ export const metadata: Metadata = {
   description: 'AI automation, custom web & mobile apps, and CTO advisory. Based in Dubai, Bucharest, and Milano.',
   keywords: ['AI automation', 'custom software', 'Dubai tech agency', 'CTO advisory', 'Next.js development'],
   icons: {
-    icon: '/favicon.png',
-    apple: '/favicon.png',
-    shortcut: '/favicon.png',
+    icon: '/TERGO_Media_Branding copy.png',
+    apple: '/TERGO_Media_Branding copy.png',
+    shortcut: '/TERGO_Media_Branding copy.png',
   },
   openGraph: {
     siteName: 'Tergo Media',
@@ -27,8 +28,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="icon" href="/TERGO_Media_Branding copy.png" />
+        <link rel="apple-touch-icon" href="/TERGO_Media_Branding copy.png" />
         {/* Google Analytics */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main>{children}</main>
         <Footer />
+        <Chatbot />
       </body>
     </html>
   );

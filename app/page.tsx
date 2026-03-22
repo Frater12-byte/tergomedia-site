@@ -68,7 +68,7 @@ export default function Home() {
 
     {/* ── SERVICES ── */}
     <div className="sec">What we do</div>
-    <div className="fw fw-grid g2">
+    <div className="fw fw-grid g2" data-section="what-we-do">
       {[
         {n:'01',t:'AI & Automation',d:'Lead capture, document processing, AI agents, reporting — all automated. Your team focuses on growth, not admin.',tags:['n8n · Make','GPT-4o · Claude','WhatsApp API'],tc:'y',href:'/services/ai-automation'},
         {n:'02',t:'Custom Web & Mobile Apps',d:'React, Next.js, Node.js, Python, PHP, native iOS & Android. Production-grade, shipped in weeks not months.',tags:['React · Next.js','Python · PHP','iOS · Android'],tc:'c',href:'/services/custom-dev'},
@@ -170,7 +170,7 @@ export default function Home() {
 
     {/* ── PORTFOLIO ── */}
     <div className="sec">Portfolio</div>
-    <div className="fw fw-grid g3">
+    <div className="fw fw-grid g3" data-section="portfolio">
       {[
         {tc:'y',cat:'Travel · CRM · Automation',t:'Cocktail Holidays',d:'Full digital transformation — booking automation, CRM, RPA. Scaled to $7M revenue. Exit achieved.',img:'IMG-01'},
         {tc:'c',cat:'Agriculture · IoT · Portal',t:'Agri Novatex',d:'Distributor portals, HubSpot implementation, API integrations across South Africa and UK.',img:'IMG-02'},

@@ -76,14 +76,21 @@ body {
 /* ── LAYOUT ── */
 .inner { max-width: 1100px; margin: 0 auto; padding: 0 clamp(24px, 5vw, 72px); }
 
-.fw { width: 100%; border-top: 1px solid var(--b); border-bottom: 1px solid var(--b); padding: 8px 0; }
-.fw-grid { display: grid; gap: 1px; background: var(--b); width: 100%; }
+/* === Default: flat / no boxes === */
+.fw { width: 100%; background: transparent; border-top: none; border-bottom: none; padding: 8px 0; }
+.fw-grid { display: grid; gap: 0; background: transparent; width: 100%; max-width: 1100px; margin: 0 auto; }
+.stats-fw { display: grid; gap: 0; background: transparent; border-top: none; border-bottom: none; width: 100%; max-width: 1100px; margin: 0 auto; }
+.cta-bar { max-width: 1100px; margin: 0 auto; }
 .g1 { grid-template-columns: 1fr; }
 .g2 { grid-template-columns: 1fr 1fr; }
 .g3 { grid-template-columns: 1fr 1fr 1fr; }
 .g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 .g6 { grid-template-columns: repeat(6, 1fr); }
 .g5s { grid-template-columns: repeat(5, 1fr); }
+
+/* Default cells/stats transparent */
+.fw .cell, .fw .cell.pad-lg, .fw .pc-service { background: transparent; border: none; }
+.stats-fw .stat { background: transparent; border: none; }
 
 .cell { background: var(--card); padding: clamp(24px, 4vw, 44px) clamp(20px, 3.5vw, 48px); }
 .cell.pad-lg { padding: clamp(32px, 5vw, 56px) clamp(28px, 4vw, 52px); }
@@ -172,11 +179,33 @@ body {
 .sec::after { content: ''; flex: 1; height: 1px; background: var(--b); }
 
 /* ── STATS ── */
-.stats-fw { display: grid; gap: 1px; background: var(--b); border-top: 1px solid var(--b); border-bottom: 1px solid var(--b); width: 100%; }
 .stat { padding: 40px clamp(20px, 3vw, 48px); background: var(--card); }
 .stat-n { font-size: clamp(36px,5vw,52px); font-weight: 900; line-height: 1; margin-bottom: 6px; letter-spacing: -2px; }
 .stat-n.y { color: var(--y); } .stat-n.c { color: var(--c); } .stat-n.p { color: var(--p); } .stat-n.r { color: var(--r); }
 .stat-l { font-size: 13px; color: var(--m); line-height: 1.6; margin-top: 6px; }
+
+/* === Boxed sections — What we do === */
+[data-section="what-we-do"].fw {
+  background: var(--b); border-top: 1px solid var(--b); border-bottom: 1px solid var(--b);
+}
+[data-section="what-we-do"].fw-grid {
+  background: var(--b); gap: 1px;
+}
+[data-section="what-we-do"] .pc-service { background: var(--card); }
+
+/* === Boxed sections — Portfolio === */
+[data-section="portfolio"].fw {
+  background: var(--b); border-top: 1px solid var(--b); border-bottom: 1px solid var(--b);
+}
+[data-section="portfolio"].fw-grid {
+  background: var(--b); gap: 1px;
+}
+[data-section="portfolio"] .cell { background: var(--card); }
+
+/* === Flatten interactive graphic boxes === */
+.ig { background: transparent; border: none; padding: 0; }
+.ig-title { display: none; }
+.stp-body { background: transparent; border: none; padding: 0; margin-top: 14px; }
 
 /* ── MAGAZINE SERVICE CARDS ── */
 .pc-service {

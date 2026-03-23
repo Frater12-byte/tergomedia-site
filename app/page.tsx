@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/components/Graphics';
 import ROICalculator from '@/components/ROICalculator';
-import OfficeMap from '@/components/OfficeMap';
+import OfficesMap from '@/components/OfficesMap';
 
 export const metadata: Metadata = {
   title: 'Tergo Media — AI Automation & Custom Software | Dubai',
@@ -69,7 +69,7 @@ export default function Home() {
     </div>
 
     {/* ── OFFICE MAP ── */}
-    <OfficeMap />
+    <OfficesMap />
 
     {/* ── SERVICES ── */}
     <div className="sec">What we do</div>

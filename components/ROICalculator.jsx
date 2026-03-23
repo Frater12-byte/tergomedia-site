@@ -169,7 +169,9 @@ export default function ROICalculator() {
                 </div>
 
                 <div className="roi-chart-wrap">
-                  <ROIChart key={chartKey} monthly={result.monthly} cumulative={result.cumulative} setup={result.setup} />
+                  <div key={chartKey} className="roi-chart-animate">
+                  <ROIChart monthly={result.monthly} cumulative={result.cumulative} setup={result.setup} />
+                  </div>
                   <div className="roi-chart-note">Bars = monthly savings &nbsp;·&nbsp; Line = cumulative net &nbsp;·&nbsp; Dashed = breakeven threshold</div>
                 </div>
 

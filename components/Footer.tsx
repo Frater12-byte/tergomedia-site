@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const SERVICES = [
   { href: '/services/ai-automation',          label: 'AI & Automation' },
@@ -28,7 +29,7 @@ export default function Footer() {
 
         {/* Brand column */}
         <div className="footer-brand">
-          <img src="/logo.png" alt="Tergo Media" style={{height:36,width:'auto',objectFit:'contain'}} />
+          <Image src="/logo.png" alt="Tergo Media" width={130} height={36} style={{objectFit:'contain',objectPosition:'left center'}} />
           <p className="footer-tagline">
             AI · Automation · Custom Software<br />
             Dubai · Bucharest · Milano

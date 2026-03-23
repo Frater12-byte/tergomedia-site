@@ -154,7 +154,7 @@ export default function OfficeMap() {
                     {/* Dot */}
                     <circle cx={cx} cy={cy} r={isActive ? 6 : 5} fill={o.color} />
                     {/* City label */}
-                    <text x={cx + 10} y={cy - 8} fill={o.color} fontSize="9" fontWeight="800" fontFamily="Exo,sans-serif" letterSpacing="1" textTransform="uppercase"
+                    <text x={cx + 10} y={cy - 8} fill={o.color} fontSize="9" fontWeight="800" fontFamily="Exo,sans-serif" letterSpacing="1"
                       style={{ textTransform: 'uppercase' }}>
                       {o.city.split(',')[0].toUpperCase()}
                     </text>

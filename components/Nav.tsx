@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -32,7 +33,7 @@ export default function Nav() {
       <div className="nav-wrap">
         <div className="nav-inner">
           <div className="nav-logo">
-            <Link href="/"><img src="/logo.png" alt="Tergo Media" style={{height:42,width:'auto',objectFit:'contain'}} /></Link>
+            <Link href="/"><Image src="/logo.png" alt="Tergo Media" width={130} height={36} style={{objectFit:'contain',objectPosition:'left center'}} priority /></Link>
           </div>
 
           {/* Desktop nav */}

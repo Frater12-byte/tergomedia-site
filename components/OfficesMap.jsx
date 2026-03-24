@@ -88,7 +88,7 @@ const OFFICES = [
   },
   {
     id: 'milano',
-    city: 'Milano',
+    city: 'Milan',
     country: 'Italy',
     role: 'Partner Office',
     lon: 9.2, lat: 45.5,

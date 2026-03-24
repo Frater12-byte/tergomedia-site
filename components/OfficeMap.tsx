@@ -69,7 +69,7 @@ const OFFICES: Record<OfficeKey, {
   },
   milano: {
     lon: 9.2, lat: 45.5, color: 'var(--p)', tc: 'p',
-    city: 'Milano, Italy',
+    city: 'Milan, Italy',
     role: 'Partner office · Europe',
     bullets: [
       'European client base & partnerships',

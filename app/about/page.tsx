@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CtaBar, ImgPh } from '@/components/Graphics';
 export const metadata: Metadata = {
-  title: 'About Tergo Media — Dubai AI & Software Agency | Francesco Terragni & Maria',
-  description: 'Tergo Media is a Dubai-based AI, automation and custom software agency. Founded by Francesco Terragni and Maria. Offices in Dubai, Bucharest, and Milano.',
-  alternates: { canonical: 'https://tergomedia.com/about' },
+  title: 'About Tergo Media — Built by Operators, Not Just Advisors',
+  description: 'Tergo Media is an AI automation and custom software agency founded by Francesco and Maria Terragni. Based in Dubai, Bucharest, and Milan.',
+  alternates: { canonical: 'https://www.tergomedia.com/about' },
 };
 export default function About() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
@@ -49,7 +49,7 @@ export default function About() { return (<>
   </div>
   <div className="sec">Our offices</div>
   <div className="fw fw-grid g3">
-    {[{tc:"y",role:"Headquarters",city:"Dubai, UAE",desc:"Primary base. Serving the GCC market — real estate, finance, travel, and professional services.",img:"IMG-16",imgDesc:"Dubai skyline"},{tc:"c",role:"Engineering hub",city:"Bucharest, Romania",desc:"Core engineering team. Registered as Tergo Invest S.R.L. — all development operations run from here.",img:"IMG-17",imgDesc:"Bucharest city"},{tc:"p",role:"Partner office",city:"Milano, Italy",desc:"European client base. Partnerships with Future Days and Ennea Capital.",img:"IMG-18",imgDesc:"Milano city"}].map(o=>(<div className={`cell at-${o.tc}`} key={o.city}><ImgPh label={o.img} desc={o.imgDesc} h={180} src={`/Images/${o.img}.png`} /><div style={{marginTop:16}}><div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:"uppercase",color:`var(--${o.tc})`,marginBottom:6}}>{o.role}</div><h4>{o.city}</h4><p>{o.desc}</p></div></div>))}
+    {[{tc:"y",role:"Headquarters",city:"Dubai, UAE",desc:"Primary base. Serving the GCC market — real estate, finance, travel, and professional services.",img:"IMG-16",imgDesc:"Dubai skyline"},{tc:"c",role:"Engineering hub",city:"Bucharest, Romania",desc:"Core engineering team. Registered as Tergo Invest S.R.L. — all development operations run from here.",img:"IMG-17",imgDesc:"Bucharest city"},{tc:"p",role:"Partner office",city:"Milan, Italy",desc:"European client base. Partnerships with Future Days and Ennea Capital.",img:"IMG-18",imgDesc:"Milan city"}].map(o=>(<div className={`cell at-${o.tc}`} key={o.city}><ImgPh label={o.img} desc={o.imgDesc} h={180} src={`/Images/${o.img}.png`} /><div style={{marginTop:16}}><div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:"uppercase",color:`var(--${o.tc})`,marginBottom:6}}>{o.role}</div><h4>{o.city}</h4><p>{o.desc}</p></div></div>))}
   </div>
   <div className="sec">Track record</div>
   <div className="fw fw-grid g1">
@@ -63,7 +63,7 @@ export default function About() { return (<>
           {y:'2022',t:'Built HayGuard farm monitoring platform',c:'c'},
           {y:'2023',t:'Tergo Media established formally — Dubai office opened',c:'y'},
           {y:'2024',t:'Brokerage Revenue Analyzer launched — 40+ Dubai brokerages using it',c:'c'},
-          {y:'2025',t:'SaaS Stack Auditor launched, Milano and Bucharest offices active',c:'p'},
+          {y:'2025',t:'SaaS Stack Auditor launched, Milan and Bucharest offices active',c:'p'},
         ].map((e,i)=>(
           <div key={e.y} style={{display:'flex',gap:24,paddingBottom:i<7?24:0,marginBottom:i<7?24:0,borderBottom:i<7?'1px solid var(--b)':'none'}}>
             <div style={{fontSize:13,fontWeight:900,color:`var(--${e.c})`,minWidth:40,paddingTop:2}}>{e.y}</div>
@@ -84,7 +84,7 @@ export default function About() { return (<>
     </div>
     <div className="cell pad-lg">
       <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:14}}>Strategic partners</div>
-      <h4>Future Days · Milano</h4>
+      <h4>Future Days · Milan</h4>
       <p style={{marginBottom:18}}>Creative agency partners. We handle the development and automation layer for their client projects.</p>
       <h4>Ennea Capital Partners</h4>
       <p>Venture and growth capital. We advise on portfolio company technical due diligence and digital transformation.</p>

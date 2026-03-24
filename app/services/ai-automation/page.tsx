@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { FlowGraphic, BeforeAfter, Stepper, CtaBar, PROCESS_STEPS } from '@/components/Graphics';
 import ToolPills from './ToolPills';
 export const metadata: Metadata = {
-  title: 'AI Automation Systems | Lead Capture, Chatbots, Workflows | Tergo Media',
-  description: 'AI-powered lead capture, WhatsApp chatbots, document processing, reporting automation. n8n, Make, GPT-4o, Claude. Dubai-based automation agency.',
-  alternates: { canonical: 'https://tergomedia.com/services/ai-automation' },
+  title: 'AI Automation Services — Lead Capture, Document Processing & AI Agents | Tergo Media',
+  description: 'We build AI automation systems using n8n, Make, GPT-4o, and the WhatsApp API. Lead capture, document processing, intelligent routing — all running without manual input.',
+  alternates: { canonical: 'https://www.tergomedia.com/services/ai-automation' },
 };
 export default function AiAutomation() { return (<>
   <div className="hero"><div className="hero-grid-bg" />

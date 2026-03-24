@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BeforeAfter, CtaBar, ImgPh } from '@/components/Graphics';
 export const metadata: Metadata = {
-  title: 'Fractional CTO Advisory | Technical Leadership Without Full-Time Cost | Tergo Media',
-  description: 'Senior technical leadership on demand. Architecture, team management, vendor evaluation, product roadmap. Dubai & remote.',
-  alternates: { canonical: 'https://tergomedia.com/services/cto-advisory' },
+  title: 'Fractional CTO Advisory — Technical Leadership Without the Full-Time Hire | Tergo Media',
+  description: 'Senior technical leadership for companies that need architecture, team building, and technology strategy without a full-time CTO. Based in Dubai, available globally.',
+  alternates: { canonical: 'https://www.tergomedia.com/services/cto-advisory' },
 };
 export default function CtoAdvisory() { return (<>
   <div className="hero"><div className="hero-grid-bg" />
@@ -28,7 +28,7 @@ export default function CtoAdvisory() { return (<>
     <div className="cell pad-lg">
       <h3>10+ years building and leading digital products</h3>
       <p style={{marginBottom:14}}>Francesco is a product and operations leader with experience spanning PM, CTO, growth strategy, and full-stack development. Founded Skipodium (scaled to $7M, exited), built HayGuard, authored "The Practical Investor."</p>
-      <p>Previous: KAYAK, Cocktail Holidays, Ryte. Based in Dubai, with teams in Bucharest and Milano.</p>
+      <p>Previous: KAYAK, Cocktail Holidays, Ryte. Based in Dubai, with teams in Bucharest and Milan.</p>
       <div style={{marginTop:20}}>
         <span className="tag p">Product management</span><span className="tag p">CTO · technical leadership</span>
         <span className="tag y">Full-stack development</span><span className="tag y">GCC market</span>

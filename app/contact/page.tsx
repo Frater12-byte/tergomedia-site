@@ -42,7 +42,7 @@ export default function Contact() {
         <div style={{borderTop:'1px solid var(--b)',paddingTop:24}}>
           <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'var(--m)',marginBottom:14}}>Offices</div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:12}}>
-            {[['Dubai','UAE','Primary office'],['Bucharest','Romania','Engineering hub'],['Milano','Italy','Partner office']].map(([city,country,role])=>(<div key={city}><div style={{fontSize:11,fontWeight:800,color:'var(--l)',marginBottom:4}}>{city}</div><div style={{fontSize:11,color:'var(--m)'}}>{country}<br/>{role}</div></div>))}
+            {[['Dubai','UAE','Primary office'],['Bucharest','Romania','Engineering hub'],['Milan','Italy','Partner office']].map(([city,country,role])=>(<div key={city}><div style={{fontSize:11,fontWeight:800,color:'var(--l)',marginBottom:4}}>{city}</div><div style={{fontSize:11,color:'var(--m)'}}>{country}<br/>{role}</div></div>))}
           </div>
           <div style={{marginTop:16,fontSize:11,color:'var(--m)'}}>hello@tergomedia.com</div>
         </div>

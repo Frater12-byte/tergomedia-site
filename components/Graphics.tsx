@@ -10,6 +10,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 /* ─── FLOW GRAPHIC ─── */
+type StepState = 'waiting' | 'running' | 'done';
+
 interface FlowNode { text: string; status: string; }
 interface FlowProps {
   nodes: FlowNode[];
@@ -18,52 +20,157 @@ interface FlowProps {
   resultLabel?: string;
   resultText?: string;
 }
+
+// Timing spec (ms): [start, duration] per step
+const STEP_TIMING = [
+  [0, 400],
+  [400, 1200],
+  [1600, 600],
+  [2200, 500],
+  [2700, 400],
+];
+const TOTAL_MS   = 3100;
+const RESULT_MS  = 3100;
+const LOOP_PAUSE = 2000;
+
 export function FlowGraphic({ nodes, color = '', title = 'Live automation flow', resultLabel = 'Result', resultText = '' }: FlowProps) {
-  const [step, setStep] = useState(-1);
-  const [key, setKey] = useState(0);
-  const uid = useRef(`fg${Math.random().toString(36).slice(2,6)}`).current;
+  const [stepStates, setStepStates] = useState<StepState[]>(() => nodes.map(() => 'waiting' as StepState));
+  const [showResult, setShowResult] = useState(false);
+  const [showReplay, setShowReplay] = useState(false);
+  const [loopCount, setLoopCount] = useState(0);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  useEffect(() => {
-    let s = 0;
-    setStep(-1);
-    const run = () => {
-      setStep(s);
-      s = (s + 1) % (nodes.length + 2);
-      if (s > nodes.length) s = 0;
-    };
-    const id = setTimeout(function tick() {
-      run();
-      (window as any)[`_ft_${uid}`] = setTimeout(tick, s === 0 ? 1800 : 700);
-    }, 800);
-    return () => { clearTimeout(id); clearTimeout((window as any)[`_ft_${uid}`]); };
-  }, [nodes.length, uid, key]);
+  const clearAll = () => { timersRef.current.forEach(clearTimeout); timersRef.current = []; };
 
-  const cc = color ? ` ${color}` : '';
+  const run = (loop: number) => {
+    clearAll();
+    setStepStates(nodes.map(() => 'waiting'));
+    setShowResult(false);
+
+    const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      setStepStates(nodes.map(() => 'done'));
+      setShowResult(true);
+      setShowReplay(true);
+      return;
+    }
+
+    nodes.forEach((_, i) => {
+      const [start, dur] = STEP_TIMING[i] ?? [i * 600, 500];
+      timersRef.current.push(setTimeout(() => {
+        setStepStates(prev => prev.map((s, j) => j === i ? 'running' : s));
+      }, start));
+      timersRef.current.push(setTimeout(() => {
+        setStepStates(prev => prev.map((s, j) => j === i ? 'done' : s));
+      }, start + dur));
+    });
+
+    timersRef.current.push(setTimeout(() => setShowResult(true), RESULT_MS));
+    timersRef.current.push(setTimeout(() => setShowReplay(true), RESULT_MS));
+    timersRef.current.push(setTimeout(() => {
+      setLoopCount(l => l + 1);
+    }, TOTAL_MS + LOOP_PAUSE));
+  };
+
+  useEffect(() => { run(loopCount); return clearAll; }, [loopCount, nodes.length]);
+
+  const Y_COLOR = '#F2C200';
+  const GREEN   = '#4ade80';
+
   return (
-    <div className="ig">
-      <div className="ig-title">{title}</div>
-      {nodes.map((n, i) => (
-        <div key={i}>
-          <div className={`fn${i <= step ? cc + ' on' : ''}`}>
-            <div className="fn-d" />
-            <span className="fn-t">{n.text}</span>
-            <span className="fn-s">{i < step ? 'Done' : i === step ? 'Running' : n.status}</span>
-          </div>
-          {i < nodes.length - 1 && <div className={`fconn${i < step ? cc + ' on' : ''}`} />}
-        </div>
-      ))}
+    <div className="ig" style={{ position: 'relative' }}>
+      <style>{`
+        @keyframes _fgPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.55;transform:scale(1.25)} }
+        @keyframes _fgCheck { from{stroke-dashoffset:20} to{stroke-dashoffset:0} }
+        @media (prefers-reduced-motion: reduce) { ._fgRunCircle,._fgCheck { animation: none !important; } }
+      `}</style>
+
+      {/* Replay button */}
+      {showReplay && (
+        <button
+          onClick={() => { setShowReplay(false); setLoopCount(l => l + 1); }}
+          style={{ position: 'absolute', top: 0, right: 0, background: 'none', border: 'none', color: Y_COLOR, fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'Exo, sans-serif', letterSpacing: 0.5, padding: '2px 0' }}
+          onMouseOver={e => (e.currentTarget.style.textDecoration = 'underline')}
+          onMouseOut={e => (e.currentTarget.style.textDecoration = 'none')}
+        >↺ Replay</button>
+      )}
+
+      {/* Vertical timeline */}
+      <div style={{ position: 'relative' }}>
+        {/* Connecting line */}
+        <div style={{
+          position: 'absolute', left: 10, top: 10, bottom: 10,
+          width: 1, background: 'rgba(255,255,255,0.08)', zIndex: 0,
+        }} />
+
+        {nodes.map((n, i) => {
+          const state = stepStates[i];
+          return (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, minHeight: 48, position: 'relative', zIndex: 1, marginBottom: i < nodes.length - 1 ? 2 : 0 }}>
+              {/* Circle indicator */}
+              <div style={{ flexShrink: 0, width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {state === 'waiting' && (
+                  <div style={{ width: 12, height: 12, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.15)', background: 'transparent' }} />
+                )}
+                {state === 'running' && (
+                  <div className="_fgRunCircle" style={{
+                    width: 12, height: 12, borderRadius: '50%',
+                    background: Y_COLOR,
+                    animation: '_fgPulse 1s ease-in-out infinite',
+                    boxShadow: `0 0 8px ${Y_COLOR}88`,
+                  }} />
+                )}
+                {state === 'done' && (
+                  <svg width="20" height="20" viewBox="0 0 20 20" style={{ display: 'block' }}>
+                    <circle cx="10" cy="10" r="9" fill={Y_COLOR} />
+                    <polyline
+                      points="6,10 9,13 14,7"
+                      fill="none" stroke="#000" strokeWidth="1.8"
+                      strokeLinecap="round" strokeLinejoin="round"
+                      className="_fgCheck"
+                      style={{ strokeDasharray: 20, strokeDashoffset: 0, animation: '_fgCheck 0.25s ease forwards' }}
+                    />
+                  </svg>
+                )}
+              </div>
+
+              {/* Label */}
+              <span style={{
+                flex: 1, fontSize: 13, fontFamily: 'Exo, sans-serif',
+                color: state === 'waiting' ? 'rgba(255,255,255,0.28)' : '#fff',
+                fontWeight: state === 'waiting' ? 300 : 500,
+                transition: 'color .25s',
+              }}>{n.text}</span>
+
+              {/* Status badge */}
+              {state === 'running' && (
+                <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 9, fontWeight: 700, color: Y_COLOR, fontFamily: 'Exo, sans-serif', letterSpacing: 1 }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: Y_COLOR, animation: '_fgPulse 0.8s ease-in-out infinite', display: 'inline-block' }} />
+                  Running
+                </span>
+              )}
+              {state === 'done' && (
+                <span style={{ fontSize: 9, fontWeight: 700, color: GREEN, fontFamily: 'Exo, sans-serif', letterSpacing: 1 }}>Done</span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Result row */}
       {resultText && (
-        <div className={`fres${cc}`} style={{ opacity: step >= nodes.length - 1 ? 1 : 0, transition: 'opacity .5s' }}>
-          <div className="fres-l">{resultLabel}</div>
-          <div className="fres-t">{resultText}</div>
+        <div style={{
+          marginTop: 12, padding: '10px 12px',
+          border: '1px solid rgba(242,194,0,.2)', background: 'rgba(242,194,0,.05)',
+          opacity: showResult ? 1 : 0, transition: 'opacity .4s',
+        }}>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: Y_COLOR, marginBottom: 3 }}>{resultLabel}</div>
+          <div style={{ fontSize: 13, color: '#fff', fontWeight: 500 }}>{resultText.split('—')[0].trim()}</div>
+          {resultText.includes('—') && (
+            <div style={{ fontSize: 11, color: '#555', fontStyle: 'italic', marginTop: 2 }}>{resultText.split('—')[1].trim()}</div>
+          )}
         </div>
       )}
-      <button
-        onClick={() => setKey(k => k + 1)}
-        style={{ marginTop: 10, padding: '4px 10px', fontSize: 9, fontWeight: 800, letterSpacing: 1.5, textTransform: 'uppercase', background: 'none', border: '1px solid var(--b2)', color: 'var(--m)', cursor: 'pointer', fontFamily: 'Exo, sans-serif', transition: 'color .2s, border-color .2s' }}
-        onMouseOver={e => { (e.target as HTMLButtonElement).style.color = '#fff'; (e.target as HTMLButtonElement).style.borderColor = 'var(--m)'; }}
-        onMouseOut={e => { (e.target as HTMLButtonElement).style.color = 'var(--m)'; (e.target as HTMLButtonElement).style.borderColor = 'var(--b2)'; }}
-      >↺ Replay</button>
     </div>
   );
 }
@@ -214,7 +321,7 @@ export function CtaBar({ h, sub }: { h: string; sub: string }) {
       <div className="cta-bar-right">
         <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer">→ Book on Calendly</a>
         <a href="mailto:hello@tergomedia.com">→ hello@tergomedia.com</a>
-        <small>Dubai · Bucharest · Milano · Response within 24h</small>
+        <small>Dubai · Bucharest · Milan · Response within 24h</small>
       </div>
     </div>
   );

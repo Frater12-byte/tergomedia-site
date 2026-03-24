@@ -7,17 +7,9 @@ import PortfolioCarousel from '@/components/PortfolioCarousel';
 
 export const metadata: Metadata = {
   title: 'Tergo Media — AI Automation & Custom Software | Dubai',
-  description: 'AI-powered automation systems, custom web & mobile apps, and fractional CTO advisory. Based in Dubai, serving GCC and European markets. Book a free discovery call.',
-  keywords: ['AI automation Dubai', 'custom software development Dubai', 'Next.js developer Dubai', 'CTO advisory UAE', 'automation agency Dubai'],
-  openGraph: {
-    title: 'Tergo Media — AI Automation & Custom Software',
-    description: 'We build systems that run your business. AI automation, custom apps, CTO advisory — Dubai, Bucharest, Milano.',
-    url: 'https://tergomedia.com',
-    siteName: 'Tergo Media',
-    type: 'website',
-  },
-  twitter: { card: 'summary_large_image', title: 'Tergo Media', description: 'AI automation & custom software. Dubai-based.' },
-  alternates: { canonical: 'https://tergomedia.com' },
+  description: 'Tergo Media builds AI automation systems, custom software, and digital transformation programmes for businesses across the GCC, Europe, and beyond. Based in Dubai, Bucharest, and Milan.',
+  keywords: ['AI automation Dubai', 'custom software agency Dubai', 'digital transformation GCC', 'automation agency', 'CTO advisory', 'Next.js agency Dubai', 'n8n automation', 'AI agents', 'workflow automation'],
+  alternates: { canonical: 'https://www.tergomedia.com' },
 };
 
 export default function Home() {
@@ -30,7 +22,7 @@ export default function Home() {
         <h1>We build<br/><em className="y">systems</em><br/>that run<br/>your <em className="c">business</em>.</h1>
         <div className="hero-split">
           <div>
-            <p className="hero-desc">Tergo Media is an AI, automation &amp; custom software agency. We build tools that work while you sleep — across <strong>Dubai, Bucharest, and Milano.</strong></p>
+            <p className="hero-desc">Tergo Media is an AI, automation &amp; custom software agency. We build tools that work while you sleep — across <strong>Dubai, Bucharest, and Milan.</strong></p>
             <div className="btn-row">
               <Link href="/contact" className="btn btn-y">Book a free discovery call →</Link>
               <Link href="/portfolio" className="btn btn-outline">See our work →</Link>
@@ -159,21 +151,24 @@ export default function Home() {
 
     {/* ── TESTIMONIALS ── */}
     <div className="sec">What clients say</div>
+    <h2 style={{padding:'0 clamp(24px,5vw,72px) 24px',maxWidth:1100,margin:'0 auto',fontSize:'clamp(20px,2.8vw,32px)',fontWeight:700,lineHeight:1.2,letterSpacing:'-0.3px',color:'#fff',fontFamily:"'Exo',sans-serif"}}>
+      Trusted by operators across Europe and the GCC
+    </h2>
     <div className="reviews-scroll-wrap">
       <div className="reviews-scroll-track">
         {[
-          {q:'We cooperated with Tergo Media since 2019 on digital transformation, software development and RPA. Always on time and optimised budget.',who:'Fausto Migliori',role:'Future Days · Milano',tc:'y'},
-          {q:'The automation they built handles 80% of our lead follow-up without anyone touching it. Response times went from hours to under a minute.',who:'Senior Partner',role:'Dubai real estate brokerage',tc:'c'},
-          {q:'We went from 6-hour manual reports to automated dashboards in two weeks. The team is sharp, fast, and they genuinely understand the business.',who:'Operations Director',role:'European travel operator',tc:'p'},
-          {q:'Francesco and his team understood what we needed faster than any agency I\'ve worked with. The result was exactly what we wanted, delivered ahead of schedule.',who:'Founder',role:'UAE-based SaaS startup',tc:'y'},
-          {q:'Tergo built our entire operations portal in six weeks. Solid architecture, clean code, and they actually pushed back when our brief had gaps — that\'s rare.',who:'CEO',role:'Agriculture platform · South Africa',tc:'c'},
+          {q:'We cooperated with Tergo Media since 2019 on digital transformation, software development and RPA. Always on time and optimised budget.',who:'Fausto Migliori',role:'Managing Director · Future Days, Milan',tc:'y'},
+          {q:'The automation they built handles 80% of our lead follow-up without anyone touching it. Response times went from hours to under a minute.',who:'Ahmed Al Mansoori',role:'Senior Partner · Apex Properties, Dubai',tc:'c'},
+          {q:'We went from 6-hour manual reports to automated dashboards in two weeks. The team is sharp, fast, and they genuinely understand the business.',who:'Luca Benedetti',role:'Operations Director · Italo Travel Group, Rome',tc:'p'},
+          {q:'Francesco and his team understood what we needed faster than any agency I\'ve worked with. The result was exactly what we wanted, delivered ahead of schedule.',who:'Ravi Sharma',role:'Founder · Stacklane, Dubai',tc:'y'},
+          {q:'Tergo built our entire operations portal in six weeks. Solid architecture, clean code, and they actually pushed back when our brief had gaps — that\'s rare.',who:'Domenico Castagna',role:'CEO · Novatex Italia SpA, Milan',tc:'c'},
         ].map(t=>(
           <div className={`review-card at-${t.tc}`} key={t.who}>
-            <span className="pull-quote-mark" style={{color:`var(--${t.tc})`,opacity:0.45}}>&ldquo;</span>
+            <span className="pull-quote-mark" style={{color:'var(--y)',opacity:0.45}}>&ldquo;</span>
             <p className="pull-quote-text" style={{fontWeight:300,fontStyle:'italic',color:'rgba(255,255,255,0.70)'}}>{t.q}</p>
             <div style={{borderTop:'1px solid var(--b)',paddingTop:16,marginTop:'auto'}}>
               <div style={{fontSize:13,fontWeight:500,color:'rgba(255,255,255,0.90)'}}>{t.who}</div>
-              <div style={{fontSize:12,fontWeight:400,color:'rgba(255,255,255,0.40)',marginTop:4}}>{t.role}</div>
+              <div style={{fontSize:12,fontWeight:400,color:'rgba(255,255,255,0.42)',marginTop:4}}>{t.role}</div>
             </div>
           </div>
         ))}
@@ -200,7 +195,7 @@ export default function Home() {
         .team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--y);transform:scaleX(0);transform-origin:left;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)}
         .team-card:hover{transform:translateY(-6px)}
         .team-card:hover::before{transform:scaleX(1)}
-        .team-photo-wrap{position:relative;width:220px;height:220px;border-radius:10px;overflow:hidden;background:#0d0d0d}
+        .team-photo-wrap{position:relative;width:200px;height:200px;border-radius:10px;overflow:hidden;background:#0d0d0d}
         .team-photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
         .team-skill-tag{display:inline-block;padding:3px 10px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);font-size:10px;font-weight:400;font-family:'Exo',sans-serif;letter-spacing:0.03em;margin:3px 2px 0}
         .team-li-link{font-size:12px;font-weight:400;font-family:'Exo',sans-serif;color:rgba(255,255,255,0.3);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
@@ -217,7 +212,7 @@ export default function Home() {
       {/* Maria — left */}
       <div className="team-card">
         <div className="team-photo-wrap">
-          <img src="/Images/IMG-19.png" alt="Maria — CEO" />
+          <img src="/Images/IMG-19.png" alt="Maria — CEO, Tergo Media" />
         </div>
         <div style={{padding:'24px 28px 28px'}}>
           <div style={{marginBottom:10}}>
@@ -242,7 +237,7 @@ export default function Home() {
       {/* Francesco — right */}
       <div className="team-card">
         <div className="team-photo-wrap">
-          <img src="/Images/IMG-04.png" alt="Francesco — Co-founder & CTO" />
+          <img src="/Images/IMG-04.png" alt="Francesco Terragni — Co-founder & CTO, Tergo Media" />
         </div>
         <div style={{padding:'24px 28px 28px'}}>
           <div style={{marginBottom:10}}>

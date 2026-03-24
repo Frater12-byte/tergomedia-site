@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FlowGraphic, Stepper, CtaBar } from '@/components/Graphics';
 export const metadata: Metadata = {
-  title: 'Custom Web & Mobile App Development | React, Next.js, PHP, Python | Tergo Media',
-  description: 'Custom web apps, mobile apps, and APIs built from scratch. React, Next.js, Node.js, Python, PHP, iOS, Android. Production-grade code shipped in weeks.',
-  alternates: { canonical: 'https://tergomedia.com/services/custom-dev' },
+  title: 'Custom Web & Mobile App Development — React, Node.js, Python | Tergo Media',
+  description: 'Production-grade custom software in React, Next.js, Node.js, Python, PHP, and native iOS & Android. Shipped in weeks, built to last.',
+  alternates: { canonical: 'https://www.tergomedia.com/services/custom-dev' },
 };
 export default function CustomDev() { return (<>
   <div className="hero"><div className="hero-grid-bg" />

@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { FlowGraphic, CtaBar } from '@/components/Graphics';
 import RealEstateCalc from './RealEstateCalc';
 export const metadata: Metadata = {
-  title: 'AI & Automation for Dubai Real Estate Brokerages | Tergo Media',
-  description: 'WhatsApp chatbots, lead automation, CRM sync, and performance dashboards built specifically for Dubai brokerages.',
-  alternates: { canonical: 'https://tergomedia.com/sectors/real-estate' },
+  title: 'AI Automation for Real Estate Brokerages — Lead Routing & CRM | Tergo Media',
+  description: 'Lead routing, CRM automation, AI follow-up, and document processing for real estate brokerages. Built for the Dubai and GCC property market.',
+  alternates: { canonical: 'https://www.tergomedia.com/sectors/real-estate' },
 };
 export default function RealEstate() { return (<>
   <div className="hero"><div className="hero-grid-bg" />

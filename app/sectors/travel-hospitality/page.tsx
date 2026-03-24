@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CtaBar, ImgPh } from '@/components/Graphics';
 export const metadata: Metadata = {
-  title: 'Automation for Travel & Tour Operators | Tergo Media',
-  description: 'Booking automation, AI itinerary generation, CRM integration for travel agencies and tour operators.',
-  alternates: { canonical: 'https://tergomedia.com/sectors/travel-hospitality' },
+  title: 'Automation for Tour Operators & Travel Agencies | Tergo Media',
+  description: 'Booking automation, AI itinerary generation, agency back-office workflows, and supplier integrations — built for tour operators and travel agencies.',
+  alternates: { canonical: 'https://www.tergomedia.com/sectors/travel-hospitality' },
 };
 export default function Page() { return (<>
   <div className="hero"><div className="hero-grid-bg" />

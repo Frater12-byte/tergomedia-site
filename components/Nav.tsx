@@ -40,7 +40,7 @@ export default function Nav() {
       <div className="nav-wrap">
         <div className="nav-inner">
           <div className="nav-logo">
-            <Link href="/"><Image src="/logo.png" alt="Tergo Media" width={130} height={36} style={{objectFit:'contain',objectPosition:'left center'}} priority /></Link>
+            <Link href="/"><Image src="/logo.png" alt="Tergo Media — AI Automation & Custom Software Agency" width={156} height={43} style={{objectFit:'contain',objectPosition:'left center'}} priority /></Link>
           </div>
 
           {/* Desktop nav */}
@@ -87,7 +87,7 @@ export default function Nav() {
               Book a free call →
             </a>
             <a href="mailto:hello@tergomedia.com" className="mob-cta-email">hello@tergomedia.com</a>
-            <div className="mob-offices">Dubai · Bucharest · Milano</div>
+            <div className="mob-offices">Dubai · Bucharest · Milan</div>
           </div>
         </div>
       </nav>

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { CtaBar, ImgPh } from '@/components/Graphics';
 export const metadata: Metadata = {
-  title: 'Portfolio — Cocktail Holidays, Agri Novatex, HayGuard | Tergo Media',
-  description: 'Case studies: Cocktail Holidays ($7M revenue, exit achieved), Agri Novatex (distributor portals), Ranjet (native mobile app).',
-  alternates: { canonical: 'https://tergomedia.com/portfolio' },
+  title: 'Our Work — Automation, SaaS & Digital Transformation Projects | Tergo Media',
+  description: 'Case studies from Tergo Media — booking automation, IoT platforms, mobile apps, CRM integration, and digital transformation across travel, agriculture, and real estate.',
+  alternates: { canonical: 'https://www.tergomedia.com/portfolio' },
 };
 export default function Portfolio() { return (<>
   <div className="hero"><div className="hero-grid-bg" />

@@ -28,9 +28,9 @@ export default function Footer() {
       <style>{`
         @keyframes dotPulse {
           0%,100% { transform: scale(1); opacity: 1; }
-          50%      { transform: scale(1.55); opacity: 0.7; }
+          50%      { transform: scale(1.15); opacity: 0.7; }
         }
-        .footer-dot { display: inline-block; animation: dotPulse 2.4s ease-in-out infinite; }
+        .footer-dot { display: inline-block; font-size: 14px; animation: dotPulse 2.5s ease-in-out infinite; }
         .footer-dot-2 { animation-delay: 0.8s; }
         .footer-dot-3 { animation-delay: 1.6s; }
         @media (prefers-reduced-motion: reduce) { .footer-dot { animation: none; } }
@@ -40,10 +40,10 @@ export default function Footer() {
 
         {/* Brand column */}
         <div className="footer-brand">
-          <Image src="/logo.png" alt="Tergo Media" width={130} height={36} style={{objectFit:'contain',objectPosition:'left center'}} />
+          <Image src="/logo.png" alt="Tergo Media — AI Automation & Custom Software Agency" width={156} height={43} style={{objectFit:'contain',objectPosition:'left center'}} />
           <p className="footer-tagline">
             AI · Automation · Custom Software<br />
-            Dubai · Bucharest · Milano
+            Dubai · Bucharest · Milan
           </p>
           <div className="footer-social">
             <a href="https://www.linkedin.com/company/tergomedia" target="_blank" rel="noreferrer" title="LinkedIn">in</a>
@@ -80,10 +80,10 @@ export default function Footer() {
             <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer">Book a discovery call →</a>
           </div>
           <div className="footer-contact-item" style={{ marginTop: 8 }}>
-            <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer">Francesco — CTO</a>
+            <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer">Maria — CEO</a>
           </div>
           <div className="footer-contact-item">
-            <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer">Maria — CEO</a>
+            <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer">Francesco — CTO</a>
           </div>
         </div>
 
@@ -95,7 +95,7 @@ export default function Footer() {
           <div className="footer-offices">
             <span className="footer-office"><span className="footer-dot" style={{color:'var(--y)'}}>●</span> Dubai, UAE</span>
             <span className="footer-office"><span className="footer-dot footer-dot-2" style={{color:'var(--y)'}}>●</span> Bucharest, Romania</span>
-            <span className="footer-office"><span className="footer-dot footer-dot-3" style={{color:'var(--y)'}}>●</span> Milano, Italy</span>
+            <span className="footer-office"><span className="footer-dot footer-dot-3" style={{color:'var(--y)'}}>●</span> Milan, Italy</span>
           </div>
           <div className="footer-copy">© 2026 Tergo Media · All rights reserved</div>
         </div>

@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CtaBar, ImgPh } from '@/components/Graphics';
 export const metadata: Metadata = {
-  title: '3 Free AI Tools for Dubai Businesses | Revenue Analyzer, SaaS Auditor & Conflict Watch | Tergo Media',
-  description: '3 live tools for businesses: Brokerage Revenue Analyzer, SaaS Stack Auditor, and Conflict Watch. No sign-up required.',
-  alternates: { canonical: 'https://tergomedia.com/tools' },
+  title: 'Free Automation Tools — SaaS Stack Auditor & ROI Calculator | Tergo Media',
+  description: 'Free tools from Tergo Media — audit your SaaS stack, estimate automation ROI, and identify where your team is losing time.',
+  alternates: { canonical: 'https://www.tergomedia.com/tools' },
 };
 export default function Tools() { return (<>
   <div className="hero"><div className="hero-grid-bg" />

@@ -27,6 +27,16 @@ const SECTOR_RATES = {
   'Other':                 24,
 };
 
+const SECTOR_ADMIN_HOURS = {
+  'Real Estate':           6,
+  'Travel & Hospitality':  5,
+  'Agriculture':           4,
+  'Media & Publishing':    6,
+  'Professional Services': 8,
+  'E-commerce & Retail':   5,
+  'Other':                 5,
+};
+
 const RESPONSE_TIMES = ['Under 1 hour', '1–4 hours', '4–24 hours', 'Over 24 hours'];
 
 const RESPONSE_UPLIFT = {
@@ -41,22 +51,28 @@ const RAMP = [0.25, 0.25, 0.60, 0.60, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
 
 /* ── Calculation ───────────────────────────────────────────────────────────── */
 function calcROI(sector, revenue, teamSize, manualPct, leads, responseTime) {
-  const rate      = SECTOR_RATES[sector] ?? 24;
-  const rawHours  = teamSize * (manualPct / 100) * 160;
-  const cappedHrs = Math.min(rawHours, teamSize * 32);
-  const rawMonthly = cappedHrs * rate;
-  const monthly    = Math.min(rawMonthly, 35000);
+  const hourlyRate          = SECTOR_RATES[sector] ?? 24;
+  const adminHoursPerPerson = SECTOR_ADMIN_HOURS[sector] ?? 5;
+  const hoursPerPersonPerMonth = adminHoursPerPerson * 4.33;
 
-  const uplift        = RESPONSE_UPLIFT[responseTime] ?? 0.18;
-  const revenueGrowth = revenue * uplift * 0.15;
+  const hoursRecoveredPerMonth = Math.min(
+    teamSize * hoursPerPersonPerMonth * (manualPct / 100) * 0.45,
+    teamSize * 32
+  );
+  const monthly = Math.min(hoursRecoveredPerMonth * hourlyRate, 35000);
 
-  const cumulative    = RAMP.map((r, i) => RAMP.slice(0, i + 1).reduce((s, v) => s + v * monthly, 0));
-  const annualSavings = cumulative[11];
-  const hoursPerYear  = Math.round(cappedHrs * 12);
-  const annualRevenue = revenueGrowth * 12;
-  const paybackMonths = monthly > 0 ? Math.ceil(9500 / monthly) : 99;
+  const uplift            = RESPONSE_UPLIFT[responseTime] ?? 0.18;
+  const attributionFactor = revenue < 100000 ? 0.25 : 0.32;
+  const monthlyUplift     = Math.min(revenue * uplift * attributionFactor, revenue * 0.20);
+  const annualRevenue     = Math.min(monthlyUplift * 12 * 0.70, 180000);
 
-  return { monthly, cumulative, annualSavings, hoursPerYear, annualRevenue, paybackMonths };
+  const monthlyBreakdown = RAMP.map(r => monthly * r);
+  const cumulative       = monthlyBreakdown.map((_, i) => monthlyBreakdown.slice(0, i + 1).reduce((s, v) => s + v, 0));
+  const annualSavings    = cumulative[11];
+  const hoursPerYear     = Math.round(hoursRecoveredPerMonth * 12);
+  const paybackMonths    = monthly > 0 ? 9500 / monthly : null;
+
+  return { monthly, cumulative, monthlyBreakdown, annualSavings, hoursPerYear, annualRevenue, paybackMonths };
 }
 
 /* ── useCountUp hook ───────────────────────────────────────────────────────── */
@@ -352,13 +368,14 @@ function buildProfile(sector, teamSize, revenue, manualPct, responseTime) {
 /* ── Main component ────────────────────────────────────────────────────────── */
 export default function ROICalculator() {
   const [sector,       setSector]       = useState('Real Estate');
-  const [revenue,      setRevenue]      = useState(50000);
-  const [teamSize,     setTeamSize]     = useState(10);
-  const [manualPct,    setManualPct]    = useState(35);
-  const [leads,        setLeads]        = useState(200);
+  const [revenue,      setRevenue]      = useState(45000);
+  const [teamSize,     setTeamSize]     = useState(12);
+  const [manualPct,    setManualPct]    = useState(40);
+  const [leads,        setLeads]        = useState(150);
   const [responseTime, setResponseTime] = useState('4–24 hours');
+  const [chartKey,     setChartKey]     = useState(0);
   const [profileText,  setProfileText]  = useState(
-    () => buildProfile('Real Estate', 10, 50000, 35, '4–24 hours')
+    () => buildProfile('Real Estate', 12, 45000, 40, '4–24 hours')
   );
   const debounceRef = useRef(null);
 
@@ -377,17 +394,23 @@ export default function ROICalculator() {
     }
   }, []);
 
-  function handleSector(v)      { setSector(v);      updateProfile(v, teamSize, revenue, manualPct, responseTime, true); }
-  function handleRevenue(v)     { setRevenue(v);     updateProfile(sector, teamSize, v, manualPct, responseTime, false); }
-  function handleTeam(v)        { setTeamSize(v);    updateProfile(sector, v, revenue, manualPct, responseTime, false); }
-  function handleManual(v)      { setManualPct(v);   updateProfile(sector, teamSize, revenue, v, responseTime, false); }
-  function handleLeads(v)       { setLeads(v);       updateProfile(sector, teamSize, revenue, manualPct, responseTime, false); }
-  function handleResponse(v)    { setResponseTime(v); updateProfile(sector, teamSize, revenue, manualPct, v, false); }
+  function handleSector(v)      { setSector(v);      setChartKey(k => k + 1); updateProfile(v, teamSize, revenue, manualPct, responseTime, true); }
+  function handleRevenue(v)     { setRevenue(v);     setChartKey(k => k + 1); updateProfile(sector, teamSize, v, manualPct, responseTime, false); }
+  function handleTeam(v)        { setTeamSize(v);    setChartKey(k => k + 1); updateProfile(sector, v, revenue, manualPct, responseTime, false); }
+  function handleManual(v)      { setManualPct(v);   setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, v, responseTime, false); }
+  function handleLeads(v)       { setLeads(v);       setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, manualPct, responseTime, false); }
+  function handleResponse(v)    { setResponseTime(v); setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, manualPct, v, false); }
 
   const fmtDollar  = v => `$${Math.round(v).toLocaleString()}`;
   const fmtDollarK = v => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${Math.round(v)}`;
   const fmtHours   = v => `${Math.round(v).toLocaleString()} hrs`;
-  const fmtMonths  = v => `${Math.round(v)} mo${Math.round(v) === 1 ? '' : 's'}`;
+  const fmtMonths  = v => {
+    if (!v || v === null) return '—';
+    const r = Math.round(v);
+    if (r > 12) return '12+ mos';
+    if (r < 1)  return '< 1 mo';
+    return `${r} mo${r === 1 ? '' : 's'}`;
+  };
 
   return (
     <div style={{ background: '#0d0d0d', borderTop: '1px solid #222', borderBottom: '1px solid #222' }}>
@@ -535,7 +558,7 @@ export default function ROICalculator() {
           <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888', marginBottom: 20 }}>
             12-month cumulative savings
           </div>
-          <ROIChart cumulative={result.cumulative} monthly={result.monthly} />
+          <ROIChart key={chartKey} cumulative={result.cumulative} monthly={result.monthly} />
         </div>
       </div>
 

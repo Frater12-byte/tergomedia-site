@@ -50,7 +50,7 @@ export default function PortfolioCarousel() {
 
       {/* Header row with arrows */}
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'56px clamp(24px,5vw,72px) 20px', maxWidth:1100, margin:'0 auto' }}>
-        <div className="sec" style={{ padding:0, margin:0, flex:1 }}>Portfolio</div>
+        <h2 className="sec" style={{ padding:0, margin:0, flex:1 }}>Work we&apos;ve shipped</h2>
         <div className="port-arrows" style={{ display:'flex', gap:8 }}>
           <button className="port-arrow" onClick={() => scroll('l')} disabled={!canLeft}  aria-label="Previous">←</button>
           <button className="port-arrow" onClick={() => scroll('r')} disabled={!canRight} aria-label="Next">→</button>

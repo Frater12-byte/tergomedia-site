@@ -55,14 +55,14 @@ const CENTRAL_ASIA = [
 ];
 
 const LANDMASSES = [
-  { id: 'europe',   coords: EUROPE,       fill: 'rgba(255,255,255,0.0)' },
-  { id: 'scan',     coords: SCANDINAVIA,  fill: 'rgba(255,255,255,0.0)' },
-  { id: 'uk',       coords: UK,           fill: 'rgba(255,255,255,0.0)' },
-  { id: 'turkey',   coords: TURKEY,       fill: 'rgba(255,255,255,0.0)' },
-  { id: 'me',       coords: MIDDLE_EAST,  fill: 'rgba(255,255,255,0.0)' },
-  { id: 'africa',   coords: NE_AFRICA,    fill: 'rgba(255,255,255,0.0)' },
-  { id: 'arab',     coords: ARABIAN,      fill: 'rgba(255,255,255,0.0)' },
-  { id: 'casia',    coords: CENTRAL_ASIA, fill: 'rgba(255,255,255,0.0)' },
+  { id: 'europe',   coords: EUROPE,       fill: '#1a1f1a' },
+  { id: 'scan',     coords: SCANDINAVIA,  fill: '#1a1f1a' },
+  { id: 'uk',       coords: UK,           fill: '#1a1f1a' },
+  { id: 'turkey',   coords: TURKEY,       fill: '#1a1f1a' },
+  { id: 'me',       coords: MIDDLE_EAST,  fill: '#1a1f1a' },
+  { id: 'africa',   coords: NE_AFRICA,    fill: '#1a1f1a' },
+  { id: 'arab',     coords: ARABIAN,      fill: '#1a1f1a' },
+  { id: 'casia',    coords: CENTRAL_ASIA, fill: '#1a1f1a' },
 ];
 
 const OFFICES = [
@@ -215,7 +215,7 @@ export default function OfficesMap() {
     <div style={{
       borderTop: '1px solid rgba(255,255,255,0.07)',
       borderBottom: '1px solid rgba(255,255,255,0.07)',
-      background: '#0d0d0d',
+      background: '#060e14',
     }}>
       <style>{animCSS}</style>
 
@@ -225,8 +225,15 @@ export default function OfficesMap() {
           viewBox={isMobile ? MOBILE_VB : DESKTOP_VB}
           style={{ width: '100%', height: 'auto', display: 'block' }}
         >
-          {/* Background */}
-          <rect width={W} height={H} fill="#0d0d0d" />
+          {/* Ocean gradient + land definitions */}
+          <defs>
+            <radialGradient id="ocean-depth" cx="52%" cy="48%" r="55%">
+              <stop offset="0%"   stopColor="#0d1f2d" stopOpacity="1" />
+              <stop offset="50%"  stopColor="#091820" stopOpacity="1" />
+              <stop offset="100%" stopColor="#060e14" stopOpacity="1" />
+            </radialGradient>
+          </defs>
+          <rect width={W} height={H} fill="url(#ocean-depth)" />
 
           {/* Graticule */}
           {[-10,0,10,20,30,40,50,60,70].map(lon => (
@@ -241,7 +248,7 @@ export default function OfficesMap() {
           {/* Land masses */}
           {LANDMASSES.map(lm => (
             <polygon key={lm.id} points={pts(lm.coords)}
-              fill={lm.fill} stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
+              fill={lm.fill} stroke="rgba(210,220,200,0.20)" strokeWidth="1" />
           ))}
 
           {/* Flight path arcs with travelling dots */}

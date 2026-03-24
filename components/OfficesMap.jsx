@@ -98,35 +98,66 @@ const OFFICES = [
   },
 ];
 
-// Connection paths (bezier arcs)
-function connPath(o1, o2) {
+// Rich card data per office
+const CARD_DATA = {
+  dubai: {
+    timezone: 'GMT+4 · available 9am–6pm',
+    linkText: 'hello@tergomedia.com →',
+    linkHref: 'mailto:hello@tergomedia.com',
+    translateX: '-80%', // far right — shift card mostly left
+  },
+  bucharest: {
+    timezone: 'GMT+2 · available 9am–6pm',
+    linkText: 'Engineering enquiries →',
+    linkHref: 'mailto:hello@tergomedia.com',
+    translateX: '-50%', // centred
+  },
+  milano: {
+    timezone: 'GMT+1 · available 9am–6pm',
+    linkText: 'Book a discovery call →',
+    linkHref: 'https://calendly.com/tergo-media/30min',
+    translateX: '-20%', // far left — shift card mostly right
+  },
+};
+
+// Flight route paths with per-route arc offsets
+function routePath(o1, o2, arcOffset) {
   const x1 = mx(o1.lon), y1 = my(o1.lat);
   const x2 = mx(o2.lon), y2 = my(o2.lat);
   const cpx = (x1 + x2) / 2;
-  const cpy = Math.min(y1, y2) - 70;
-  return `M ${x1} ${y1} Q ${cpx} ${cpy} ${x2} ${y2}`;
+  const cpy = Math.min(y1, y2) - arcOffset;
+  return `M ${x1.toFixed(1)} ${y1.toFixed(1)} Q ${cpx.toFixed(1)} ${cpy.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
 }
 
-const CONNECTIONS = [
-  { id: 'c1', o1: OFFICES[0], o2: OFFICES[1] },
-  { id: 'c2', o1: OFFICES[1], o2: OFFICES[2] },
-  { id: 'c3', o1: OFFICES[2], o2: OFFICES[0] },
+// Route A: Dubai→Bucharest, B: Bucharest→Milan, C: Milan→Dubai
+const ROUTES = [
+  { id: 'route-a-path', o1: OFFICES[0], o2: OFFICES[1], arcOffset: 60, mobileArcOffset: 35, dotDur: '4s',   dotBegin: '0s'   },
+  { id: 'route-b-path', o1: OFFICES[1], o2: OFFICES[2], arcOffset: 40, mobileArcOffset: 35, dotDur: '3.2s', dotBegin: '1.3s' },
+  { id: 'route-c-path', o1: OFFICES[2], o2: OFFICES[0], arcOffset: 70, mobileArcOffset: 35, dotDur: '5s',   dotBegin: '2.6s' },
 ];
 
-// Mobile viewBox focuses on Europe–Middle East corridor
 const MOBILE_VB = '100 60 800 300';
 const DESKTOP_VB = `0 0 ${W} ${H}`;
 
 export default function OfficesMap() {
-  const [activeId, setActiveId] = useState(null);
-  const [hoverId,  setHoverId]  = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [activeId,      setActiveId]      = useState('dubai'); // Dubai active by default
+  const [hoverId,       setHoverId]       = useState(null);
+  const [isMobile,      setIsMobile]      = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const activeOffice = OFFICES.find(o => o.id === activeId);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)');
     setIsMobile(mq.matches);
-    const handler = (e) => setIsMobile(e.matches);
+    const handler = e => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReducedMotion(mq.matches);
+    const handler = e => setReducedMotion(e.matches);
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
@@ -134,17 +165,49 @@ export default function OfficesMap() {
   const animCSS = `
     @keyframes _pr1 { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(3.5);opacity:0} }
     @keyframes _pr2 { 0%{transform:scale(1);opacity:0.35} 100%{transform:scale(2.5);opacity:0} }
-    @keyframes _dotIn2 { from{opacity:0;transform:scale(0)} to{opacity:1;transform:scale(1)} }
-    @keyframes _cardIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
     .pulse-r1 { animation: _pr1 2.4s ease-out infinite; transform-box:fill-box; transform-origin:center; }
     .pulse-r2 { animation: _pr2 2.4s ease-out 0.6s infinite; transform-box:fill-box; transform-origin:center; }
-    .office-card-g { transform-box: fill-box; transform-origin: bottom center; }
-    @media (prefers-reduced-motion: reduce) { .pulse-r1,.pulse-r2 { animation:none; } .office-card-g { animation:none; } }
+    .office-hover-card {
+      position: absolute;
+      background: rgba(9,9,9,0.96);
+      border: 1px solid rgba(245,197,64,0.25);
+      border-top: 2px solid #F5C540;
+      border-radius: 6px;
+      padding: 16px 18px;
+      min-width: 180px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      opacity: 0;
+      margin-top: 8px;
+      pointer-events: none;
+      transition: opacity 200ms ease-out, margin-top 200ms ease-out;
+      z-index: 20;
+      font-family: 'Exo', sans-serif;
+    }
+    .office-hover-card.card-vis {
+      opacity: 1;
+      margin-top: 0;
+      pointer-events: auto;
+    }
+    .ohc-link {
+      display: block;
+      font-size: 12px;
+      color: #F5C540;
+      text-decoration: none;
+      margin-top: 8px;
+      font-family: 'Exo', sans-serif;
+    }
+    .ohc-link:hover { text-decoration: underline; }
     @media (max-width: 768px) {
-      .offices-map-svg-wrap { min-height: 360px; padding: 0 !important; }
-      .offices-map-svg-wrap svg { min-height: 360px; }
+      .offices-map-svg-wrap { min-height: 280px; padding: 0 !important; }
+      .offices-map-svg-wrap svg { min-height: 280px; }
       .offices-tab-row { padding: 0 !important; gap: 0 !important; }
       .offices-tab-row button { flex: 1 !important; min-height: 44px !important; font-size: 12px !important; padding: 10px 6px !important; }
+      .office-hover-card { display: none !important; }
+      .office-map-label { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pulse-r1, .pulse-r2 { animation: none; }
+      .office-hover-card { transition: none; }
     }
   `;
 
@@ -156,8 +219,8 @@ export default function OfficesMap() {
     }}>
       <style>{animCSS}</style>
 
-      {/* Map container */}
-      <div className="offices-map-svg-wrap" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
+      {/* Map container — overflow visible so absolute cards aren't clipped */}
+      <div className="offices-map-svg-wrap" style={{ position: 'relative', width: '100%', overflow: 'visible' }}>
         <svg
           viewBox={isMobile ? MOBILE_VB : DESKTOP_VB}
           style={{ width: '100%', height: 'auto', display: 'block' }}
@@ -181,24 +244,34 @@ export default function OfficesMap() {
               fill={lm.fill} stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
           ))}
 
-          {/* Connection lines */}
-          {CONNECTIONS.map(({ id, o1, o2 }) => (
-            <g key={id}>
-              <path id={id} d={connPath(o1, o2)}
-                fill="none" stroke={`rgba(242,194,0,0.12)`} strokeWidth="1.2" strokeDasharray="4 4" />
-              <circle r="3.5" fill={YELLOW} opacity="0.65">
-                <animateMotion dur="5s" repeatCount="indefinite">
-                  <mpath href={`#${id}`} />
-                </animateMotion>
-              </circle>
-            </g>
-          ))}
+          {/* Flight path arcs with travelling dots */}
+          {ROUTES.map(route => {
+            const arcOff = isMobile ? route.mobileArcOffset : route.arcOffset;
+            return (
+              <g key={route.id}>
+                <path
+                  id={route.id}
+                  d={routePath(route.o1, route.o2, arcOff)}
+                  fill="none"
+                  stroke={isMobile ? 'rgba(245,197,64,0.20)' : 'rgba(245,197,64,0.15)'}
+                  strokeWidth="1"
+                  strokeDasharray="4 6"
+                />
+                {!reducedMotion && (
+                  <circle r="2.5" fill="#F5C540" opacity="0.8">
+                    <animateMotion dur={route.dotDur} repeatCount="indefinite" begin={route.dotBegin}>
+                      <mpath href={`#${route.id}`} />
+                    </animateMotion>
+                  </circle>
+                )}
+              </g>
+            );
+          })}
 
-          {/* Office markers */}
+          {/* Office markers + always-visible city labels */}
           {OFFICES.map(office => {
             const px = mx(office.lon), py = my(office.lat);
             const isActive = activeId === office.id;
-            const showCard = isActive || (!isMobile && hoverId === office.id);
             return (
               <g key={office.id}
                 onClick={() => setActiveId(activeId === office.id ? null : office.id)}
@@ -206,7 +279,7 @@ export default function OfficesMap() {
                 onMouseLeave={() => setHoverId(null)}
                 style={{ cursor: 'pointer' }}>
 
-                {/* Pulse rings — 1.4× larger on mobile */}
+                {/* Pulse rings — suppressed when active */}
                 {!isActive && (
                   <>
                     <circle cx={px} cy={py} r={isMobile ? 13 : 9} fill="none"
@@ -230,66 +303,99 @@ export default function OfficesMap() {
                   fill={office.color}
                   style={{ transition: 'all 0.2s', filter: isActive ? `drop-shadow(0 0 8px ${office.color})` : 'none' }} />
 
-                {/* Hover / active info card above pin */}
-                {showCard && (() => {
-                  const cw = 168, ch = 72;
-                  const cx2 = Math.min(Math.max(px - cw / 2, 8), W - cw - 8);
-                  const cy2 = Math.max(py - ch - 14, 4);
-                  return (
-                    <g className="office-card-g" style={{ animation: '_cardIn 0.2s ease-out both' }}>
-                      <rect x={cx2} y={cy2} width={cw} height={ch} rx="8"
-                        fill="rgba(10,10,10,0.92)" stroke="rgba(245,197,64,0.25)" strokeWidth="1" />
-                      <text x={cx2 + 16} y={cy2 + 22}
-                        fontSize="14" fontWeight="700" fill="#fff"
-                        fontFamily="Exo, sans-serif">
-                        {office.city}
-                      </text>
-                      <text x={cx2 + 16} y={cy2 + 40}
-                        fontSize="11" fill="rgba(255,255,255,0.45)"
-                        fontFamily="Exo, sans-serif">
-                        {office.role}
-                      </text>
-                      <line x1={cx2 + 16} y1={cy2 + 58} x2={cx2 + 40} y2={cy2 + 58}
-                        stroke="#F5C540" strokeWidth="2" strokeLinecap="round" />
-                    </g>
-                  );
-                })()}
-
-                {/* City label (when not active) */}
-                {!isActive && !isMobile && (
-                  <text x={px + 9} y={py - 7}
-                    fontSize="9" fontWeight="700" fill={office.color} opacity="0.7"
-                    fontFamily="Exo, sans-serif" letterSpacing="0.5">
-                    {office.city.toUpperCase()}
+                {/* Always-visible two-line city label — hidden on mobile via CSS */}
+                <g className="office-map-label">
+                  <text
+                    x={px + 16} y={py - 4}
+                    fontSize="13" fontWeight="600"
+                    fill={isActive ? '#F5C540' : 'rgba(255,255,255,0.90)'}
+                    fontFamily="Exo, sans-serif"
+                    style={{ transition: 'fill 0.2s' }}>
+                    {office.city}
                   </text>
-                )}
-                {/* City label pill on mobile */}
-                {!isActive && isMobile && (() => {
-                  const pw = office.city.length * 13 + 28;
-                  return (
-                    <g>
-                      <rect x={px + 12} y={py - 46} width={pw} height={36}
-                        rx="9" fill="rgba(0,0,0,0.6)" />
-                      <text x={px + 12 + pw / 2} y={py - 22}
-                        textAnchor="middle" dominantBaseline="middle"
-                        fontSize="22" fontWeight="700" fill="#fff"
-                        fontFamily="Exo, sans-serif">
-                        {office.city}
-                      </text>
-                    </g>
-                  );
-                })()}
+                  <text
+                    x={px + 16} y={py + 12}
+                    fontSize="11" fontWeight="400"
+                    fill={isActive ? 'rgba(255,255,255,0.60)' : 'rgba(255,255,255,0.42)'}
+                    fontFamily="Exo, sans-serif"
+                    style={{ transition: 'fill 0.2s' }}>
+                    {office.role}
+                  </text>
+                </g>
               </g>
             );
           })}
         </svg>
 
-        {/* Vignette overlay */}
+        {/* Vignette overlay — clipped to SVG bounds */}
         <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
+          position: 'absolute',
+          top: 0, left: 0, right: 0,
+          bottom: 0,
+          pointerEvents: 'none',
           background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(13,13,13,0.55) 75%, rgba(13,13,13,0.92) 100%)',
         }} />
+
+        {/* HTML hover/active cards — desktop only (hidden on mobile via CSS) */}
+        {OFFICES.map(office => {
+          const xPct = (mx(office.lon) / W * 100).toFixed(2);
+          const yPct = (my(office.lat) / H * 100).toFixed(2);
+          const cfg  = CARD_DATA[office.id];
+          const isActive = activeId === office.id;
+          const show = isActive || hoverId === office.id;
+          return (
+            <div
+              key={office.id}
+              className={`office-hover-card${show ? ' card-vis' : ''}`}
+              style={{
+                left: `${xPct}%`,
+                top: `${yPct}%`,
+                transform: `translate(${cfg.translateX}, calc(-100% - 12px))`,
+              }}
+            >
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#EFEFEF', letterSpacing: '-0.2px', fontFamily: "'Exo',sans-serif" }}>
+                {office.city}
+              </div>
+              <div style={{ fontSize: 11, fontWeight: 400, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 2, fontFamily: "'Exo',sans-serif" }}>
+                {office.role}
+              </div>
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '10px 0' }} />
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', fontFamily: "'Exo',sans-serif" }}>
+                🕐 {cfg.timezone}
+              </div>
+              <a href={cfg.linkHref} className="ohc-link">{cfg.linkText}</a>
+            </div>
+          );
+        })}
       </div>
+
+      {/* Mobile info card — between map and tab row */}
+      {activeOffice && isMobile && (
+        <div style={{ padding: '12px 16px 0', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{
+            background: 'rgba(9,9,9,0.96)',
+            border: '1px solid rgba(245,197,64,0.25)',
+            borderTop: '2px solid #F5C540',
+            borderRadius: 6,
+            padding: '16px 18px',
+          }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#EFEFEF', fontFamily: "'Exo',sans-serif", letterSpacing: '-0.2px' }}>
+              {activeOffice.city}
+            </div>
+            <div style={{ fontSize: 11, fontWeight: 400, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 2, fontFamily: "'Exo',sans-serif" }}>
+              {activeOffice.role}
+            </div>
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '10px 0' }} />
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', fontFamily: "'Exo',sans-serif" }}>
+              🕐 {CARD_DATA[activeOffice.id].timezone}
+            </div>
+            <a href={CARD_DATA[activeOffice.id].linkHref}
+              style={{ display: 'block', fontSize: 12, color: '#F5C540', textDecoration: 'none', marginTop: 8, fontFamily: "'Exo',sans-serif" }}>
+              {CARD_DATA[activeOffice.id].linkText}
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* Tab buttons */}
       <div className="offices-tab-row" style={{

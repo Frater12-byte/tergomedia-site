@@ -63,7 +63,7 @@ export default function PortfolioCarousel() {
             <div className={`port-card at-${p.tc}`} key={p.t}>
               {p.img
                 ? <ImgPh label={(p as any).alt ?? p.img} desc={`${p.t} screenshot`} h={240} src={`/Images/${p.img}.png`} />
-                : <div style={{ height:240, background:'#1a1a1a', display:'flex', alignItems:'center', justifyContent:'center', fontSize:96, fontWeight:900, color:'rgba(255,255,255,0.06)', fontFamily:"'Exo',sans-serif", userSelect:'none' }}>{p.ph}</div>
+                : <div style={{ height:240, background:'#1a1a1a', display:'flex', alignItems:'center', justifyContent:'center', fontSize:96, fontWeight:900, color:'rgba(255,255,255,0.06)', fontFamily:"'Exo',sans-serif", userSelect:'none' }}>{(p as any).ph}</div>
               }
               <div style={{ padding:'20px clamp(20px,3vw,40px) 28px' }}>
                 <div style={{ fontSize:9, color:'var(--m)', letterSpacing:2, textTransform:'uppercase', marginBottom:10 }}>{p.cat}</div>

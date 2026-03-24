@@ -71,7 +71,7 @@ const OFFICES = [
     city: 'Dubai',
     country: 'UAE',
     role: 'Headquarters',
-    lon: 55.3, lat: 25.2,
+    lon: 55.2708, lat: 25.2048,
     color: YELLOW,
     pulseDelay: '0s',
     details: ['Primary client-facing office','GCC market — real estate, finance, travel','Francesco & Maria based here','New business & client strategy'],
@@ -81,7 +81,7 @@ const OFFICES = [
     city: 'Bucharest',
     country: 'Romania',
     role: 'Engineering Hub',
-    lon: 26.1, lat: 44.4,
+    lon: 26.0969, lat: 44.4268,
     color: '#00C9A7',
     pulseDelay: '0.9s',
     details: ['Core engineering team','React, Node.js, Python, PHP, iOS, Android','Registered as Tergo Invest S.R.L.','All development operations'],
@@ -91,7 +91,7 @@ const OFFICES = [
     city: 'Milan',
     country: 'Italy',
     role: 'Partner Office',
-    lon: 9.2, lat: 45.5,
+    lon: 9.19, lat: 45.4654,
     color: '#A78BFA',
     pulseDelay: '1.8s',
     details: ['European client base','Partners: Future Days & Ennea Capital','Design and creative collaboration','EU market development'],
@@ -232,6 +232,9 @@ export default function OfficesMap() {
               <stop offset="50%"  stopColor="#091820" stopOpacity="1" />
               <stop offset="100%" stopColor="#060e14" stopOpacity="1" />
             </radialGradient>
+            <filter id="coast-glow">
+              <feGaussianBlur stdDeviation="2" />
+            </filter>
           </defs>
           <rect width={W} height={H} fill="url(#ocean-depth)" />
 
@@ -245,10 +248,17 @@ export default function OfficesMap() {
               stroke="rgba(255,255,255,0.025)" strokeWidth="1" />
           ))}
 
+          {/* Coast glow layer (behind land) */}
+          {LANDMASSES.map(lm => (
+            <polygon key={`glow-${lm.id}`} points={pts(lm.coords)}
+              fill="none" stroke="rgba(74,222,128,0.06)" strokeWidth="3"
+              filter="url(#coast-glow)" />
+          ))}
+
           {/* Land masses */}
           {LANDMASSES.map(lm => (
             <polygon key={lm.id} points={pts(lm.coords)}
-              fill={lm.fill} stroke="rgba(210,220,200,0.20)" strokeWidth="1" />
+              fill={lm.fill} stroke="rgba(210,220,200,0.28)" strokeWidth="1.4" />
           ))}
 
           {/* Flight path arcs with travelling dots */}

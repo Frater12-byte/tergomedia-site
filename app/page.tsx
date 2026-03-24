@@ -61,9 +61,6 @@ export default function Home() {
       ))}
     </div>
 
-    {/* ── OFFICE MAP ── */}
-    <OfficesMap />
-
     {/* ── SERVICES ── */}
     <div className="sec">What we do</div>
     <div className="fw fw-grid g2" data-section="what-we-do">
@@ -84,6 +81,9 @@ export default function Home() {
       ))}
     </div>
 
+    {/* ── PORTFOLIO ── */}
+    <PortfolioCarousel />
+
     {/* ── SECTORS ── */}
     <div className="sec">Sectors we serve</div>
     <div className="fw fw-grid g3 sectors-grid">
@@ -103,6 +103,9 @@ export default function Home() {
         </Link>
       ))}
     </div>
+
+    {/* ── ROI CALCULATOR ── */}
+    <ROICalculator />
 
     {/* ── RESULTS ── */}
     <div className="sec">Client results — by the numbers</div>
@@ -130,25 +133,6 @@ export default function Home() {
       </div>
     </div>
 
-    {/* ── ROI CALCULATOR ── */}
-    <ROICalculator />
-
-    {/* ── HOW WE WORK ── */}
-    <div className="sec">How we work</div>
-    <div className="fw fw-grid g2">
-      <div className="cell pad-lg">
-        <h3>From first call to live system — in weeks, not months</h3>
-        <p>We work in tight, outcome-focused sprints with fixed-price proposals and clear deliverables at each step. No bloated retainers. No surprises.</p>
-        <div style={{marginTop:28}}>
-          <Link href="/contact" className="btn btn-y">Start a project →</Link>
-        </div>
-      </div>
-      <div className="cell"><Stepper steps={PROCESS_STEPS} color="y" /></div>
-    </div>
-
-    {/* ── PORTFOLIO ── */}
-    <PortfolioCarousel />
-
     {/* ── TESTIMONIALS ── */}
     <div className="sec">What clients say</div>
     <h2 style={{padding:'0 clamp(24px,5vw,72px) 24px',maxWidth:1100,margin:'0 auto',fontSize:'clamp(20px,2.8vw,32px)',fontWeight:700,lineHeight:1.2,letterSpacing:'-0.3px',color:'#fff',fontFamily:"'Exo',sans-serif"}}>
@@ -174,6 +158,9 @@ export default function Home() {
         ))}
       </div>
     </div>
+
+    {/* ── OFFICE MAP ── */}
+    <OfficesMap />
 
     {/* ── TEAM ── */}
     <div style={{maxWidth:1100,margin:'0 auto',padding:'56px clamp(24px,5vw,72px) 20px'}}>
@@ -278,6 +265,19 @@ export default function Home() {
       <p style={{fontSize:13,color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",fontWeight:300,fontStyle:'italic'}}>
         Between the two: commercial leadership and deep technical execution — across Europe and the GCC.
       </p>
+    </div>
+
+    {/* ── HOW WE WORK ── */}
+    <div className="sec">How we work</div>
+    <div className="fw fw-grid g2">
+      <div className="cell pad-lg">
+        <h3>From first call to live system — in weeks, not months</h3>
+        <p>We work in tight, outcome-focused sprints with fixed-price proposals and clear deliverables at each step. No bloated retainers. No surprises.</p>
+        <div style={{marginTop:28}}>
+          <Link href="/contact" className="btn btn-y">Start a project →</Link>
+        </div>
+      </div>
+      <div className="cell"><Stepper steps={PROCESS_STEPS} color="y" /></div>
     </div>
 
     <CtaBar h="Ready to build something that actually works?" sub="Book a free 30-minute discovery call. No pitch, no commitment — just clarity on what's possible." />

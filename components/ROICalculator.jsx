@@ -251,115 +251,51 @@ function fmtAxisVal(v) {
   return `$${Math.round(v)}`;
 }
 
-/* ── Bezier path ───────────────────────────────────────────────────────────── */
-function smoothPath(points) {
-  if (points.length < 2) return '';
-  let d = `M ${points[0].x} ${points[0].y}`;
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1], curr = points[i];
-    const tension = 0.4;
-    const cpx1 = prev.x + (curr.x - prev.x) * tension;
-    const cpy1 = prev.y;
-    const cpx2 = curr.x - (curr.x - prev.x) * tension;
-    const cpy2 = curr.y;
-    d += ` C ${cpx1} ${cpy1} ${cpx2} ${cpy2} ${curr.x} ${curr.y}`;
-  }
-  return d;
-}
-
-/* ── Sector variance ───────────────────────────────────────────────────────── */
-const SECTOR_VARIANCE = {
-  'Real Estate':           [0, .03, -.02, .04, -.01, .03, .02, -.02, .04, -.01, .02, .01],
-  'Travel & Hospitality':  [0, .05, -.04, .06, .02, -.03, .07, -.02, .04, -.05, .06, .02],
-  'Agriculture':           [0, .02, .04, -.03, .06, -.02, .03, .05, -.04, .02, -.01, .03],
-  'Professional Services': [0, .03, -.01, .02, .04, -.02, .01, .03, -.01, .04, .02, -.01],
-  'Media & Publishing':    [0, .04, -.03, .05, -.02, .04, -.01, .06, -.03, .02, .05, -.02],
-  'E-commerce & Retail':   [0, .06, -.04, .03, .05, -.03, .04, -.02, .06, -.04, .03, .05],
-  'Other':                 [0, .03, -.02, .03, -.01, .02, .03, -.02, .03, -.01, .02, .01],
-};
-
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+/* ── Chart ramp arrays ─────────────────────────────────────────────────────── */
+const RAMP_SAVINGS = [0.25, 0.25, 0.60, 0.60, 1.0, 1.0, 1.0, 1.05, 1.05, 1.10, 1.10, 1.15];
+const RAMP_REVENUE = [0,    0.25, 0.60, 0.60, 1.0, 1.0, 1.0, 1.05, 1.05, 1.10, 1.10, 1.15];
 
 /* ── ROIChart ──────────────────────────────────────────────────────────────── */
-function ROIChart({ monthlyBreakdown, sector, annualRevenue }) {
-  const W = 700, H = 260, PL = 54, PR = 54, PT = 28, PB = 36;
+function ROIChart({ monthly, annualRevenue }) {
+  const W = 700, H = 260, PL = 54, PR = 20, PT = 28, PB = 36;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
   const [hovered, setHovered] = useState(null);
-  const lineRef  = useRef(null);
-  const annotRef = useRef(null);
 
-  const variance    = SECTOR_VARIANCE[sector] || SECTOR_VARIANCE['Other'];
-  // Savings bars: variance-adjusted monthly savings
-  const savingsBars = monthlyBreakdown.map((v, i) => Math.max(v * (1 + variance[i]), 0));
-  // Revenue uplift per month: (annualRevenue / 12) × rampFactor
-  const upliftBars  = RAMP.map(r => (annualRevenue / 12) * r);
-  // Stacked totals per month
-  const stackedTotals = savingsBars.map((s, i) => s + upliftBars[i]);
-  const maxBar = Math.max(...stackedTotals, 1);
+  const monthlyRevenue = annualRevenue / 12;
 
-  // Cumulative line: savings only — always monotonically increasing
-  const chartCumulative = monthlyBreakdown.reduce((acc, v, i) => {
-    acc.push((acc[i - 1] || 0) + v);
-    return acc;
-  }, []);
-  const maxCum = Math.max(...chartCumulative, 1);
+  const savingsM = RAMP_SAVINGS.map(r => monthly * r);
+  const revenueM = RAMP_REVENUE.map(r => monthlyRevenue * r);
 
-  // Proper Y-axis ticks (no duplicate bug)
-  const barTicks = getYTicks(maxBar);
-  const cumTicks = getYTicks(maxCum);
+  const cumSavings = savingsM.reduce((acc, v, i) => { acc.push((acc[i - 1] || 0) + v); return acc; }, []);
+  const cumRevenue = revenueM.reduce((acc, v, i) => { acc.push((acc[i - 1] || 0) + v); return acc; }, []);
+  const cumTotal   = cumSavings.map((s, i) => s + cumRevenue[i]);
+
+  const maxY   = Math.max(...cumTotal, 1);
+  const yTicks = getYTicks(maxY);
 
   const gap  = chartW / 12;
   const barW = Math.floor(gap * 0.52);
 
-  function xFor(i)    { return PL + gap * i + gap * 0.24; }
-  function yForBar(v) { return PT + chartH - (v / maxBar) * chartH; }
-  function yForCum(v) { return PT + chartH - (v / maxCum) * chartH; }
+  function xFor(i) { return PL + gap * i + gap * 0.24; }
+  function yFor(v) { return PT + chartH - (v / maxY) * chartH; }
 
-  const pts      = chartCumulative.map((v, i) => ({ x: xFor(i) + barW / 2, y: yForCum(v) }));
-  const linePath = smoothPath(pts);
+  function savFill(i, hov) {
+    if (hov) return '#4ade80';
+    if (i < 2) return 'rgba(74,222,128,0.40)';
+    if (i < 4) return 'rgba(74,222,128,0.62)';
+    return '#4ade80';
+  }
+  function revFill(i, hov) {
+    if (i === 0) return 'transparent';
+    if (hov) return 'rgba(134,239,172,0.70)';
+    if (i === 1) return 'rgba(134,239,172,0.18)';
+    if (i < 4)  return 'rgba(134,239,172,0.35)';
+    return 'rgba(134,239,172,0.52)';
+  }
 
-  const milestoneIdx = [0, 3, 6, 9, 11];
-
-  // Line draw animation on mount
-  useEffect(() => {
-    const reduced = typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const lineEl = lineRef.current;
-    if (!lineEl) return;
-    if (reduced) {
-      lineEl.style.strokeDasharray = 'none';
-      lineEl.style.strokeDashoffset = '0';
-      return;
-    }
-    const len = lineEl.getTotalLength();
-    lineEl.style.strokeDasharray = String(len);
-    lineEl.style.strokeDashoffset = String(len);
-    lineEl.style.transition = 'none';
-    const raf = requestAnimationFrame(() => {
-      lineEl.style.transition = 'stroke-dashoffset 700ms ease-out';
-      lineEl.style.strokeDashoffset = '0';
-    });
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  // Annotation fade-in
-  useEffect(() => {
-    const reduced = typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const annotEl = annotRef.current;
-    if (!annotEl) return;
-    if (reduced) { annotEl.style.opacity = '1'; return; }
-    annotEl.style.opacity = '0';
-    const t = setTimeout(() => {
-      annotEl.style.transition = 'opacity 300ms ease-out';
-      annotEl.style.opacity = '1';
-    }, 700);
-    return () => clearTimeout(t);
-  }, []);
-
-  const lastPt  = pts[pts.length - 1];
-  const lastCum = chartCumulative[chartCumulative.length - 1];
+  const lastSav = cumSavings[11];
+  const lastTot = cumTotal[11];
 
   return (
     <div style={{ width: '100%' }}>
@@ -376,15 +312,15 @@ function ROIChart({ monthlyBreakdown, sector, annualRevenue }) {
       {/* Title + legend row */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
         <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888' }}>
-          Monthly benefit breakdown
+          Cumulative benefit — working with Tergo
         </div>
         <div className="roi-chart-legend" style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 10, height: 10, background: '#F5C540', flexShrink: 0 }} />
+            <div style={{ width: 10, height: 10, background: '#4ade80', flexShrink: 0 }} />
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', fontFamily: "'Exo',sans-serif" }}>Cost savings</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div style={{ width: 10, height: 10, background: 'rgba(245,197,64,0.35)', flexShrink: 0 }} />
+            <div style={{ width: 10, height: 10, background: 'rgba(134,239,172,0.45)', flexShrink: 0 }} />
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', fontFamily: "'Exo',sans-serif" }}>Revenue potential</span>
           </div>
         </div>
@@ -392,9 +328,9 @@ function ROIChart({ monthlyBreakdown, sector, annualRevenue }) {
 
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
 
-        {/* Grid + left Y-axis (bar/stacked scale) */}
-        {barTicks.map((v, i) => {
-          const y = yForBar(v);
+        {/* Grid + left Y-axis */}
+        {yTicks.map((v, i) => {
+          const y = yFor(v);
           return (
             <g key={i}>
               <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
@@ -405,167 +341,92 @@ function ROIChart({ monthlyBreakdown, sector, annualRevenue }) {
           );
         })}
 
-        {/* Right Y-axis (cumulative scale) */}
-        {cumTicks.map((v, i) => {
-          const y = yForCum(v);
-          return (
-            <text key={i} x={W - PR + 6} y={y + 4} textAnchor="start" fill="#3a3a3a" fontSize="9" fontFamily="'Exo',sans-serif">
-              {fmtAxisVal(v)}
-            </text>
-          );
-        })}
-
-        {/* Stacked bars */}
-        {savingsBars.map((savV, i) => {
-          const uplV    = upliftBars[i];
-          const totalV  = stackedTotals[i];
-          const totalH  = Math.max((totalV / maxBar) * chartH, 0);
-          const savH    = Math.max((savV   / maxBar) * chartH, 0);
-          const uplH    = Math.max((uplV   / maxBar) * chartH, 0);
-          const x       = xFor(i);
-          const delay   = `${i * 35}ms`;
-          const isHov   = hovered === i;
-
-          // Savings opacity: 0.4 ramp1-2, 0.7 ramp3-4, 1.0 ramp5-12
-          const savOpacity = i < 2 ? 0.4 : i < 4 ? 0.7 : 1;
-          const savFill    = isHov ? '#F5C540' : `rgba(245,197,64,${savOpacity})`;
-          // Uplift opacity: 0.15 ramp1-2, 0.25 ramp3-4, 0.35 ramp5-12
-          const uplOpacity = i < 2 ? 0.15 : i < 4 ? 0.25 : 0.35;
-          const uplFill    = isHov ? `rgba(245,197,64,0.55)` : `rgba(245,197,64,${uplOpacity})`;
-
-          const ySav = PT + chartH - savH;
-          const yUpl = PT + chartH - totalH;
+        {/* Stacked cumulative bars */}
+        {Array.from({ length: 12 }, (_, i) => {
+          const totH = Math.max((cumTotal[i]   / maxY) * chartH, 0);
+          const savH = Math.max((cumSavings[i] / maxY) * chartH, 0);
+          const revH = Math.max(totH - savH, 0);
+          const x     = xFor(i);
+          const delay = `${i * 35}ms`;
+          const isHov = hovered === i;
+          const yBot  = PT + chartH;
+          const ySav  = yBot - savH;
+          const yRev  = ySav - revH;
 
           return (
             <g key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
-              {/* Bottom segment: cost savings */}
               {savH > 0.5 && (
-                <rect
-                  className="roi-bar"
-                  x={x} y={ySav} width={barW} height={savH} rx="1"
-                  fill={savFill}
-                  style={{
-                    transformBox: 'fill-box',
-                    transformOrigin: 'bottom',
-                    animation: `barGrow 300ms ease-out both ${delay}`,
-                    transition: 'fill .15s',
-                  }}
+                <rect className="roi-bar" x={x} y={ySav} width={barW} height={savH} rx="1"
+                  fill={savFill(i, isHov)}
+                  style={{ transformBox: 'fill-box', transformOrigin: 'bottom', animation: `barGrow 300ms ease-out both ${delay}`, transition: 'fill .15s' }}
                 />
               )}
-              {/* Top segment: revenue uplift */}
-              {uplH > 0.5 && (
-                <rect
-                  className="roi-bar"
-                  x={x} y={yUpl} width={barW} height={uplH} rx="1"
-                  fill={uplFill}
-                  style={{
-                    transformBox: 'fill-box',
-                    transformOrigin: 'bottom',
-                    animation: `barGrow 300ms ease-out both ${delay}`,
-                    transition: 'fill .15s',
-                  }}
+              {revH > 0.5 && (
+                <rect className="roi-bar" x={x} y={yRev} width={barW} height={revH} rx="1"
+                  fill={revFill(i, isHov)}
+                  style={{ transformBox: 'fill-box', transformOrigin: 'bottom', animation: `barGrow 300ms ease-out both ${delay}`, transition: 'fill .15s' }}
                 />
               )}
-              {/* Transparent hit area */}
               <rect x={x - 4} y={PT} width={barW + 8} height={chartH} fill="transparent" />
             </g>
           );
         })}
 
-        {/* Cumulative line (savings only) */}
-        <path ref={lineRef} d={linePath} stroke={Y} strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
-
-        {/* "Cumulative savings →" inline annotation near the line */}
-        <text
-          x={pts[7].x + 6} y={pts[7].y - 11}
-          fill="rgba(255,255,255,0.38)" fontSize="9" fontFamily="'Exo',sans-serif">
-          Cumulative savings →
-        </text>
-
-        {/* Milestone labels above line */}
-        {milestoneIdx.map(i => (
-          <text key={i}
-            x={pts[i].x} y={pts[i].y - 8}
-            textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="9" fontFamily="'Exo',sans-serif">
-            {fmtAxisVal(chartCumulative[i])}
-          </text>
-        ))}
-
-        {/* Line dots */}
-        {pts.map(({ x, y }, i) => (
-          <circle key={i} cx={x} cy={y}
-            r={hovered === i ? 5 : 3}
-            fill={hovered === i ? Y : '#141414'}
-            stroke={Y} strokeWidth="1.5"
-            style={{ transition: 'r .15s' }}
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered(null)} />
-        ))}
-
-        {/* Month labels */}
-        {MONTHS.map((m, i) => (
+        {/* X-axis labels: M1–M12 */}
+        {Array.from({ length: 12 }, (_, i) => (
           <text key={i} x={xFor(i) + barW / 2} y={H - 8}
             textAnchor="middle" fill={hovered === i ? 'rgba(255,255,255,0.6)' : '#444'}
             fontSize="9" fontFamily="'Exo',sans-serif">
-            {m}
+            M{i + 1}
           </text>
         ))}
 
-        {/* Final annotation pill */}
-        <g ref={annotRef} style={{ opacity: 0 }}>
-          <rect
-            x={lastPt.x - 38} y={lastPt.y - 26}
-            width={76} height={18} rx="4"
-            fill="rgba(0,0,0,0.7)" stroke="rgba(245,197,64,0.3)" strokeWidth="1"
-          />
-          <text x={lastPt.x} y={lastPt.y - 13}
-            textAnchor="middle" fill={Y} fontSize="10" fontFamily="'Exo',sans-serif" fontWeight="700">
-            {fmtAxisVal(lastCum)} total
-          </text>
-        </g>
-
         {/* Hover tooltip */}
         {hovered !== null && (() => {
-          const { x: tx, y: ty } = pts[hovered];
-          const sav  = Math.round(savingsBars[hovered]);
-          const upl  = Math.round(upliftBars[hovered]);
-          const tot  = sav + upl;
-          const cum  = Math.round(chartCumulative[hovered]);
-          const tipW = 192, tipH = 100;
-          const tipX = tx + tipW + 12 > W ? tx - tipW - 10 : tx + 10;
-          const tipY = Math.max(Math.min(ty - tipH / 2, H - tipH - PT), PT);
+          const i   = hovered;
+          const sav = Math.round(cumSavings[i]);
+          const rev = Math.round(cumRevenue[i]);
+          const tot = Math.round(cumTotal[i]);
+          const cx  = xFor(i) + barW / 2;
+          const cy  = yFor(cumTotal[i]);
+          const tipW = 196, tipH = 94;
+          const tipX = cx + tipW + 12 > W ? cx - tipW - 10 : cx + 10;
+          const tipY = Math.max(Math.min(cy - tipH / 2, H - tipH - PT), PT);
           return (
             <g pointerEvents="none">
               <rect x={tipX} y={tipY} width={tipW} height={tipH} rx="4"
-                fill="#181818" stroke="rgba(245,197,64,0.3)" strokeWidth="1" />
-              <rect x={tipX} y={tipY} width={tipW} height={3} rx="2" fill="rgba(245,197,64,0.6)" />
-              {/* Month */}
+                fill="rgba(10,10,10,0.96)" stroke={Y} strokeWidth="1" strokeOpacity="0.4" />
               <text x={tipX + 10} y={tipY + 16} fill="rgba(255,255,255,0.8)" fontSize="10"
-                fontFamily="'Exo',sans-serif" fontWeight="700">{MONTHS[hovered]}</text>
+                fontFamily="'Exo',sans-serif" fontWeight="700">M{i + 1}</text>
               <line x1={tipX + 10} y1={tipY + 22} x2={tipX + tipW - 10} y2={tipY + 22}
                 stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
-              {/* Cost savings */}
               <text x={tipX + 10} y={tipY + 36} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Cost savings:</text>
-              <text x={tipX + tipW - 10} y={tipY + 36} fill="#F5C540" fontSize="9"
+              <text x={tipX + tipW - 10} y={tipY + 36} fill="#4ade80" fontSize="9"
                 fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${sav.toLocaleString()}</text>
-              {/* Revenue potential */}
               <text x={tipX + 10} y={tipY + 50} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Revenue potential:</text>
-              <text x={tipX + tipW - 10} y={tipY + 50} fill="rgba(245,197,64,0.55)" fontSize="9"
-                fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${upl.toLocaleString()}</text>
+              <text x={tipX + tipW - 10} y={tipY + 50} fill="rgba(134,239,172,0.85)" fontSize="9"
+                fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${rev.toLocaleString()}</text>
               <line x1={tipX + 10} y1={tipY + 57} x2={tipX + tipW - 10} y2={tipY + 57}
                 stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
-              {/* Monthly total */}
-              <text x={tipX + 10} y={tipY + 71} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Monthly total:</text>
+              <text x={tipX + 10} y={tipY + 71} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Combined benefit:</text>
               <text x={tipX + tipW - 10} y={tipY + 71} fill="rgba(255,255,255,0.85)" fontSize="9"
                 fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${tot.toLocaleString()}</text>
-              {/* Cumulative */}
-              <text x={tipX + 10} y={tipY + 87} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Cumul. savings:</text>
-              <text x={tipX + tipW - 10} y={tipY + 87} fill="rgba(255,255,255,0.6)" fontSize="9"
-                fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${cum.toLocaleString()}</text>
             </g>
           );
         })()}
       </svg>
+
+      {/* Footer stat callouts */}
+      <div style={{ display: 'flex', gap: 1, marginTop: 1, background: 'rgba(255,255,255,0.04)' }}>
+        <div style={{ flex: 1, padding: '14px 16px', background: '#141414' }}>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Total cost savings</div>
+          <div style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Exo',sans-serif", color: '#4ade80', lineHeight: 1 }}>{fmtAxisVal(lastSav)}</div>
+        </div>
+        <div style={{ flex: 1, padding: '14px 16px', background: '#141414' }}>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Total combined benefit</div>
+          <div style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Exo',sans-serif", color: 'rgba(134,239,172,0.9)', lineHeight: 1 }}>{fmtAxisVal(lastTot)}</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -882,8 +743,7 @@ export default function ROICalculator() {
         }}>
           <ROIChart
             key={chartKey}
-            monthlyBreakdown={result.monthlyBreakdown}
-            sector={sector}
+            monthly={result.monthly}
             annualRevenue={result.annualRevenue}
           />
         </div>

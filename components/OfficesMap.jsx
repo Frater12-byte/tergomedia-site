@@ -55,14 +55,14 @@ const CENTRAL_ASIA = [
 ];
 
 const LANDMASSES = [
-  { id: 'europe',   coords: EUROPE,       fill: 'rgba(255,255,255,0.045)' },
-  { id: 'scan',     coords: SCANDINAVIA,  fill: 'rgba(255,255,255,0.04)' },
-  { id: 'uk',       coords: UK,           fill: 'rgba(255,255,255,0.04)' },
-  { id: 'turkey',   coords: TURKEY,       fill: 'rgba(255,255,255,0.04)' },
-  { id: 'me',       coords: MIDDLE_EAST,  fill: 'rgba(255,255,255,0.04)' },
-  { id: 'africa',   coords: NE_AFRICA,    fill: 'rgba(255,255,255,0.038)' },
-  { id: 'arab',     coords: ARABIAN,      fill: 'rgba(255,255,255,0.04)' },
-  { id: 'casia',    coords: CENTRAL_ASIA, fill: 'rgba(255,255,255,0.035)' },
+  { id: 'europe',   coords: EUROPE,       fill: 'rgba(255,255,255,0.0)' },
+  { id: 'scan',     coords: SCANDINAVIA,  fill: 'rgba(255,255,255,0.0)' },
+  { id: 'uk',       coords: UK,           fill: 'rgba(255,255,255,0.0)' },
+  { id: 'turkey',   coords: TURKEY,       fill: 'rgba(255,255,255,0.0)' },
+  { id: 'me',       coords: MIDDLE_EAST,  fill: 'rgba(255,255,255,0.0)' },
+  { id: 'africa',   coords: NE_AFRICA,    fill: 'rgba(255,255,255,0.0)' },
+  { id: 'arab',     coords: ARABIAN,      fill: 'rgba(255,255,255,0.0)' },
+  { id: 'casia',    coords: CENTRAL_ASIA, fill: 'rgba(255,255,255,0.0)' },
 ];
 
 const OFFICES = [
@@ -119,6 +119,7 @@ const DESKTOP_VB = `0 0 ${W} ${H}`;
 
 export default function OfficesMap() {
   const [activeId, setActiveId] = useState(null);
+  const [hoverId,  setHoverId]  = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const activeOffice = OFFICES.find(o => o.id === activeId);
 
@@ -134,9 +135,11 @@ export default function OfficesMap() {
     @keyframes _pr1 { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(3.5);opacity:0} }
     @keyframes _pr2 { 0%{transform:scale(1);opacity:0.35} 100%{transform:scale(2.5);opacity:0} }
     @keyframes _dotIn2 { from{opacity:0;transform:scale(0)} to{opacity:1;transform:scale(1)} }
+    @keyframes _cardIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
     .pulse-r1 { animation: _pr1 2.4s ease-out infinite; transform-box:fill-box; transform-origin:center; }
     .pulse-r2 { animation: _pr2 2.4s ease-out 0.6s infinite; transform-box:fill-box; transform-origin:center; }
-    @media (prefers-reduced-motion: reduce) { .pulse-r1,.pulse-r2 { animation:none; } }
+    .office-card-g { transform-box: fill-box; transform-origin: bottom center; }
+    @media (prefers-reduced-motion: reduce) { .pulse-r1,.pulse-r2 { animation:none; } .office-card-g { animation:none; } }
     @media (max-width: 768px) {
       .offices-map-svg-wrap { min-height: 360px; padding: 0 !important; }
       .offices-map-svg-wrap svg { min-height: 360px; }
@@ -175,7 +178,7 @@ export default function OfficesMap() {
           {/* Land masses */}
           {LANDMASSES.map(lm => (
             <polygon key={lm.id} points={pts(lm.coords)}
-              fill={lm.fill} stroke="rgba(255,255,255,0.08)" strokeWidth="0.7" />
+              fill={lm.fill} stroke="rgba(255,255,255,0.18)" strokeWidth="1" />
           ))}
 
           {/* Connection lines */}
@@ -195,9 +198,12 @@ export default function OfficesMap() {
           {OFFICES.map(office => {
             const px = mx(office.lon), py = my(office.lat);
             const isActive = activeId === office.id;
+            const showCard = isActive || (!isMobile && hoverId === office.id);
             return (
               <g key={office.id}
                 onClick={() => setActiveId(activeId === office.id ? null : office.id)}
+                onMouseEnter={() => setHoverId(office.id)}
+                onMouseLeave={() => setHoverId(null)}
                 style={{ cursor: 'pointer' }}>
 
                 {/* Pulse rings — 1.4× larger on mobile */}
@@ -224,31 +230,27 @@ export default function OfficesMap() {
                   fill={office.color}
                   style={{ transition: 'all 0.2s', filter: isActive ? `drop-shadow(0 0 8px ${office.color})` : 'none' }} />
 
-                {/* Info card above pin (when active) */}
-                {isActive && (() => {
-                  const cw = 148, ch = 52;
+                {/* Hover / active info card above pin */}
+                {showCard && (() => {
+                  const cw = 168, ch = 72;
                   const cx2 = Math.min(Math.max(px - cw / 2, 8), W - cw - 8);
-                  const cy2 = py - ch - 18;
+                  const cy2 = Math.max(py - ch - 14, 4);
                   return (
-                    <g style={{ animation: '_dotIn2 0.2s ease both' }}>
-                      <rect x={cx2} y={cy2} width={cw} height={ch}
-                        fill="#191919" stroke={office.color} strokeWidth="1" />
-                      {/* Arrow */}
-                      <polygon
-                        points={`${px - 5},${cy2 + ch} ${px + 5},${cy2 + ch} ${px},${py - 10}`}
-                        fill="#191919" />
-                      <line x1={px - 5} y1={cy2 + ch} x2={px - 5} y2={cy2 + ch}
-                        stroke={office.color} strokeWidth="1" />
-                      <text x={cx2 + cw / 2} y={cy2 + 18}
-                        textAnchor="middle" fontSize="13" fontWeight="800" fill="#fff"
-                        fontFamily="Exo, sans-serif" letterSpacing="-0.3">
+                    <g className="office-card-g" style={{ animation: '_cardIn 0.2s ease-out both' }}>
+                      <rect x={cx2} y={cy2} width={cw} height={ch} rx="8"
+                        fill="rgba(10,10,10,0.92)" stroke="rgba(245,197,64,0.25)" strokeWidth="1" />
+                      <text x={cx2 + 16} y={cy2 + 22}
+                        fontSize="14" fontWeight="700" fill="#fff"
+                        fontFamily="Exo, sans-serif">
                         {office.city}
                       </text>
-                      <text x={cx2 + cw / 2} y={cy2 + 36}
-                        textAnchor="middle" fontSize="9" fontWeight="600" fill={office.color}
-                        fontFamily="Exo, sans-serif" letterSpacing="1">
-                        {office.role.toUpperCase()}
+                      <text x={cx2 + 16} y={cy2 + 40}
+                        fontSize="11" fill="rgba(255,255,255,0.45)"
+                        fontFamily="Exo, sans-serif">
+                        {office.role}
                       </text>
+                      <line x1={cx2 + 16} y1={cy2 + 58} x2={cx2 + 40} y2={cy2 + 58}
+                        stroke="#F5C540" strokeWidth="2" strokeLinecap="round" />
                     </g>
                   );
                 })()}
@@ -301,6 +303,8 @@ export default function OfficesMap() {
           return (
             <button key={o.id}
               onClick={() => setActiveId(activeId === o.id ? null : o.id)}
+              onMouseEnter={() => !isMobile && setHoverId(o.id)}
+              onMouseLeave={() => setHoverId(null)}
               style={{
                 padding: '8px 20px',
                 border: `1px solid ${isAct ? o.color : 'rgba(255,255,255,0.1)'}`,

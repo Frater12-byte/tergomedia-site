@@ -61,16 +61,21 @@ function calcROI(sector, revenue, teamSize, manualPct, leads, responseTime) {
   );
   const monthly = Math.min(hoursRecoveredPerMonth * hourlyRate, 35000);
 
+  const leadVolumeMultiplier = Math.min(1 + (leads - 150) / 1000, 1.6);
   const uplift            = RESPONSE_UPLIFT[responseTime] ?? 0.18;
   const attributionFactor = revenue < 100000 ? 0.25 : 0.32;
-  const monthlyUplift     = Math.min(revenue * uplift * attributionFactor, revenue * 0.20);
+  const monthlyUplift     = Math.min(
+    revenue * uplift * attributionFactor * leadVolumeMultiplier,
+    revenue * 0.20
+  );
   const annualRevenue     = Math.min(monthlyUplift * 12 * 0.70, 180000);
 
   const monthlyBreakdown = RAMP.map(r => monthly * r);
   const cumulative       = monthlyBreakdown.map((_, i) => monthlyBreakdown.slice(0, i + 1).reduce((s, v) => s + v, 0));
   const annualSavings    = cumulative[11];
   const hoursPerYear     = Math.round(hoursRecoveredPerMonth * 12);
-  const paybackMonths    = monthly > 0 ? 9500 / monthly : null;
+  const leadPaybackBonus = Math.max(0.85, 1 - (leads - 150) / 3000);
+  const paybackMonths    = monthly > 0 ? (9500 / monthly) * leadPaybackBonus : null;
 
   return { monthly, cumulative, monthlyBreakdown, annualSavings, hoursPerYear, annualRevenue, paybackMonths };
 }
@@ -252,8 +257,12 @@ function smoothPath(points) {
   let d = `M ${points[0].x} ${points[0].y}`;
   for (let i = 1; i < points.length; i++) {
     const prev = points[i - 1], curr = points[i];
-    const cpx = (prev.x + curr.x) / 2;
-    d += ` C ${cpx} ${prev.y} ${cpx} ${curr.y} ${curr.x} ${curr.y}`;
+    const tension = 0.35;
+    const cpx1 = prev.x + (curr.x - prev.x) * tension;
+    const cpy1 = prev.y;
+    const cpx2 = curr.x - (curr.x - prev.x) * tension;
+    const cpy2 = curr.y;
+    d += ` C ${cpx1} ${cpy1} ${cpx2} ${cpy2} ${curr.x} ${curr.y}`;
   }
   return d;
 }

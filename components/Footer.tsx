@@ -9,10 +9,10 @@ const SERVICES = [
 ];
 
 const SECTORS = [
-  { href: '/sectors/real-estate',          label: 'Real Estate · Dubai' },
-  { href: '/sectors/travel-hospitality',   label: 'Travel & Hospitality' },
-  { href: '/sectors/agriculture',          label: 'Agriculture' },
-  { href: '/sectors/professional-services',label: 'Professional Services' },
+  { href: '/sectors/real-estate',           label: 'Real Estate · Dubai' },
+  { href: '/sectors/travel-hospitality',    label: 'Travel & Hospitality' },
+  { href: '/sectors/agriculture',           label: 'Agriculture' },
+  { href: '/sectors/professional-services', label: 'Professional Services' },
 ];
 
 const COMPANY = [
@@ -25,6 +25,17 @@ const COMPANY = [
 export default function Footer() {
   return (
     <footer className="footer-outer">
+      <style>{`
+        @keyframes dotPulse {
+          0%,100% { transform: scale(1); opacity: 1; }
+          50%      { transform: scale(1.55); opacity: 0.7; }
+        }
+        .footer-dot { display: inline-block; animation: dotPulse 2.4s ease-in-out infinite; }
+        .footer-dot-2 { animation-delay: 0.8s; }
+        .footer-dot-3 { animation-delay: 1.6s; }
+        @media (prefers-reduced-motion: reduce) { .footer-dot { animation: none; } }
+      `}</style>
+
       <div className="footer-main">
 
         {/* Brand column */}
@@ -51,7 +62,11 @@ export default function Footer() {
         <div className="footer-col">
           <div className="footer-col-title">Sectors</div>
           {SECTORS.map(l => <Link key={l.href} href={l.href}>{l.label}</Link>)}
-          <div className="footer-col-title" style={{ marginTop: 16 }}>Company</div>
+        </div>
+
+        {/* Company */}
+        <div className="footer-col">
+          <div className="footer-col-title">Company</div>
           {COMPANY.map(l => <Link key={l.href} href={l.href}>{l.label}</Link>)}
         </div>
 
@@ -78,9 +93,9 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <div className="footer-offices">
-            <span className="footer-office"><span>●</span>Dubai, UAE</span>
-            <span className="footer-office"><span>●</span>Bucharest, Romania</span>
-            <span className="footer-office"><span>●</span>Milano, Italy</span>
+            <span className="footer-office"><span className="footer-dot" style={{color:'var(--y)'}}>●</span> Dubai, UAE</span>
+            <span className="footer-office"><span className="footer-dot footer-dot-2" style={{color:'var(--y)'}}>●</span> Bucharest, Romania</span>
+            <span className="footer-office"><span className="footer-dot footer-dot-3" style={{color:'var(--y)'}}>●</span> Milano, Italy</span>
           </div>
           <div className="footer-copy">© 2026 Tergo Media · All rights reserved</div>
         </div>

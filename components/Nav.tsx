@@ -4,14 +4,21 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-const links = [
-  { href: '/', label: 'Home' },
+const DESKTOP_LINKS = [
   { href: '/services', label: 'Services' },
-  { href: '/sectors', label: 'Sectors' },
-  { href: '/tools', label: 'Tools' },
-  { href: '/portfolio', label: 'Portfolio' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/sectors',  label: 'Sectors' },
+  { href: '/portfolio',label: 'Portfolio' },
+  { href: '/about',    label: 'About' },
+  { href: '/contact',  label: 'Contact' },
+];
+const MOBILE_LINKS = [
+  { href: '/',         label: 'Home' },
+  { href: '/services', label: 'Services' },
+  { href: '/sectors',  label: 'Sectors' },
+  { href: '/tools',    label: 'Tools' },
+  { href: '/portfolio',label: 'Portfolio' },
+  { href: '/about',    label: 'About' },
+  { href: '/contact',  label: 'Contact' },
 ];
 
 export default function Nav() {
@@ -38,12 +45,12 @@ export default function Nav() {
 
           {/* Desktop nav */}
           <div className="nav-links">
-            {links.map(l => (
+            {DESKTOP_LINKS.map(l => (
               <Link key={l.href} href={l.href} className={isActive(l.href) ? 'active' : ''}>
                 {l.label}
               </Link>
             ))}
-            <Link href="/contact" className="btn nav-cta">Book a call</Link>
+            <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer" className="btn nav-cta">Book a call</a>
           </div>
 
           {/* Hamburger button */}
@@ -64,7 +71,7 @@ export default function Nav() {
       <div className={`mob-overlay ${open ? 'open' : ''}`} onClick={() => setOpen(false)} />
       <nav className={`mob-menu ${open ? 'open' : ''}`}>
         <div className="mob-menu-inner">
-          {links.map(l => (
+          {MOBILE_LINKS.map(l => (
             <Link
               key={l.href}
               href={l.href}

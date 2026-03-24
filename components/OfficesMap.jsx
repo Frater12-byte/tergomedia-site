@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 
-const YELLOW = '#F5C540';
+const YELLOW = '#F2C200';
 const W = 1000, H = 420;
 const LON_MIN = -20, LON_MAX = 75, LAT_MIN = 10, LAT_MAX = 70;
 
@@ -124,6 +124,12 @@ export default function OfficesMap() {
     .pulse-r1 { animation: _pr1 2.4s ease-out infinite; transform-box:fill-box; transform-origin:center; }
     .pulse-r2 { animation: _pr2 2.4s ease-out 0.6s infinite; transform-box:fill-box; transform-origin:center; }
     @media (prefers-reduced-motion: reduce) { .pulse-r1,.pulse-r2 { animation:none; } }
+    @media (max-width: 768px) {
+      .offices-map-svg-wrap { min-height: 320px; padding: 0 !important; }
+      .offices-map-svg-wrap svg { min-height: 320px; }
+      .offices-tab-row { padding: 16px 16px 20px !important; gap: 6px !important; }
+      .offices-tab-row button { padding: 7px 12px !important; font-size: 11px !important; }
+    }
   `;
 
   return (
@@ -135,7 +141,7 @@ export default function OfficesMap() {
       <style>{animCSS}</style>
 
       {/* Map container */}
-      <div style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
+      <div className="offices-map-svg-wrap" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
         <svg
           viewBox={`0 0 ${W} ${H}`}
           style={{ width: '100%', height: 'auto', display: 'block' }}
@@ -163,7 +169,7 @@ export default function OfficesMap() {
           {CONNECTIONS.map(({ id, o1, o2 }) => (
             <g key={id}>
               <path id={id} d={connPath(o1, o2)}
-                fill="none" stroke={`rgba(245,197,64,0.12)`} strokeWidth="1.2" strokeDasharray="4 4" />
+                fill="none" stroke={`rgba(242,194,0,0.12)`} strokeWidth="1.2" strokeDasharray="4 4" />
               <circle r="3.5" fill={YELLOW} opacity="0.65">
                 <animateMotion dur="5s" repeatCount="indefinite">
                   <mpath href={`#${id}`} />
@@ -222,12 +228,12 @@ export default function OfficesMap() {
                         stroke={office.color} strokeWidth="1" />
                       <text x={cx2 + cw / 2} y={cy2 + 18}
                         textAnchor="middle" fontSize="13" fontWeight="800" fill="#fff"
-                        fontFamily="Syne, sans-serif" letterSpacing="-0.3">
+                        fontFamily="Exo, sans-serif" letterSpacing="-0.3">
                         {office.city}
                       </text>
                       <text x={cx2 + cw / 2} y={cy2 + 36}
                         textAnchor="middle" fontSize="9" fontWeight="600" fill={office.color}
-                        fontFamily="DM Sans, sans-serif" letterSpacing="1">
+                        fontFamily="Exo, sans-serif" letterSpacing="1">
                         {office.role.toUpperCase()}
                       </text>
                     </g>
@@ -238,7 +244,7 @@ export default function OfficesMap() {
                 {!isActive && (
                   <text x={px + 9} y={py - 7}
                     fontSize="9" fontWeight="700" fill={office.color} opacity="0.7"
-                    fontFamily="DM Sans, sans-serif" letterSpacing="0.5">
+                    fontFamily="Exo, sans-serif" letterSpacing="0.5">
                     {office.city.toUpperCase()}
                   </text>
                 )}
@@ -255,7 +261,7 @@ export default function OfficesMap() {
       </div>
 
       {/* Tab buttons */}
-      <div style={{
+      <div className="offices-tab-row" style={{
         display: 'flex', justifyContent: 'center', gap: 8,
         padding: '20px 24px 24px', flexWrap: 'wrap',
         borderTop: '1px solid rgba(255,255,255,0.05)',
@@ -271,7 +277,7 @@ export default function OfficesMap() {
                 background: isAct ? `rgba(${o.color === YELLOW ? '245,197,64' : o.color === '#00C9A7' ? '0,201,167' : '167,139,250'},0.08)` : 'transparent',
                 color: isAct ? o.color : 'rgba(255,255,255,0.4)',
                 fontSize: 12, fontWeight: 600,
-                fontFamily: 'DM Sans, sans-serif',
+                fontFamily: "'Exo', sans-serif",
                 cursor: 'pointer', transition: 'all 0.15s',
                 letterSpacing: '0.05em',
               }}>
@@ -299,13 +305,13 @@ export default function OfficesMap() {
             <div style={{
               fontSize: 9, fontWeight: 700, letterSpacing: '0.18em',
               textTransform: 'uppercase', color: activeOffice.color,
-              fontFamily: 'DM Sans, sans-serif', marginBottom: 6,
+              fontFamily: "'Exo', sans-serif", marginBottom: 6,
             }}>
               {activeOffice.role} · {activeOffice.country}
             </div>
             <div style={{
               fontSize: 20, fontWeight: 800, color: '#fff',
-              fontFamily: 'Syne, sans-serif', letterSpacing: '-0.5px',
+              fontFamily: "'Exo', sans-serif", letterSpacing: '-0.5px',
               marginBottom: 16,
             }}>
               {activeOffice.city}
@@ -314,7 +320,7 @@ export default function OfficesMap() {
               {activeOffice.details.map((d, i) => (
                 <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                   <span style={{ color: activeOffice.color, fontWeight: 900, flexShrink: 0, marginTop: 1, fontSize: 13 }}>→</span>
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontWeight: 300, lineHeight: 1.55, fontFamily: 'DM Sans, sans-serif' }}>{d}</span>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontWeight: 300, lineHeight: 1.55, fontFamily: "'Exo', sans-serif" }}>{d}</span>
                 </div>
               ))}
             </div>

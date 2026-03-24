@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/components/Graphics';
 import ROICalculator from '@/components/ROICalculator';
 import OfficesMap from '@/components/OfficesMap';
+import PortfolioCarousel from '@/components/PortfolioCarousel';
 
 export const metadata: Metadata = {
   title: 'Tergo Media — AI Automation & Custom Software | Dubai',
@@ -152,24 +153,7 @@ export default function Home() {
     </div>
 
     {/* ── PORTFOLIO ── */}
-    <div className="sec">Portfolio</div>
-    <div className="fw fw-grid g3" data-section="portfolio">
-      {[
-        {tc:'y',cat:'Travel · CRM · Automation',t:'Cocktail Holidays',d:'Full digital transformation — booking automation, CRM, RPA. Scaled to $7M revenue. Exit achieved.',img:'IMG-01'},
-        {tc:'c',cat:'Agriculture · IoT · Portal',t:'Agri Novatex',d:'Distributor portals, HubSpot implementation, API integrations across South Africa and UK.',img:'IMG-02'},
-        {tc:'p',cat:'Mobile · iOS · Android',t:'Ranjet',d:'Native iOS and Android app, product management, digital strategy for a high-growth startup.',img:'IMG-03'},
-      ].map(p=>(
-        <div className={`cell at-${p.tc}`} key={p.t}>
-          <ImgPh label={p.img} desc={`${p.t} screenshot`} h={240} src={`/Images/${p.img}.png`} />
-          <div style={{marginTop:20}}>
-            <div style={{fontSize:9,color:'var(--m)',letterSpacing:2,textTransform:'uppercase',marginBottom:10}}>{p.cat}</div>
-            <h3>{p.t}</h3>
-            <p style={{marginBottom:16}}>{p.d}</p>
-            <Link href="/portfolio" style={{fontSize:11,fontWeight:800,color:`var(--${p.tc})`,textDecoration:'none',textTransform:'uppercase',letterSpacing:1}}>View case →</Link>
-          </div>
-        </div>
-      ))}
-    </div>
+    <PortfolioCarousel />
 
     {/* ── TESTIMONIALS ── */}
     <div className="sec">What clients say</div>
@@ -183,11 +167,11 @@ export default function Home() {
           {q:'Tergo built our entire operations portal in six weeks. Solid architecture, clean code, and they actually pushed back when our brief had gaps — that\'s rare.',who:'CEO',role:'Agriculture platform · South Africa',tc:'c'},
         ].map(t=>(
           <div className={`review-card at-${t.tc}`} key={t.who}>
-            <span className="pull-quote-mark" style={{color:`var(--${t.tc})`}}>&ldquo;</span>
-            <p className="pull-quote-text" style={{fontWeight:300,fontStyle:'italic'}}>{t.q}</p>
+            <span className="pull-quote-mark" style={{color:`var(--${t.tc})`,opacity:0.45}}>&ldquo;</span>
+            <p className="pull-quote-text" style={{fontWeight:300,fontStyle:'italic',color:'rgba(255,255,255,0.70)'}}>{t.q}</p>
             <div style={{borderTop:'1px solid var(--b)',paddingTop:16,marginTop:'auto'}}>
-              <div style={{fontSize:13,fontWeight:300,color:'rgba(255,255,255,0.7)'}}>{t.who}</div>
-              <div style={{fontSize:12,fontWeight:300,color:'var(--m)',marginTop:4}}>{t.role}</div>
+              <div style={{fontSize:13,fontWeight:500,color:'rgba(255,255,255,0.90)'}}>{t.who}</div>
+              <div style={{fontSize:12,fontWeight:400,color:'rgba(255,255,255,0.40)',marginTop:4}}>{t.role}</div>
             </div>
           </div>
         ))}
@@ -196,14 +180,14 @@ export default function Home() {
 
     {/* ── TEAM ── */}
     <div style={{maxWidth:1100,margin:'0 auto',padding:'56px clamp(24px,5vw,72px) 20px'}}>
-      <div style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:10,fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',color:'#F5C540',marginBottom:18,fontFamily:'DM Sans, sans-serif'}}>
-        <span style={{width:18,height:1,background:'#F5C540',display:'inline-block'}}/>
+      <div style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:10,fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',color:'var(--y)',marginBottom:18,fontFamily:"'Exo', sans-serif"}}>
+        <span style={{width:18,height:1,background:'var(--y)',display:'inline-block'}}/>
         The team behind it
       </div>
-      <h2 style={{fontFamily:'Syne, sans-serif',fontSize:'clamp(24px,3.5vw,40px)',fontWeight:800,letterSpacing:'-1.2px',lineHeight:1.05,color:'#fff',marginBottom:14}}>
+      <h2 style={{fontFamily:"'Exo', sans-serif",fontSize:'clamp(24px,3.5vw,40px)',fontWeight:800,letterSpacing:'-1.2px',lineHeight:1.05,color:'#fff',marginBottom:14}}>
         People who&apos;ve built it,<br/>not just advised on it.
       </h2>
-      <p style={{fontFamily:'DM Sans, sans-serif',fontSize:15,color:'rgba(255,255,255,0.4)',fontWeight:300,lineHeight:1.75,maxWidth:560,marginBottom:48}}>
+      <p style={{fontFamily:"'Exo', sans-serif",fontSize:15,color:'rgba(255,255,255,0.4)',fontWeight:300,lineHeight:1.75,maxWidth:560,marginBottom:48}}>
         We&apos;ve been inside the companies — running teams, shipping product, and dealing with the same operational messiness our clients face. That&apos;s the difference.
       </p>
     </div>
@@ -211,16 +195,15 @@ export default function Home() {
       <style>{`
         .team-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);max-width:1100px;margin:0 auto clamp(0px,2vw,8px);padding:0 0;width:100%}
         .team-card{background:#111;position:relative;overflow:hidden;transition:transform 0.25s cubic-bezier(0.16,1,0.3,1)}
-        .team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#F5C540;transform:scaleX(0);transform-origin:left;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)}
+        .team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--y);transform:scaleX(0);transform-origin:left;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)}
         .team-card:hover{transform:translateY(-6px)}
         .team-card:hover::before{transform:scaleX(1)}
-        .team-photo-wrap{position:relative;height:280px;overflow:hidden;background:#0d0d0d}
-        .team-photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-        .team-photo-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,#111)}
-        .team-skill-tag{display:inline-block;padding:3px 10px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);font-size:10px;font-weight:400;font-family:'DM Sans',sans-serif;letter-spacing:0.03em;margin:3px 2px 0}
-        .team-li-link{font-size:12px;font-weight:400;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.3);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
-        .team-li-link:hover{color:#F5C540}
-        .team-role-chip{display:inline-block;padding:3px 10px;border:1px solid rgba(245,197,64,0.3);color:#F5C540;background:rgba(245,197,64,0.06);font-size:10px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:0.05em;margin:0 4px 4px 0}
+        .team-photo-wrap{position:relative;width:220px;height:220px;border-radius:10px;overflow:hidden;background:#0d0d0d}
+        .team-photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+        .team-skill-tag{display:inline-block;padding:3px 10px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);font-size:10px;font-weight:400;font-family:'Exo',sans-serif;letter-spacing:0.03em;margin:3px 2px 0}
+        .team-li-link{font-size:12px;font-weight:400;font-family:'Exo',sans-serif;color:rgba(255,255,255,0.3);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+        .team-li-link:hover{color:var(--y)}
+        .team-role-chip{display:inline-block;padding:3px 10px;border:1px solid rgba(242,194,0,0.3);color:var(--y);background:rgba(242,194,0,0.06);font-size:10px;font-weight:600;font-family:'Exo',sans-serif;letter-spacing:0.05em;margin:0 4px 4px 0}
         @media(max-width:768px){.team-cards-grid{grid-template-columns:1fr}.team-card:hover{transform:none}}
         @media(prefers-reduced-motion:reduce){.team-card,.team-card::before{transition:none}}
       `}</style>
@@ -236,9 +219,9 @@ export default function Home() {
             <span className="team-role-chip">Business Development</span>
             <span className="team-role-chip">GCC</span>
           </div>
-          <div style={{fontFamily:'Syne, sans-serif',fontSize:27,fontWeight:800,letterSpacing:'-0.8px',color:'#fff',lineHeight:1,marginBottom:6}}>Maria</div>
-          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:'DM Sans, sans-serif',marginBottom:16}}>Commercial leadership · GCC markets</div>
-          <p style={{fontSize:14,fontFamily:'DM Sans, sans-serif',fontWeight:300,lineHeight:1.8,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
+          <div style={{fontFamily:"'Exo', sans-serif",fontSize:27,fontWeight:800,letterSpacing:'-0.8px',color:'#fff',lineHeight:1,marginBottom:6}}>Maria</div>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",marginBottom:16}}>Commercial leadership · GCC markets</div>
+          <p style={{fontSize:14,fontFamily:"'Exo', sans-serif",fontWeight:300,lineHeight:1.8,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
             Maria leads the commercial side of Tergo Media — from business development across the GCC to the operational structure that keeps us delivering at scale. With over a decade in product management, marketing, and international business development, she brings strategic clarity and genuine relationship-building to every client engagement.
           </p>
           <div style={{marginBottom:20,display:'flex',flexWrap:'wrap'}}>
@@ -261,9 +244,9 @@ export default function Home() {
             <span className="team-role-chip">CTO</span>
             <span className="team-role-chip">Full-Stack</span>
           </div>
-          <div style={{fontFamily:'Syne, sans-serif',fontSize:27,fontWeight:800,letterSpacing:'-0.8px',color:'#fff',lineHeight:1,marginBottom:6}}>Francesco</div>
-          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:'DM Sans, sans-serif',marginBottom:16}}>Technical core · Systems architecture</div>
-          <p style={{fontSize:14,fontFamily:'DM Sans, sans-serif',fontWeight:300,lineHeight:1.8,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
+          <div style={{fontFamily:"'Exo', sans-serif",fontSize:27,fontWeight:800,letterSpacing:'-0.8px',color:'#fff',lineHeight:1,marginBottom:6}}>Francesco</div>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",marginBottom:16}}>Technical core · Systems architecture</div>
+          <p style={{fontSize:14,fontFamily:"'Exo', sans-serif",fontWeight:300,lineHeight:1.8,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
             Francesco is the technical core of Tergo Media — designing the systems, writing the code, and making sure what we promise actually ships. With 10+ years across CTO roles and hands-on development in JavaScript, Node.js, Python, and React, he covers everything from AI pipelines and IoT platforms to SaaS architecture and automation systems.
           </p>
           <div style={{marginBottom:20,display:'flex',flexWrap:'wrap'}}>
@@ -276,7 +259,7 @@ export default function Home() {
       </div>
     </div>
     <div style={{maxWidth:1100,margin:'0 auto',padding:'20px clamp(24px,5vw,72px) 56px',textAlign:'center'}}>
-      <p style={{fontSize:13,color:'rgba(255,255,255,0.28)',fontFamily:'DM Sans, sans-serif',fontWeight:300,fontStyle:'italic'}}>
+      <p style={{fontSize:13,color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",fontWeight:300,fontStyle:'italic'}}>
         Between the two: commercial leadership and deep technical execution — across Europe and the GCC.
       </p>
     </div>

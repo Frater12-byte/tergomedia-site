@@ -110,14 +110,34 @@ function useCountUp(target, duration = 420, precision = 0) {
   return val;
 }
 
-/* ── KpiCard ───────────────────────────────────────────────────────────────── */
-function KpiCard({ tag, rawValue, fmt, sub, accent, precision = 0 }) {
-  const animated = useCountUp(rawValue, 420, precision);
+/* ── getYTicks ─────────────────────────────────────────────────────────────── */
+function getYTicks(maxValue) {
+  if (maxValue <= 0) return [0, 1, 2, 3, 4];
+  const magnitude = Math.pow(10, Math.floor(Math.log10(maxValue)));
+  const step = Math.ceil((maxValue / 4) / magnitude) * magnitude;
+  return [0, step, step * 2, step * 3, Math.ceil(maxValue / step) * step];
+}
 
+/* ── KpiCard ───────────────────────────────────────────────────────────────── */
+function KpiCard({ tag, rawValue, fmt, sub, accent, precision = 0, primary = false }) {
+  const animated = useCountUp(rawValue, 420, precision);
   return (
-    <div style={{ background: '#141414', padding: 'clamp(16px,2.5vw,26px)', display: 'flex', flexDirection: 'column', gap: 6 }}>
+    <div style={{
+      background: '#141414',
+      padding: primary ? '28px clamp(18px,3vw,32px)' : '20px clamp(14px,2.5vw,24px)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 6,
+      borderTop: `${primary ? 3 : 2}px solid ${accent}`,
+    }}>
       <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888' }}>{tag}</div>
-      <div style={{ fontSize: 'clamp(20px,2.8vw,30px)', fontWeight: 900, fontFamily: "'Exo',sans-serif", color: accent, lineHeight: 1.1 }}>
+      <div style={{
+        fontSize: primary ? 'clamp(28px,3.5vw,38px)' : 'clamp(20px,2.5vw,28px)',
+        fontWeight: 900,
+        fontFamily: "'Exo',sans-serif",
+        color: accent,
+        lineHeight: 1.1,
+      }}>
         {fmt(animated)}
       </div>
       {sub && <div style={{ fontSize: 11, color: '#555', lineHeight: 1.5, fontWeight: 300 }}>{sub}</div>}
@@ -181,31 +201,25 @@ function Illustration() {
   return (
     <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', maxWidth: 200, height: 'auto', opacity: 0.82, flexShrink: 0 }}>
-      {/* Desk */}
       <rect x="20" y="108" width="160" height="6" rx="3" fill={Y} opacity="0.25" />
       <rect x="30" y="114" width="8" height="26" rx="2" fill={Y} opacity="0.15" />
       <rect x="162" y="114" width="8" height="26" rx="2" fill={Y} opacity="0.15" />
-      {/* Monitor */}
       <rect x="72" y="72" width="56" height="37" rx="3" stroke={Y} strokeWidth="1.5" fill="rgba(242,194,0,0.04)" />
       <rect x="95" y="109" width="10" height="5" rx="1" fill={Y} opacity="0.18" />
       <rect x="87" y="114" width="26" height="2" rx="1" fill={Y} opacity="0.13" />
-      {/* Screen lines */}
       <line x1="80" y1="83" x2="120" y2="83" stroke={Y} strokeWidth="1" opacity="0.28" />
       <line x1="80" y1="89" x2="112" y2="89" stroke={Y} strokeWidth="1" opacity="0.18" />
       <line x1="80" y1="95" x2="116" y2="95" stroke={Y} strokeWidth="1" opacity="0.18" />
-      {/* Person left */}
       <circle cx="40" cy="78" r="7" stroke="white" strokeWidth="1.2" fill="none" opacity="0.45" />
       <path d="M30 108 Q40 94 50 108" stroke="white" strokeWidth="1.2" fill="none" opacity="0.45" />
       <line x1="40" y1="85" x2="40" y2="100" stroke="white" strokeWidth="1.2" opacity="0.45" />
       <line x1="40" y1="90" x2="32" y2="97" stroke="white" strokeWidth="1.2" opacity="0.45" />
       <line x1="40" y1="90" x2="48" y2="97" stroke="white" strokeWidth="1.2" opacity="0.45" />
-      {/* Person right */}
       <circle cx="160" cy="78" r="7" stroke="white" strokeWidth="1.2" fill="none" opacity="0.45" />
       <path d="M150 108 Q160 94 170 108" stroke="white" strokeWidth="1.2" fill="none" opacity="0.45" />
       <line x1="160" y1="85" x2="160" y2="100" stroke="white" strokeWidth="1.2" opacity="0.45" />
       <line x1="160" y1="90" x2="152" y2="97" stroke="white" strokeWidth="1.2" opacity="0.45" />
       <line x1="160" y1="90" x2="168" y2="97" stroke="white" strokeWidth="1.2" opacity="0.45" />
-      {/* Gear icon */}
       <g opacity="0.55">
         <circle cx="24" cy="40" r="6" stroke={Y} strokeWidth="1.2" fill="none" />
         <circle cx="24" cy="40" r="2.5" stroke={Y} strokeWidth="1" fill="none" />
@@ -218,40 +232,26 @@ function Illustration() {
             stroke={Y} strokeWidth="2" strokeLinecap="round" />
         ))}
       </g>
-      {/* Lightning bolt */}
       <path d="M176 26 L170 40 L174 40 L168 54 L180 36 L175 36 Z"
         stroke={Y} strokeWidth="1.2" fill="rgba(242,194,0,0.1)" opacity="0.65" />
-      {/* Envelope */}
       <rect x="144" y="16" width="20" height="14" rx="2" stroke="white" strokeWidth="1.2" fill="none" opacity="0.4" />
       <polyline points="144,16 154,24 164,16" stroke="white" strokeWidth="1.2" fill="none" opacity="0.4" />
-      {/* Checkmark circle */}
       <circle cx="50" cy="26" r="7" stroke={GREEN} strokeWidth="1.2" fill="none" opacity="0.6" />
       <polyline points="46,26 49,29 55,22" stroke={GREEN} strokeWidth="1.5" fill="none" opacity="0.6" strokeLinecap="round" strokeLinejoin="round" />
-      {/* Automation arc */}
       <path d="M80 50 Q100 38 120 50" stroke={Y} strokeWidth="1.2" fill="none" opacity="0.3" strokeDasharray="3 2" />
       <polygon points="120,50 115,46 115,54" fill={Y} opacity="0.3" />
     </svg>
   );
 }
 
-/* ── ROIChart ──────────────────────────────────────────────────────────────── */
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-const SECTOR_VARIANCE = {
-  'Real Estate':           [0, .03, -.02, .04, -.01, .03, .02, -.02, .04, -.01, .02, .01],
-  'Travel & Hospitality':  [0, .05, -.04, .06, .02, -.03, .07, -.02, .04, -.05, .06, .02],
-  'Agriculture':           [0, .02, .04, -.03, .06, -.02, .03, .05, -.04, .02, -.01, .03],
-  'Professional Services': [0, .03, -.01, .02, .04, -.02, .01, .03, -.01, .04, .02, -.01],
-  'Media & Publishing':    [0, .04, -.03, .05, -.02, .04, -.01, .06, -.03, .02, .05, -.02],
-  'E-commerce & Retail':   [0, .06, -.04, .03, .05, -.03, .04, -.02, .06, -.04, .03, .05],
-  'Other':                 [0, .03, -.02, .03, -.01, .02, .03, -.02, .03, -.01, .02, .01],
-};
-
+/* ── Axis formatter ────────────────────────────────────────────────────────── */
 function fmtAxisVal(v) {
-  if (v >= 1000) return `$${(v / 1000).toFixed(0)}K`;
+  if (v >= 1000000) return `$${(v / 1000000).toFixed(1)}M`;
+  if (v >= 1000)    return `$${(v / 1000).toFixed(0)}K`;
   return `$${Math.round(v)}`;
 }
 
+/* ── Bezier path ───────────────────────────────────────────────────────────── */
 function smoothPath(points) {
   if (points.length < 2) return '';
   let d = `M ${points[0].x} ${points[0].y}`;
@@ -267,26 +267,47 @@ function smoothPath(points) {
   return d;
 }
 
-function ROIChart({ monthlyBreakdown, sector }) {
-  const W = 700, H = 240, PL = 54, PR = 54, PT = 28, PB = 36;
+/* ── Sector variance ───────────────────────────────────────────────────────── */
+const SECTOR_VARIANCE = {
+  'Real Estate':           [0, .03, -.02, .04, -.01, .03, .02, -.02, .04, -.01, .02, .01],
+  'Travel & Hospitality':  [0, .05, -.04, .06, .02, -.03, .07, -.02, .04, -.05, .06, .02],
+  'Agriculture':           [0, .02, .04, -.03, .06, -.02, .03, .05, -.04, .02, -.01, .03],
+  'Professional Services': [0, .03, -.01, .02, .04, -.02, .01, .03, -.01, .04, .02, -.01],
+  'Media & Publishing':    [0, .04, -.03, .05, -.02, .04, -.01, .06, -.03, .02, .05, -.02],
+  'E-commerce & Retail':   [0, .06, -.04, .03, .05, -.03, .04, -.02, .06, -.04, .03, .05],
+  'Other':                 [0, .03, -.02, .03, -.01, .02, .03, -.02, .03, -.01, .02, .01],
+};
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+/* ── ROIChart ──────────────────────────────────────────────────────────────── */
+function ROIChart({ monthlyBreakdown, sector, annualRevenue }) {
+  const W = 700, H = 260, PL = 54, PR = 54, PT = 28, PB = 36;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
   const [hovered, setHovered] = useState(null);
-  const lineRef   = useRef(null);
-  const annotRef  = useRef(null);
+  const lineRef  = useRef(null);
+  const annotRef = useRef(null);
 
-  // Bars: ramp values with small sector variance for natural look (can vary slightly)
-  const variance = SECTOR_VARIANCE[sector] || SECTOR_VARIANCE['Other'];
-  const chartMonthlyValues = monthlyBreakdown.map((v, i) => Math.max(v * (1 + variance[i]), 0));
-  // Cumulative line: ALWAYS built from clean monthlyBreakdown — never from varied bar values.
-  // This guarantees the line is always monotonically increasing regardless of variance sign.
+  const variance    = SECTOR_VARIANCE[sector] || SECTOR_VARIANCE['Other'];
+  // Savings bars: variance-adjusted monthly savings
+  const savingsBars = monthlyBreakdown.map((v, i) => Math.max(v * (1 + variance[i]), 0));
+  // Revenue uplift per month: (annualRevenue / 12) × rampFactor
+  const upliftBars  = RAMP.map(r => (annualRevenue / 12) * r);
+  // Stacked totals per month
+  const stackedTotals = savingsBars.map((s, i) => s + upliftBars[i]);
+  const maxBar = Math.max(...stackedTotals, 1);
+
+  // Cumulative line: savings only — always monotonically increasing
   const chartCumulative = monthlyBreakdown.reduce((acc, v, i) => {
     acc.push((acc[i - 1] || 0) + v);
     return acc;
   }, []);
-
-  const maxBar = Math.max(...chartMonthlyValues, 1);
   const maxCum = Math.max(...chartCumulative, 1);
+
+  // Proper Y-axis ticks (no duplicate bug)
+  const barTicks = getYTicks(maxBar);
+  const cumTicks = getYTicks(maxCum);
 
   const gap  = chartW / 12;
   const barW = Math.floor(gap * 0.52);
@@ -295,40 +316,34 @@ function ROIChart({ monthlyBreakdown, sector }) {
   function yForBar(v) { return PT + chartH - (v / maxBar) * chartH; }
   function yForCum(v) { return PT + chartH - (v / maxCum) * chartH; }
 
-  const pts = chartCumulative.map((v, i) => ({ x: xFor(i) + barW / 2, y: yForCum(v) }));
+  const pts      = chartCumulative.map((v, i) => ({ x: xFor(i) + barW / 2, y: yForCum(v) }));
   const linePath = smoothPath(pts);
 
-  // Y-axis ticks: 0, 33%, 66%, 100%
-  const barTicks = [0, 0.33, 0.66, 1].map(t => maxBar * t);
-  const cumTicks = [0, 0.33, 0.66, 1].map(t => maxCum * t);
-
-  // Milestone labels: Jan(0), Apr(3), Jul(6), Oct(9), Dec(11)
   const milestoneIdx = [0, 3, 6, 9, 11];
 
-  // Line + annotation animation on mount (key forces remount on every calc change)
+  // Line draw animation on mount
   useEffect(() => {
     const reduced = typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     const lineEl = lineRef.current;
-    if (lineEl) {
-      if (reduced) {
-        lineEl.style.strokeDasharray = 'none';
-        lineEl.style.strokeDashoffset = '0';
-      } else {
-        const len = lineEl.getTotalLength();
-        lineEl.style.strokeDasharray = String(len);
-        lineEl.style.strokeDashoffset = String(len);
-        lineEl.style.transition = 'none';
-        const raf = requestAnimationFrame(() => {
-          lineEl.style.transition = 'stroke-dashoffset 700ms ease-out';
-          lineEl.style.strokeDashoffset = '0';
-        });
-        return () => cancelAnimationFrame(raf);
-      }
+    if (!lineEl) return;
+    if (reduced) {
+      lineEl.style.strokeDasharray = 'none';
+      lineEl.style.strokeDashoffset = '0';
+      return;
     }
-  }, []); // runs once per mount; key={chartKey} at call site guarantees remount per change
+    const len = lineEl.getTotalLength();
+    lineEl.style.strokeDasharray = String(len);
+    lineEl.style.strokeDashoffset = String(len);
+    lineEl.style.transition = 'none';
+    const raf = requestAnimationFrame(() => {
+      lineEl.style.transition = 'stroke-dashoffset 700ms ease-out';
+      lineEl.style.strokeDashoffset = '0';
+    });
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
+  // Annotation fade-in
   useEffect(() => {
     const reduced = typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -343,12 +358,11 @@ function ROIChart({ monthlyBreakdown, sector }) {
     return () => clearTimeout(t);
   }, []);
 
-  // Last data point for annotation
-  const lastPt = pts[pts.length - 1];
+  const lastPt  = pts[pts.length - 1];
   const lastCum = chartCumulative[chartCumulative.length - 1];
 
   return (
-    <div style={{ position: 'relative', width: '100%' }}>
+    <div style={{ width: '100%' }}>
       <style>{`
         @keyframes barGrow {
           from { transform: scaleY(0); }
@@ -358,9 +372,27 @@ function ROIChart({ monthlyBreakdown, sector }) {
           .roi-bar { animation: none !important; }
         }
       `}</style>
+
+      {/* Title + legend row */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
+        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888' }}>
+          Monthly benefit breakdown
+        </div>
+        <div className="roi-chart-legend" style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 10, height: 10, background: '#F5C540', flexShrink: 0 }} />
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', fontFamily: "'Exo',sans-serif" }}>Cost savings</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 10, height: 10, background: 'rgba(245,197,64,0.35)', flexShrink: 0 }} />
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', fontFamily: "'Exo',sans-serif" }}>Revenue potential</span>
+          </div>
+        </div>
+      </div>
+
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
 
-        {/* Grid lines + left Y-axis (bar scale) */}
+        {/* Grid + left Y-axis (bar/stacked scale) */}
         {barTicks.map((v, i) => {
           const y = yForBar(v);
           return (
@@ -383,34 +415,72 @@ function ROIChart({ monthlyBreakdown, sector }) {
           );
         })}
 
-        {/* Bars — CSS keyframe animation, scaleY from bottom */}
-        {chartMonthlyValues.map((v, i) => {
-          const barH = Math.max((v / maxBar) * chartH, 1);
-          const x = xFor(i);
-          const y = PT + chartH - barH;
-          const isHov = hovered === i;
-          const delay = `${i * 35}ms`;
+        {/* Stacked bars */}
+        {savingsBars.map((savV, i) => {
+          const uplV    = upliftBars[i];
+          const totalV  = stackedTotals[i];
+          const totalH  = Math.max((totalV / maxBar) * chartH, 0);
+          const savH    = Math.max((savV   / maxBar) * chartH, 0);
+          const uplH    = Math.max((uplV   / maxBar) * chartH, 0);
+          const x       = xFor(i);
+          const delay   = `${i * 35}ms`;
+          const isHov   = hovered === i;
+
+          // Savings opacity: 0.4 ramp1-2, 0.7 ramp3-4, 1.0 ramp5-12
+          const savOpacity = i < 2 ? 0.4 : i < 4 ? 0.7 : 1;
+          const savFill    = isHov ? '#F5C540' : `rgba(245,197,64,${savOpacity})`;
+          // Uplift opacity: 0.15 ramp1-2, 0.25 ramp3-4, 0.35 ramp5-12
+          const uplOpacity = i < 2 ? 0.15 : i < 4 ? 0.25 : 0.35;
+          const uplFill    = isHov ? `rgba(245,197,64,0.55)` : `rgba(245,197,64,${uplOpacity})`;
+
+          const ySav = PT + chartH - savH;
+          const yUpl = PT + chartH - totalH;
+
           return (
             <g key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
-              <rect
-                className="roi-bar"
-                x={x} y={y} width={barW} height={barH} rx="2"
-                fill={isHov ? Y : 'rgba(242,194,0,0.18)'}
-                style={{
-                  transformBox: 'fill-box',
-                  transformOrigin: 'bottom',
-                  animation: `barGrow 300ms ease-out both ${delay}`,
-                  transition: 'fill .15s',
-                }}
-              />
-              {/* invisible hit area */}
+              {/* Bottom segment: cost savings */}
+              {savH > 0.5 && (
+                <rect
+                  className="roi-bar"
+                  x={x} y={ySav} width={barW} height={savH} rx="1"
+                  fill={savFill}
+                  style={{
+                    transformBox: 'fill-box',
+                    transformOrigin: 'bottom',
+                    animation: `barGrow 300ms ease-out both ${delay}`,
+                    transition: 'fill .15s',
+                  }}
+                />
+              )}
+              {/* Top segment: revenue uplift */}
+              {uplH > 0.5 && (
+                <rect
+                  className="roi-bar"
+                  x={x} y={yUpl} width={barW} height={uplH} rx="1"
+                  fill={uplFill}
+                  style={{
+                    transformBox: 'fill-box',
+                    transformOrigin: 'bottom',
+                    animation: `barGrow 300ms ease-out both ${delay}`,
+                    transition: 'fill .15s',
+                  }}
+                />
+              )}
+              {/* Transparent hit area */}
               <rect x={x - 4} y={PT} width={barW + 8} height={chartH} fill="transparent" />
             </g>
           );
         })}
 
-        {/* Cumulative line — animated via ref in useEffect */}
+        {/* Cumulative line (savings only) */}
         <path ref={lineRef} d={linePath} stroke={Y} strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
+
+        {/* "Cumulative savings →" inline annotation near the line */}
+        <text
+          x={pts[7].x + 6} y={pts[7].y - 11}
+          fill="rgba(255,255,255,0.38)" fontSize="9" fontFamily="'Exo',sans-serif">
+          Cumulative savings →
+        </text>
 
         {/* Milestone labels above line */}
         {milestoneIdx.map(i => (
@@ -441,7 +511,7 @@ function ROIChart({ monthlyBreakdown, sector }) {
           </text>
         ))}
 
-        {/* Final annotation pill — fades in via ref after line animation */}
+        {/* Final annotation pill */}
         <g ref={annotRef} style={{ opacity: 0 }}>
           <rect
             x={lastPt.x - 38} y={lastPt.y - 26}
@@ -454,22 +524,44 @@ function ROIChart({ monthlyBreakdown, sector }) {
           </text>
         </g>
 
-        {/* Tooltip */}
+        {/* Hover tooltip */}
         {hovered !== null && (() => {
           const { x: tx, y: ty } = pts[hovered];
-          const tipW = 118, tipH = 52;
-          const tipX = tx + tipW + 8 > W ? tx - tipW - 8 : tx + 8;
-          const tipY = Math.max(ty - tipH / 2, PT);
+          const sav  = Math.round(savingsBars[hovered]);
+          const upl  = Math.round(upliftBars[hovered]);
+          const tot  = sav + upl;
+          const cum  = Math.round(chartCumulative[hovered]);
+          const tipW = 192, tipH = 100;
+          const tipX = tx + tipW + 12 > W ? tx - tipW - 10 : tx + 10;
+          const tipY = Math.max(Math.min(ty - tipH / 2, H - tipH - PT), PT);
           return (
             <g pointerEvents="none">
               <rect x={tipX} y={tipY} width={tipW} height={tipH} rx="4"
-                fill="#1c1c1c" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
-              <text x={tipX + 10} y={tipY + 16} fill="#666" fontSize="9" fontFamily="'Exo',sans-serif"
-                fontWeight="700" letterSpacing="1">CUMULATIVE M{hovered + 1}</text>
-              <text x={tipX + 10} y={tipY + 36} fill={Y} fontSize="15" fontFamily="'Exo',sans-serif"
-                fontWeight="900">
-                ${Math.round(chartCumulative[hovered]).toLocaleString()}
-              </text>
+                fill="#181818" stroke="rgba(245,197,64,0.3)" strokeWidth="1" />
+              <rect x={tipX} y={tipY} width={tipW} height={3} rx="2" fill="rgba(245,197,64,0.6)" />
+              {/* Month */}
+              <text x={tipX + 10} y={tipY + 16} fill="rgba(255,255,255,0.8)" fontSize="10"
+                fontFamily="'Exo',sans-serif" fontWeight="700">{MONTHS[hovered]}</text>
+              <line x1={tipX + 10} y1={tipY + 22} x2={tipX + tipW - 10} y2={tipY + 22}
+                stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+              {/* Cost savings */}
+              <text x={tipX + 10} y={tipY + 36} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Cost savings:</text>
+              <text x={tipX + tipW - 10} y={tipY + 36} fill="#F5C540" fontSize="9"
+                fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${sav.toLocaleString()}</text>
+              {/* Revenue potential */}
+              <text x={tipX + 10} y={tipY + 50} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Revenue potential:</text>
+              <text x={tipX + tipW - 10} y={tipY + 50} fill="rgba(245,197,64,0.55)" fontSize="9"
+                fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${upl.toLocaleString()}</text>
+              <line x1={tipX + 10} y1={tipY + 57} x2={tipX + tipW - 10} y2={tipY + 57}
+                stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+              {/* Monthly total */}
+              <text x={tipX + 10} y={tipY + 71} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Monthly total:</text>
+              <text x={tipX + tipW - 10} y={tipY + 71} fill="rgba(255,255,255,0.85)" fontSize="9"
+                fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${tot.toLocaleString()}</text>
+              {/* Cumulative */}
+              <text x={tipX + 10} y={tipY + 87} fill="#777" fontSize="9" fontFamily="'Exo',sans-serif">Cumul. savings:</text>
+              <text x={tipX + tipW - 10} y={tipY + 87} fill="rgba(255,255,255,0.6)" fontSize="9"
+                fontFamily="'Exo',sans-serif" fontWeight="700" textAnchor="end">${cum.toLocaleString()}</text>
             </g>
           );
         })()}
@@ -479,9 +571,7 @@ function ROIChart({ monthlyBreakdown, sector }) {
 }
 
 /* ── Profile text builder ──────────────────────────────────────────────────── */
-// Values interpolated below (teamSize, rev, manualPct, responseTime) come from
-// controlled React state — numeric or from a fixed options array — not user-typed input.
-// dangerouslySetInnerHTML is safe here.
+// Values in profileText come from controlled React state — safe for dangerouslySetInnerHTML.
 const SP = (txt) => `<span style="color:#F5C540;font-weight:500">${txt}</span>`;
 function buildProfile(sector, teamSize, revenue, manualPct, responseTime) {
   const rev = revenue >= 1000 ? `$${(revenue / 1000).toFixed(0)}K` : `$${revenue}`;
@@ -533,12 +623,12 @@ export default function ROICalculator() {
     }
   }, []);
 
-  function handleSector(v)      { setSector(v);      setChartKey(k => k + 1); updateProfile(v, teamSize, revenue, manualPct, responseTime, true); }
-  function handleRevenue(v)     { setRevenue(v);     setChartKey(k => k + 1); updateProfile(sector, teamSize, v, manualPct, responseTime, false); }
-  function handleTeam(v)        { setTeamSize(v);    setChartKey(k => k + 1); updateProfile(sector, v, revenue, manualPct, responseTime, false); }
-  function handleManual(v)      { setManualPct(v);   setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, v, responseTime, false); }
-  function handleLeads(v)       { setLeads(v);       setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, manualPct, responseTime, false); }
-  function handleResponse(v)    { setResponseTime(v); setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, manualPct, v, false); }
+  function handleSector(v)   { setSector(v);       setChartKey(k => k + 1); updateProfile(v, teamSize, revenue, manualPct, responseTime, true); }
+  function handleRevenue(v)  { setRevenue(v);      setChartKey(k => k + 1); updateProfile(sector, teamSize, v, manualPct, responseTime, false); }
+  function handleTeam(v)     { setTeamSize(v);     setChartKey(k => k + 1); updateProfile(sector, v, revenue, manualPct, responseTime, false); }
+  function handleManual(v)   { setManualPct(v);    setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, v, responseTime, false); }
+  function handleLeads(v)    { setLeads(v);        setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, manualPct, responseTime, false); }
+  function handleResponse(v) { setResponseTime(v); setChartKey(k => k + 1); updateProfile(sector, teamSize, revenue, manualPct, v, false); }
 
   const fmtDollar  = v => `$${Math.round(v).toLocaleString()}`;
   const fmtDollarK = v => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${Math.round(v)}`;
@@ -583,131 +673,252 @@ export default function ROICalculator() {
           border: none;
           cursor: pointer;
         }
-        .roi-kpi-grid {
+        /* KPI rows */
+        .roi-kpi-row1 {
           display: grid;
-          grid-template-columns: repeat(6, 1fr);
+          grid-template-columns: 1fr 1fr;
+          gap: 1px;
+          background: rgba(255,255,255,0.06);
+          margin-bottom: 1px;
+        }
+        .roi-kpi-row2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
           gap: 1px;
           background: rgba(255,255,255,0.06);
         }
-        .roi-kpi-card { grid-column: span 2; }
-        .roi-kpi-card:nth-child(4) { grid-column: span 3; }
-        .roi-kpi-card:nth-child(5) { grid-column: span 3; }
-        @media (max-width: 1024px) {
-          .roi-kpi-grid { grid-template-columns: repeat(4, 1fr); }
-          .roi-kpi-card { grid-column: span 2; }
-          .roi-kpi-card:nth-child(4) { grid-column: span 2; }
-          .roi-kpi-card:nth-child(5) { grid-column: span 4; }
+        /* Input columns */
+        .roi-input-cols {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: clamp(24px,3vw,40px) clamp(32px,5vw,64px);
         }
+        .roi-group-label {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.35);
+          margin-bottom: 20px;
+          font-family: 'Exo', sans-serif;
+        }
+        /* Illustration hidden on mobile */
+        .roi-illustration { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 140px; }
+        /* Disclaimer ghost CTA */
+        .roi-disc-cta {
+          border: 1px solid rgba(245,197,64,0.4);
+          padding: 10px 20px;
+          color: #F5C540;
+          font-size: 12px;
+          font-weight: 700;
+          font-family: 'Exo', sans-serif;
+          text-decoration: none;
+          letter-spacing: 0.5px;
+          transition: background .15s;
+          display: inline-block;
+        }
+        .roi-disc-cta:hover { background: rgba(245,197,64,0.08); }
         @media (max-width: 768px) {
-          .roi-kpi-grid { grid-template-columns: 1fr 1fr; }
-          .roi-kpi-card { grid-column: span 1; }
-          .roi-kpi-card:nth-child(4) { grid-column: span 1; }
-          .roi-kpi-card:nth-child(5) { grid-column: span 2; }
-          .roi-input-grid { grid-template-columns: 1fr !important; }
-          .roi-bottom-row { flex-direction: column !important; }
-          .roi-profile-col { border-right: none !important; border-bottom: 1px solid #222; }
+          .roi-input-cols { grid-template-columns: 1fr; }
+          .roi-kpi-row2   { grid-template-columns: 1fr; }
+          .roi-illustration { display: none !important; }
+          .roi-chart-legend { flex-direction: column; gap: 8px !important; }
+          .roi-disc-cta { display: block; text-align: center; width: 100%; box-sizing: border-box; }
+        }
+        @media (max-width: 480px) {
+          .roi-kpi-row1 { grid-template-columns: 1fr; }
         }
       `}</style>
 
-      {/* Section header */}
+      {/* ── Section header ── */}
       <div style={{ padding: 'clamp(48px,6vw,80px) clamp(24px,5vw,72px) 0', maxWidth: 1100, margin: '0 auto' }}>
-        <div className="sec" style={{ marginBottom: 16 }}>Free Estimate</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 24, marginBottom: 48 }}>
-          <h2 style={{ fontSize: 'clamp(24px,3.5vw,40px)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.5px', margin: 0, maxWidth: 520 }}>
-            What could automation<br />save your team?
-          </h2>
-          <Illustration />
-        </div>
+        <div className="eyebrow y" style={{ marginBottom: 16 }}>Free Estimate</div>
+        <h2 style={{ fontSize: 'clamp(24px,3.5vw,40px)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.5px', margin: '0 0 40px 0', maxWidth: 520 }}>
+          What could automation<br />save your team?
+        </h2>
       </div>
 
-      {/* Inputs */}
-      <div style={{ padding: '0 clamp(24px,5vw,72px)', maxWidth: 1100, margin: '0 auto 1px' }}>
+      {/* ── Inputs ── */}
+      <div style={{ padding: '0 clamp(24px,5vw,72px)', maxWidth: 1100, margin: '0 auto' }}>
+
+        {/* Sector selector */}
         <div style={{ marginBottom: 32 }}>
           <PillGroup label="Your sector" options={SECTORS} value={sector} onChange={handleSector} />
         </div>
-        <div className="roi-input-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(24px,3vw,40px) clamp(32px,5vw,64px)', marginBottom: 40 }}>
-          <SliderInput
-            label="Monthly revenue"
-            helper="Your organisation's total monthly revenue."
-            min={8000} max={500000} step={1000}
-            value={revenue} onChange={handleRevenue}
-            fmt={v => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${v}`}
-          />
-          <SliderInput
-            label="Team size"
-            helper="Number of full-time employees."
-            min={3} max={80} step={1}
-            value={teamSize} onChange={handleTeam}
-            fmt={v => `${v} people`}
-          />
-          <SliderInput
-            label="Manual work share"
-            helper="Approximate % of the team's time spent on manual, repeatable tasks."
-            min={10} max={80} step={5}
-            value={manualPct} onChange={handleManual}
-            fmt={v => `${v}%`}
-          />
-          <SliderInput
-            label="Monthly inbound leads"
-            helper="Enquiries, sign-ups, or new leads received per month."
-            min={10} max={2000} step={10}
-            value={leads} onChange={handleLeads}
-            fmt={v => v.toLocaleString()}
-          />
-        </div>
-        <div style={{ marginBottom: 48 }}>
-          <PillGroup label="Current lead response time" options={RESPONSE_TIMES} value={responseTime} onChange={handleResponse} small />
-        </div>
-      </div>
 
-      {/* KPI cards */}
-      <div style={{ borderTop: '1px solid #222' }}>
-        <div className="roi-kpi-grid">
-          <div className="roi-kpi-card">
-            <KpiCard tag="Monthly savings" rawValue={result.monthly} fmt={fmtDollar} sub="At automation maturity" accent={Y} />
+        {/* Two-column input groups */}
+        <div className="roi-input-cols" style={{ marginBottom: 48 }}>
+          {/* Group A */}
+          <div>
+            <div className="roi-group-label">About your business</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+              <SliderInput
+                label="Monthly revenue"
+                helper="Your organisation's total monthly revenue."
+                min={8000} max={500000} step={1000}
+                value={revenue} onChange={handleRevenue}
+                fmt={v => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${v}`}
+              />
+              <SliderInput
+                label="Team size"
+                helper="Number of full-time employees."
+                min={3} max={80} step={1}
+                value={teamSize} onChange={handleTeam}
+                fmt={v => `${v} people`}
+              />
+              <SliderInput
+                label="Manual work share"
+                helper="Approximate % of the team's time spent on manual, repeatable tasks."
+                min={10} max={80} step={5}
+                value={manualPct} onChange={handleManual}
+                fmt={v => `${v}%`}
+              />
+            </div>
           </div>
-          <div className="roi-kpi-card">
-            <KpiCard tag="Annual impact" rawValue={result.annualSavings} fmt={fmtDollarK} sub="12-month cumulative" accent={Y} />
-          </div>
-          <div className="roi-kpi-card">
-            <KpiCard tag="Hours recovered" rawValue={result.hoursPerYear} fmt={fmtHours} sub="Per year across the team" accent="white" />
-          </div>
-          <div className="roi-kpi-card">
-            <KpiCard tag="Revenue growth potential" rawValue={result.annualRevenue} fmt={fmtDollarK} sub="From faster lead response" accent={GREEN} />
-          </div>
-          <div className="roi-kpi-card">
-            <KpiCard tag="Estimated payback" rawValue={result.paybackMonths} fmt={fmtMonths} sub="Based on a typical engagement" accent={BLUE} />
+          {/* Group B */}
+          <div>
+            <div className="roi-group-label">About your leads</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+              <SliderInput
+                label="Monthly inbound leads"
+                helper="Enquiries, sign-ups, or new leads received per month."
+                min={10} max={2000} step={10}
+                value={leads} onChange={handleLeads}
+                fmt={v => v.toLocaleString()}
+              />
+              <PillGroup
+                label="Current lead response time"
+                options={RESPONSE_TIMES}
+                value={responseTime}
+                onChange={handleResponse}
+                small
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Profile + chart row */}
-      <div className="roi-bottom-row" style={{ display: 'flex', borderTop: '1px solid #222' }}>
-        <div className="roi-profile-col" style={{
-          flex: '0 0 clamp(240px,30%,360px)',
-          borderRight: '1px solid #222',
-          padding: 'clamp(24px,3vw,40px)',
+      {/* ── Separator ── */}
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', margin: '0 clamp(24px,5vw,72px)' }} />
+
+      {/* ── KPI cards ── */}
+      <div style={{ maxWidth: 1100, margin: '48px auto 0', padding: '0 clamp(24px,5vw,72px)' }}>
+        {/* Row 1: primary — Monthly savings + Annual impact */}
+        <div className="roi-kpi-row1">
+          <KpiCard
+            primary
+            tag="Monthly savings"
+            rawValue={result.monthly}
+            fmt={fmtDollar}
+            sub="per month at full run-rate"
+            accent={Y}
+          />
+          <KpiCard
+            primary
+            tag="Annual impact"
+            rawValue={result.annualSavings}
+            fmt={fmtDollarK}
+            sub="total over 12 months"
+            accent={Y}
+          />
+        </div>
+        {/* Row 2: secondary — Hours + Revenue + Payback */}
+        <div className="roi-kpi-row2">
+          <KpiCard
+            tag="Hours recovered"
+            rawValue={result.hoursPerYear}
+            fmt={fmtHours}
+            sub="hours back per year"
+            accent="white"
+          />
+          <KpiCard
+            tag="Revenue upside"
+            rawValue={result.annualRevenue}
+            fmt={fmtDollarK}
+            sub="from responding faster to leads"
+            accent={GREEN}
+          />
+          <KpiCard
+            tag="Estimated payback"
+            rawValue={result.paybackMonths}
+            fmt={fmtMonths}
+            sub="to recover a typical investment"
+            accent={BLUE}
+          />
+        </div>
+      </div>
+
+      {/* ── Profile card (full-width, illustration inside) ── */}
+      <div style={{ maxWidth: 1100, margin: '40px auto 0', padding: '0 clamp(24px,5vw,72px)' }}>
+        <div style={{
+          background: '#141414',
+          border: '1px solid #222',
+          borderBottom: 'none',
+          padding: '24px 28px',
+          display: 'flex',
+          gap: 28,
+          alignItems: 'center',
         }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888', marginBottom: 16 }}>Your profile</div>
-          <div style={{ borderLeft: `3px solid ${Y}`, paddingLeft: 16 }}>
-            {/* Values in profileText are from controlled state — safe for dangerouslySetInnerHTML */}
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.68)', lineHeight: 1.8, fontWeight: 300, margin: 0 }}
-               dangerouslySetInnerHTML={{ __html: profileText }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888', marginBottom: 16 }}>
+              Your profile
+            </div>
+            <div style={{ borderLeft: `3px solid ${Y}`, paddingLeft: 16 }}>
+              {/* profileText values come from controlled state — safe for dangerouslySetInnerHTML */}
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.68)', lineHeight: 1.8, fontWeight: 300, margin: 0 }}
+                 dangerouslySetInnerHTML={{ __html: profileText }} />
+            </div>
+          </div>
+          <div className="roi-illustration">
+            <Illustration />
           </div>
         </div>
-        <div style={{ flex: 1, padding: 'clamp(24px,3vw,40px)', minWidth: 0 }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888', marginBottom: 20 }}>
-            12-month cumulative savings
-          </div>
-          <ROIChart key={chartKey} monthlyBreakdown={result.monthlyBreakdown} sector={sector} />
+
+        {/* ── Chart (shares border/background with profile) ── */}
+        <div style={{
+          background: '#141414',
+          border: '1px solid #222',
+          padding: '20px 24px 16px',
+        }}>
+          <ROIChart
+            key={chartKey}
+            monthlyBreakdown={result.monthlyBreakdown}
+            sector={sector}
+            annualRevenue={result.annualRevenue}
+          />
         </div>
       </div>
 
-      {/* Disclaimer */}
-      <div style={{ padding: 'clamp(20px,2.5vw,32px) clamp(24px,5vw,72px)', borderTop: '1px solid #1a1a1a' }}>
-        <p style={{ fontSize: 11, color: '#444', lineHeight: 1.7, fontWeight: 300, margin: '0 auto', maxWidth: 1100 }}>
-          These figures are <span style={{ color: Y }}>best-case scenario estimates</span> based on industry-average automation yields and typical team structures. Actual results depend on workflow complexity, data quality, and implementation scope. We recommend a discovery call before drawing conclusions from this calculator.
-        </p>
+      {/* ── Disclaimer ── */}
+      <div style={{ maxWidth: 1100, margin: '32px auto 0', padding: '0 clamp(24px,5vw,72px) clamp(48px,6vw,80px)' }}>
+        <div style={{
+          border: '1px solid rgba(245,197,64,0.12)',
+          borderLeft: '3px solid rgba(245,197,64,0.35)',
+          padding: '20px 24px',
+          background: '#111',
+        }}>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+            {/* Warning icon — SVG, not emoji */}
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+              <path d="M7 1.5L12.5 12H1.5L7 1.5Z" stroke="rgba(245,197,64,0.6)" strokeWidth="1.2" fill="none" strokeLinejoin="round" />
+              <line x1="7" y1="5.5" x2="7" y2="8.5" stroke="rgba(245,197,64,0.6)" strokeWidth="1.2" strokeLinecap="round" />
+              <circle cx="7" cy="10.5" r="0.6" fill="rgba(245,197,64,0.6)" />
+            </svg>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 13, color: '#555', lineHeight: 1.7, fontWeight: 300, margin: '0 0 16px 0' }}>
+                These figures are <span style={{ color: Y }}>best-case scenario estimates</span> based on industry-average automation yields and typical team structures. Actual results depend on workflow complexity, data quality, and implementation scope. We recommend a discovery call before drawing conclusions from this calculator.
+              </p>
+              <a
+                href="https://calendly.com/tergo-media/30min"
+                target="_blank"
+                rel="noreferrer"
+                className="roi-disc-cta"
+              >
+                Book a free discovery call →
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

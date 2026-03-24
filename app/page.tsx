@@ -184,47 +184,101 @@ export default function Home() {
         ].map(t=>(
           <div className={`review-card at-${t.tc}`} key={t.who}>
             <span className="pull-quote-mark" style={{color:`var(--${t.tc})`}}>&ldquo;</span>
-            <p className="pull-quote-text">{t.q}</p>
+            <p className="pull-quote-text" style={{fontWeight:300,fontStyle:'italic'}}>{t.q}</p>
             <div style={{borderTop:'1px solid var(--b)',paddingTop:16,marginTop:'auto'}}>
-              <div style={{fontSize:13,fontWeight:800,color:'#fff'}}>{t.who}</div>
-              <div style={{fontSize:12,color:'var(--m)',marginTop:4}}>{t.role}</div>
+              <div style={{fontSize:13,fontWeight:300,color:'rgba(255,255,255,0.7)'}}>{t.who}</div>
+              <div style={{fontSize:12,fontWeight:300,color:'var(--m)',marginTop:4}}>{t.role}</div>
             </div>
           </div>
         ))}
       </div>
     </div>
 
-    {/* ── CO-FOUNDERS ── */}
-    <div className="sec">The team behind it</div>
-    <div className="fw fw-grid g2">
-      <div className="cell pad-lg">
-        <div className="fw-grid g2" style={{gap:8,margin:0,padding:0,maxWidth:'100%',border:'none'}}>
-          <ImgPh label="IMG-04" desc="Francesco Terragni" h={360} src="/Images/IMG-04.png" />
-          <ImgPh label="IMG-19" desc="Maria Terragni — CEO" h={360} src="/Images/IMG-19.png" />
+    {/* ── TEAM ── */}
+    <div style={{maxWidth:1100,margin:'0 auto',padding:'56px clamp(24px,5vw,72px) 20px'}}>
+      <div style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:10,fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',color:'#F5C540',marginBottom:18,fontFamily:'DM Sans, sans-serif'}}>
+        <span style={{width:18,height:1,background:'#F5C540',display:'inline-block'}}/>
+        The team behind it
+      </div>
+      <h2 style={{fontFamily:'Syne, sans-serif',fontSize:'clamp(24px,3.5vw,40px)',fontWeight:800,letterSpacing:'-1.2px',lineHeight:1.05,color:'#fff',marginBottom:14}}>
+        People who&apos;ve built it,<br/>not just advised on it.
+      </h2>
+      <p style={{fontFamily:'DM Sans, sans-serif',fontSize:15,color:'rgba(255,255,255,0.4)',fontWeight:300,lineHeight:1.75,maxWidth:560,marginBottom:48}}>
+        We&apos;ve been inside the companies — running teams, shipping product, and dealing with the same operational messiness our clients face. That&apos;s the difference.
+      </p>
+    </div>
+    <div className="team-cards-grid">
+      <style>{`
+        .team-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);max-width:1100px;margin:0 auto clamp(0px,2vw,8px);padding:0 0;width:100%}
+        .team-card{background:#111;position:relative;overflow:hidden;transition:transform 0.25s cubic-bezier(0.16,1,0.3,1)}
+        .team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#F5C540;transform:scaleX(0);transform-origin:left;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)}
+        .team-card:hover{transform:translateY(-6px)}
+        .team-card:hover::before{transform:scaleX(1)}
+        .team-photo-wrap{position:relative;height:280px;overflow:hidden;background:#0d0d0d}
+        .team-photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+        .team-photo-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,#111)}
+        .team-skill-tag{display:inline-block;padding:3px 10px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);font-size:10px;font-weight:400;font-family:'DM Sans',sans-serif;letter-spacing:0.03em;margin:3px 2px 0}
+        .team-li-link{font-size:12px;font-weight:400;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.3);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+        .team-li-link:hover{color:#F5C540}
+        .team-role-chip{display:inline-block;padding:3px 10px;border:1px solid rgba(245,197,64,0.3);color:#F5C540;background:rgba(245,197,64,0.06);font-size:10px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:0.05em;margin:0 4px 4px 0}
+        @media(max-width:768px){.team-cards-grid{grid-template-columns:1fr}.team-card:hover{transform:none}}
+        @media(prefers-reduced-motion:reduce){.team-card,.team-card::before{transition:none}}
+      `}</style>
+
+      {/* Maria — left */}
+      <div className="team-card">
+        <div className="team-photo-wrap">
+          <img src="/Images/IMG-19.png" alt="Maria — CEO" />
         </div>
-        <div className="fw-grid g2" style={{gap:8,margin:0,padding:0,maxWidth:'100%',border:'none',marginTop:8}}>
-          <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
-            <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Francesco</div>
-            Co-founder · Product · CTO
+        <div style={{padding:'24px 28px 28px'}}>
+          <div style={{marginBottom:10}}>
+            <span className="team-role-chip">CEO</span>
+            <span className="team-role-chip">Business Development</span>
+            <span className="team-role-chip">GCC</span>
           </div>
-          <div style={{padding:'10px 12px',background:'#111',border:'1px solid #1e1e1e',fontSize:12,color:'#888'}}>
-            <div style={{fontSize:11,fontWeight:800,color:'#fff',marginBottom:2}}>Maria — CEO</div>
-            Business development · GCC
+          <div style={{fontFamily:'Syne, sans-serif',fontSize:27,fontWeight:800,letterSpacing:'-0.8px',color:'#fff',lineHeight:1,marginBottom:6}}>Maria</div>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:'DM Sans, sans-serif',marginBottom:16}}>Commercial leadership · GCC markets</div>
+          <p style={{fontSize:14,fontFamily:'DM Sans, sans-serif',fontWeight:300,lineHeight:1.8,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
+            Maria leads the commercial side of Tergo Media — from business development across the GCC to the operational structure that keeps us delivering at scale. With over a decade in product management, marketing, and international business development, she brings strategic clarity and genuine relationship-building to every client engagement.
+          </p>
+          <div style={{marginBottom:20,display:'flex',flexWrap:'wrap'}}>
+            {['Business Development','Strategic Planning','GCC Markets','Team Leadership','Process Optimisation'].map(t=>(
+              <span key={t} className="team-skill-tag">{t}</span>
+            ))}
           </div>
+          <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer" className="team-li-link">LinkedIn →</a>
         </div>
       </div>
-      <div className="cell pad-lg" style={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
-        <div className="eyebrow y">Built by operators</div>
-        <h2 style={{marginBottom:20}}>We&apos;ve built and exited products.<br/>We know what shipping means.</h2>
-        <p style={{marginBottom:16}}><strong>Francesco</strong> builds technology companies from the ground up — CTO, engineer, and co-founder. Previously at KAYAK, he scaled Skipodium to $7M before exit. <strong>Maria</strong>, CEO, brings 12+ years in operations and business transformation in the travel industry, with a track record of building efficient organisations and enabling data-driven leadership.</p>
-        <p style={{marginBottom:24}}>Between the two: deep technical execution, commercial leadership, and operational excellence — across Europe and the GCC.</p>
-        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-          <span className="tag y">Francesco — Co-founder & CTO</span>
-          <span className="tag y">Node.js · Python · React · AI</span>
-          <span className="tag c">Maria — CEO</span>
-          <span className="tag c">Operations · Transformation · GCC</span>
+
+      {/* Francesco — right */}
+      <div className="team-card">
+        <div className="team-photo-wrap">
+          <img src="/Images/IMG-04.png" alt="Francesco — Co-founder & CTO" />
+        </div>
+        <div style={{padding:'24px 28px 28px'}}>
+          <div style={{marginBottom:10}}>
+            <span className="team-role-chip">Co-founder</span>
+            <span className="team-role-chip">CTO</span>
+            <span className="team-role-chip">Full-Stack</span>
+          </div>
+          <div style={{fontFamily:'Syne, sans-serif',fontSize:27,fontWeight:800,letterSpacing:'-0.8px',color:'#fff',lineHeight:1,marginBottom:6}}>Francesco</div>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:'DM Sans, sans-serif',marginBottom:16}}>Technical core · Systems architecture</div>
+          <p style={{fontSize:14,fontFamily:'DM Sans, sans-serif',fontWeight:300,lineHeight:1.8,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
+            Francesco is the technical core of Tergo Media — designing the systems, writing the code, and making sure what we promise actually ships. With 10+ years across CTO roles and hands-on development in JavaScript, Node.js, Python, and React, he covers everything from AI pipelines and IoT platforms to SaaS architecture and automation systems.
+          </p>
+          <div style={{marginBottom:20,display:'flex',flexWrap:'wrap'}}>
+            {['Node.js','React','Python','AI & Automation','System Architecture'].map(t=>(
+              <span key={t} className="team-skill-tag">{t}</span>
+            ))}
+          </div>
+          <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer" className="team-li-link">LinkedIn →</a>
         </div>
       </div>
+    </div>
+    <div style={{maxWidth:1100,margin:'0 auto',padding:'20px clamp(24px,5vw,72px) 56px',textAlign:'center'}}>
+      <p style={{fontSize:13,color:'rgba(255,255,255,0.28)',fontFamily:'DM Sans, sans-serif',fontWeight:300,fontStyle:'italic'}}>
+        Between the two: commercial leadership and deep technical execution — across Europe and the GCC.
+      </p>
     </div>
 
     <CtaBar h="Ready to build something that actually works?" sub="Book a free 30-minute discovery call. No pitch, no commitment — just clarity on what's possible." />

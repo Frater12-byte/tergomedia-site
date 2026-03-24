@@ -465,8 +465,8 @@ input[type=range] { flex: 1; accent-color: var(--y); height: 3px; }
 .footer-bottom { border-top: 1px solid rgba(242,194,0,0.15); }
 .footer-bottom-inner { max-width: 1100px; margin: 0 auto; padding: 18px clamp(24px,5vw,72px); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
 .footer-offices { display: flex; gap: 20px; }
-.footer-office { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; color: #2a2a2a; display: flex; align-items: center; gap: 5px; }
-.footer-copy { font-size: 10px; color: #252525; letter-spacing: 0.5px; }
+.footer-office { font-size: 13px; font-weight: 400; letter-spacing: 0.3px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 5px; }
+.footer-copy { font-size: 11px; color: rgba(255,255,255,0.75); letter-spacing: 0.3px; }
 
 /* ── CHATBOT ── */
 .chat-btn {

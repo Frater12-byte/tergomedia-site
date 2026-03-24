@@ -30,7 +30,7 @@ export default function Footer() {
           0%,100% { transform: scale(1); opacity: 1; }
           50%      { transform: scale(1.15); opacity: 0.7; }
         }
-        .footer-dot { display: inline-block; font-size: 14px; animation: dotPulse 2.5s ease-in-out infinite; }
+        .footer-dot { display: inline-block; font-size: 13px; color: #F5C540; opacity: 1; animation: dotPulse 2.5s ease-in-out infinite; }
         .footer-dot-2 { animation-delay: 0.8s; }
         .footer-dot-3 { animation-delay: 1.6s; }
         @media (prefers-reduced-motion: reduce) { .footer-dot { animation: none; } }

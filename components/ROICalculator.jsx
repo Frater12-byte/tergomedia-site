@@ -232,74 +232,186 @@ function Illustration() {
 /* ── ROIChart ──────────────────────────────────────────────────────────────── */
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-function ROIChart({ cumulative, monthly }) {
-  const W = 700, H = 220, PL = 54, PR = 20, PT = 24, PB = 36;
+const SECTOR_VARIANCE = {
+  'Real Estate':           [0, .03, -.02, .04, -.01, .03, .02, -.02, .04, -.01, .02, .01],
+  'Travel & Hospitality':  [0, .05, -.04, .06, .02, -.03, .07, -.02, .04, -.05, .06, .02],
+  'Agriculture':           [0, .02, .04, -.03, .06, -.02, .03, .05, -.04, .02, -.01, .03],
+  'Professional Services': [0, .03, -.01, .02, .04, -.02, .01, .03, -.01, .04, .02, -.01],
+  'Media & Publishing':    [0, .04, -.03, .05, -.02, .04, -.01, .06, -.03, .02, .05, -.02],
+  'E-commerce & Retail':   [0, .06, -.04, .03, .05, -.03, .04, -.02, .06, -.04, .03, .05],
+  'Other':                 [0, .03, -.02, .03, -.01, .02, .03, -.02, .03, -.01, .02, .01],
+};
+
+function fmtAxisVal(v) {
+  if (v >= 1000) return `$${(v / 1000).toFixed(0)}K`;
+  return `$${Math.round(v)}`;
+}
+
+function smoothPath(points) {
+  if (points.length < 2) return '';
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1], curr = points[i];
+    const cpx = (prev.x + curr.x) / 2;
+    d += ` C ${cpx} ${prev.y} ${cpx} ${curr.y} ${curr.x} ${curr.y}`;
+  }
+  return d;
+}
+
+function ROIChart({ monthlyBreakdown, sector }) {
+  const W = 700, H = 240, PL = 54, PR = 54, PT = 28, PB = 36;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
-  const maxVal = Math.max(...cumulative, monthly * 12, 1);
   const [hovered, setHovered] = useState(null);
+  const lineRef   = useRef(null);
+  const annotRef  = useRef(null);
+
+  // Visual-only noise layer — does NOT affect KPI cards
+  const variance = SECTOR_VARIANCE[sector] || SECTOR_VARIANCE['Other'];
+  const chartMonthlyValues = monthlyBreakdown.map((v, i) => Math.max(v * (1 + variance[i]), 0));
+  const chartCumulative = chartMonthlyValues.reduce((acc, v, i) => {
+    acc.push((acc[i - 1] || 0) + v);
+    return acc;
+  }, []);
+
+  const maxBar = Math.max(...chartMonthlyValues, 1);
+  const maxCum = Math.max(...chartCumulative, 1);
 
   const gap  = chartW / 12;
   const barW = Math.floor(gap * 0.52);
 
-  function xFor(i) { return PL + gap * i + gap * 0.24; }
-  function yFor(v) { return PT + chartH - (v / maxVal) * chartH; }
+  function xFor(i)    { return PL + gap * i + gap * 0.24; }
+  function yForBar(v) { return PT + chartH - (v / maxBar) * chartH; }
+  function yForCum(v) { return PT + chartH - (v / maxCum) * chartH; }
 
-  const pts = cumulative.map((v, i) => [xFor(i) + barW / 2, yFor(v)]);
-  let linePath = `M ${pts[0][0]} ${pts[0][1]}`;
-  for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1];
-    const [x1, y1] = pts[i];
-    const cx = (x0 + x1) / 2;
-    linePath += ` C ${cx} ${y0} ${cx} ${y1} ${x1} ${y1}`;
-  }
+  const pts = chartCumulative.map((v, i) => ({ x: xFor(i) + barW / 2, y: yForCum(v) }));
+  const linePath = smoothPath(pts);
 
-  function fmtAxis(v) {
-    if (v >= 100000) return `$${(v / 1000).toFixed(0)}K`;
-    if (v >= 1000)   return `$${(v / 1000).toFixed(0)}K`;
-    return `$${Math.round(v)}`;
-  }
+  // Y-axis ticks: 0, 33%, 66%, 100%
+  const barTicks = [0, 0.33, 0.66, 1].map(t => maxBar * t);
+  const cumTicks = [0, 0.33, 0.66, 1].map(t => maxCum * t);
+
+  // Milestone labels: Jan(0), Apr(3), Jul(6), Oct(9), Dec(11)
+  const milestoneIdx = [0, 3, 6, 9, 11];
+
+  // Line + annotation animation on mount (key forces remount on every calc change)
+  useEffect(() => {
+    const reduced = typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const lineEl = lineRef.current;
+    if (lineEl) {
+      if (reduced) {
+        lineEl.style.strokeDasharray = 'none';
+        lineEl.style.strokeDashoffset = '0';
+      } else {
+        const len = lineEl.getTotalLength();
+        lineEl.style.strokeDasharray = String(len);
+        lineEl.style.strokeDashoffset = String(len);
+        lineEl.style.transition = 'none';
+        const raf = requestAnimationFrame(() => {
+          lineEl.style.transition = 'stroke-dashoffset 700ms ease-out';
+          lineEl.style.strokeDashoffset = '0';
+        });
+        return () => cancelAnimationFrame(raf);
+      }
+    }
+  }, []); // runs once per mount; key={chartKey} at call site guarantees remount per change
+
+  useEffect(() => {
+    const reduced = typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const annotEl = annotRef.current;
+    if (!annotEl) return;
+    if (reduced) { annotEl.style.opacity = '1'; return; }
+    annotEl.style.opacity = '0';
+    const t = setTimeout(() => {
+      annotEl.style.transition = 'opacity 300ms ease-out';
+      annotEl.style.opacity = '1';
+    }, 700);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Last data point for annotation
+  const lastPt = pts[pts.length - 1];
+  const lastCum = chartCumulative[chartCumulative.length - 1];
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
-        {/* Grid lines + Y-axis ticks */}
-        {[0, 0.25, 0.5, 0.75, 1].map((t, i) => {
-          const v = maxVal * t;
-          const y = yFor(v);
+      <style>{`
+        @keyframes barGrow {
+          from { transform: scaleY(0); }
+          to   { transform: scaleY(1); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .roi-bar { animation: none !important; }
+        }
+      `}</style>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
+
+        {/* Grid lines + left Y-axis (bar scale) */}
+        {barTicks.map((v, i) => {
+          const y = yForBar(v);
           return (
             <g key={i}>
               <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
               <text x={PL - 6} y={y + 4} textAnchor="end" fill="#555" fontSize="9" fontFamily="'Exo',sans-serif">
-                {fmtAxis(v)}
+                {fmtAxisVal(v)}
               </text>
             </g>
           );
         })}
 
-        {/* Bars */}
-        {cumulative.map((v, i) => {
-          const barH = Math.max((v / maxVal) * chartH, 1);
+        {/* Right Y-axis (cumulative scale) */}
+        {cumTicks.map((v, i) => {
+          const y = yForCum(v);
+          return (
+            <text key={i} x={W - PR + 6} y={y + 4} textAnchor="start" fill="#3a3a3a" fontSize="9" fontFamily="'Exo',sans-serif">
+              {fmtAxisVal(v)}
+            </text>
+          );
+        })}
+
+        {/* Bars — CSS keyframe animation, scaleY from bottom */}
+        {chartMonthlyValues.map((v, i) => {
+          const barH = Math.max((v / maxBar) * chartH, 1);
           const x = xFor(i);
           const y = PT + chartH - barH;
           const isHov = hovered === i;
+          const delay = `${i * 35}ms`;
           return (
-            <g key={i}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}>
-              <rect x={x} y={y} width={barW} height={barH} rx="2"
+            <g key={i} onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}>
+              <rect
+                className="roi-bar"
+                x={x} y={y} width={barW} height={barH} rx="2"
                 fill={isHov ? Y : 'rgba(242,194,0,0.18)'}
-                style={{ transition: 'fill .15s' }} />
+                style={{
+                  transformBox: 'fill-box',
+                  transformOrigin: 'bottom',
+                  animation: `barGrow 300ms ease-out both ${delay}`,
+                  transition: 'fill .15s',
+                }}
+              />
+              {/* invisible hit area */}
               <rect x={x - 4} y={PT} width={barW + 8} height={chartH} fill="transparent" />
             </g>
           );
         })}
 
-        {/* Cumulative line */}
-        <path d={linePath} stroke={Y} strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
+        {/* Cumulative line — animated via ref in useEffect */}
+        <path ref={lineRef} d={linePath} stroke={Y} strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
+
+        {/* Milestone labels above line */}
+        {milestoneIdx.map(i => (
+          <text key={i}
+            x={pts[i].x} y={pts[i].y - 8}
+            textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="9" fontFamily="'Exo',sans-serif">
+            {fmtAxisVal(chartCumulative[i])}
+          </text>
+        ))}
 
         {/* Line dots */}
-        {pts.map(([x, y], i) => (
+        {pts.map(({ x, y }, i) => (
           <circle key={i} cx={x} cy={y}
             r={hovered === i ? 5 : 3}
             fill={hovered === i ? Y : '#141414'}
@@ -318,9 +430,22 @@ function ROIChart({ cumulative, monthly }) {
           </text>
         ))}
 
+        {/* Final annotation pill — fades in via ref after line animation */}
+        <g ref={annotRef} style={{ opacity: 0 }}>
+          <rect
+            x={lastPt.x - 38} y={lastPt.y - 26}
+            width={76} height={18} rx="4"
+            fill="rgba(0,0,0,0.7)" stroke="rgba(245,197,64,0.3)" strokeWidth="1"
+          />
+          <text x={lastPt.x} y={lastPt.y - 13}
+            textAnchor="middle" fill={Y} fontSize="10" fontFamily="'Exo',sans-serif" fontWeight="700">
+            {fmtAxisVal(lastCum)} total
+          </text>
+        </g>
+
         {/* Tooltip */}
         {hovered !== null && (() => {
-          const [tx, ty] = pts[hovered];
+          const { x: tx, y: ty } = pts[hovered];
           const tipW = 118, tipH = 52;
           const tipX = tx + tipW + 8 > W ? tx - tipW - 8 : tx + 8;
           const tipY = Math.max(ty - tipH / 2, PT);
@@ -332,7 +457,7 @@ function ROIChart({ cumulative, monthly }) {
                 fontWeight="700" letterSpacing="1">CUMULATIVE M{hovered + 1}</text>
               <text x={tipX + 10} y={tipY + 36} fill={Y} fontSize="15" fontFamily="'Exo',sans-serif"
                 fontWeight="900">
-                ${Math.round(cumulative[hovered]).toLocaleString()}
+                ${Math.round(chartCumulative[hovered]).toLocaleString()}
               </text>
             </g>
           );
@@ -558,7 +683,7 @@ export default function ROICalculator() {
           <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888', marginBottom: 20 }}>
             12-month cumulative savings
           </div>
-          <ROIChart key={chartKey} cumulative={result.cumulative} monthly={result.monthly} />
+          <ROIChart key={chartKey} monthlyBreakdown={result.monthlyBreakdown} sector={sector} />
         </div>
       </div>
 

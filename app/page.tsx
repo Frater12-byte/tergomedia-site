@@ -193,36 +193,51 @@ export default function Home() {
         .team-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);max-width:1100px;margin:0 auto clamp(0px,2vw,8px);padding:0 0;width:100%}
         .team-card{background:#111;position:relative;overflow:hidden;transition:transform 0.25s cubic-bezier(0.16,1,0.3,1)}
         .team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--y);transform:scaleX(0);transform-origin:left;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)}
-        .team-card:hover{transform:translateY(-6px)}
         .team-card:hover::before{transform:scaleX(1)}
-        .team-photo-wrap{position:relative;width:200px;height:200px;border-radius:10px;overflow:hidden;background:#0d0d0d}
+        .team-photo-wrap{position:relative;width:200px;height:200px;border-radius:10px;overflow:hidden;background:#0d0d0d;flex-shrink:0}
         .team-photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
         .team-skill-tag{display:inline-block;padding:3px 10px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);font-size:10px;font-weight:400;font-family:'Exo',sans-serif;letter-spacing:0.03em;margin:3px 2px 0}
         .team-li-link{font-size:12px;font-weight:400;font-family:'Exo',sans-serif;color:rgba(255,255,255,0.3);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
         .team-li-link:hover{color:var(--y)}
         .team-role-chip{display:inline-block;padding:3px 10px;border:1px solid rgba(242,194,0,0.3);color:var(--y);background:rgba(242,194,0,0.06);font-size:10px;font-weight:600;font-family:'Exo',sans-serif;letter-spacing:0.05em;margin:0 4px 4px 0}
+        .team-card-text{padding:24px 28px 28px}
+        .team-card-name{font-family:'Exo',sans-serif;font-size:27px;font-weight:800;letter-spacing:-0.8px;color:#fff;line-height:1;margin-bottom:6px}
+        @media(min-width:1025px){
+          .team-cards-grid{grid-template-columns:1fr;gap:0;background:none}
+          .team-card{display:flex;flex-direction:row;align-items:stretch}
+          .team-card:hover{transform:none}
+          .team-card:nth-child(2){flex-direction:row-reverse}
+          .team-card:nth-child(1){border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:48px}
+          .team-photo-wrap{width:42% !important;height:420px !important;border-radius:0 !important}
+          .team-card:nth-child(1) .team-photo-wrap{border-right:2px solid rgba(245,197,64,0.25)}
+          .team-card:nth-child(2) .team-photo-wrap{border-left:2px solid rgba(245,197,64,0.25)}
+          .team-card-text{flex:1;display:flex;flex-direction:column;justify-content:center}
+          .team-card:nth-child(1) .team-card-text{padding:40px 48px 40px 40px}
+          .team-card:nth-child(2) .team-card-text{padding:40px 40px 40px 48px}
+          .team-card-name{font-size:36px !important;font-weight:700 !important}
+        }
         @media(max-width:768px){
           .team-cards-grid{grid-template-columns:1fr}
           .team-card:hover{transform:none}
-          .team-photo-wrap{width:100%;height:320px;border-radius:0}
+          .team-photo-wrap{width:100% !important;height:320px !important;border-radius:0 !important}
         }
         @media(prefers-reduced-motion:reduce){.team-card,.team-card::before{transition:none}}
       `}</style>
 
-      {/* Maria — left */}
+      {/* Maria — left on desktop */}
       <div className="team-card">
         <div className="team-photo-wrap">
           <img src="/Images/IMG-19.png" alt="Maria — CEO, Tergo Media" />
         </div>
-        <div style={{padding:'24px 28px 28px'}}>
+        <div className="team-card-text">
           <div style={{marginBottom:10}}>
             <span className="team-role-chip">CEO</span>
             <span className="team-role-chip">Business Development</span>
             <span className="team-role-chip">GCC</span>
           </div>
-          <div style={{fontFamily:"'Exo', sans-serif",fontSize:27,fontWeight:800,letterSpacing:'-0.8px',color:'#fff',lineHeight:1,marginBottom:6}}>Maria</div>
+          <div className="team-card-name">Maria</div>
           <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",marginBottom:16}}>Commercial leadership · GCC markets</div>
-          <p style={{fontSize:14,fontFamily:"'Exo', sans-serif",fontWeight:300,lineHeight:1.8,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
+          <p style={{fontSize:15,fontFamily:"'Exo', sans-serif",fontWeight:300,lineHeight:1.85,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
             Maria leads the commercial side of Tergo Media — from business development across the GCC to the operational structure that keeps us delivering at scale. With over a decade in product management, marketing, and international business development, she brings strategic clarity and genuine relationship-building to every client engagement.
           </p>
           <div style={{marginBottom:20,display:'flex',flexWrap:'wrap'}}>
@@ -234,20 +249,20 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Francesco — right */}
+      {/* Francesco — right on desktop */}
       <div className="team-card">
         <div className="team-photo-wrap">
           <img src="/Images/IMG-04.png" alt="Francesco Terragni — Co-founder & CTO, Tergo Media" />
         </div>
-        <div style={{padding:'24px 28px 28px'}}>
+        <div className="team-card-text">
           <div style={{marginBottom:10}}>
             <span className="team-role-chip">Co-founder</span>
             <span className="team-role-chip">CTO</span>
             <span className="team-role-chip">Full-Stack</span>
           </div>
-          <div style={{fontFamily:"'Exo', sans-serif",fontSize:27,fontWeight:800,letterSpacing:'-0.8px',color:'#fff',lineHeight:1,marginBottom:6}}>Francesco</div>
+          <div className="team-card-name">Francesco</div>
           <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",marginBottom:16}}>Technical core · Systems architecture</div>
-          <p style={{fontSize:14,fontFamily:"'Exo', sans-serif",fontWeight:300,lineHeight:1.8,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
+          <p style={{fontSize:15,fontFamily:"'Exo', sans-serif",fontWeight:300,lineHeight:1.85,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
             Francesco is the technical core of Tergo Media — designing the systems, writing the code, and making sure what we promise actually ships. With 10+ years across CTO roles and hands-on development in JavaScript, Node.js, Python, and React, he covers everything from AI pipelines and IoT platforms to SaaS architecture and automation systems.
           </p>
           <div style={{marginBottom:20,display:'flex',flexWrap:'wrap'}}>
@@ -259,7 +274,7 @@ export default function Home() {
         </div>
       </div>
     </div>
-    <div style={{maxWidth:1100,margin:'0 auto',padding:'20px clamp(24px,5vw,72px) 56px',textAlign:'center'}}>
+    <div style={{maxWidth:1100,margin:'0 auto',padding:'40px clamp(24px,5vw,72px) 56px',textAlign:'center',borderTop:'1px solid rgba(255,255,255,0.06)'}}>
       <p style={{fontSize:13,color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",fontWeight:300,fontStyle:'italic'}}>
         Between the two: commercial leadership and deep technical execution — across Europe and the GCC.
       </p>

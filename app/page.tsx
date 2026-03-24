@@ -93,13 +93,16 @@ export default function Home() {
     </div>
 
     {/* ── SECTORS ── */}
+    <style>{`@media(min-width:769px) and (max-width:1024px){.sectors-grid{grid-template-columns:1fr 1fr!important}}`}</style>
     <div className="sec">Sectors we serve</div>
-    <div className="fw fw-grid g4">
+    <div className="fw fw-grid g3 sectors-grid">
       {[
-        {c:'y',label:'Real estate · Dubai',t:'Brokerages',d:'Lead routing, CRM automation, AI follow-up.',href:'/sectors/real-estate'},
-        {c:'c',label:'Travel & hospitality',t:'Tour operators',d:'Booking automation, AI itinerary generation.',href:'/sectors/travel-hospitality'},
-        {c:'p',label:'Agriculture',t:'Agri businesses',d:'IoT monitoring, automated alerts, portals.',href:'/sectors/agriculture'},
-        {c:'r',label:'Professional services',t:'Service firms',d:'Invoice automation, KPI reporting, onboarding.',href:'/sectors/professional-services'},
+        {c:'y',label:'Real estate',t:'Brokerages & developers',d:'Lead routing, CRM automation, AI follow-up, and document processing — from first enquiry to signed contract.',href:'/sectors/real-estate'},
+        {c:'c',label:'Travel & hospitality',t:'Tour operators & hotels',d:'Booking automation, AI itinerary generation, supplier comms, and revenue reporting — running without manual input.',href:'/sectors/travel-hospitality'},
+        {c:'p',label:'Agriculture',t:'Agri businesses & distributors',d:'IoT sensor monitoring, automated alerts, distributor portals, and inventory tracking — field to office, connected.',href:'/sectors/agriculture'},
+        {c:'r',label:'Media & publishing',t:'Agencies & content platforms',d:'Content workflows, asset management, automated distribution, and performance reporting — built for teams that move fast.',href:'/sectors'},
+        {c:'y',label:'Professional services',t:'Consultancies & service firms',d:'Invoice automation, KPI dashboards, client onboarding, and reporting — your admin runs itself so your team focuses on delivery.',href:'/sectors/professional-services'},
+        {c:'c',label:'E-commerce & retail',t:'Online stores & brands',d:'Order management, returns automation, catalogue sync, and customer communication — at scale, without extra headcount.',href:'/sectors'},
       ].map(s=>(
         <Link href={s.href} className="cell" key={s.t} style={{display:'block',minHeight:220}}>
           <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:`var(--${s.c})`,marginBottom:12}}>{s.label}</div>

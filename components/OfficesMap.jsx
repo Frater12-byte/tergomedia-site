@@ -5,8 +5,15 @@ const YELLOW = '#F2C200';
 const W = 1000, H = 420;
 const LON_MIN = -20, LON_MAX = 75, LAT_MIN = 10, LAT_MAX = 70;
 
+// Bounded Mercator projection — consistent for both polygons and pins
+const MERC_Y_TOP = Math.log(Math.tan(Math.PI / 4 + LAT_MAX * Math.PI / 360));
+const MERC_Y_BOT = Math.log(Math.tan(Math.PI / 4 + LAT_MIN * Math.PI / 360));
+
 function mx(lon) { return (lon - LON_MIN) / (LON_MAX - LON_MIN) * W; }
-function my(lat) { return (LAT_MAX - lat) / (LAT_MAX - LAT_MIN) * H; }
+function my(lat) {
+  const mercY = Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360));
+  return (MERC_Y_TOP - mercY) / (MERC_Y_TOP - MERC_Y_BOT) * H;
+}
 function pts(coords) {
   return coords.map(([lon, lat]) => `${mx(lon).toFixed(1)},${my(lat).toFixed(1)}`).join(' ');
 }
@@ -55,14 +62,14 @@ const CENTRAL_ASIA = [
 ];
 
 const LANDMASSES = [
-  { id: 'europe',   coords: EUROPE,       fill: '#1a1f1a' },
-  { id: 'scan',     coords: SCANDINAVIA,  fill: '#1a1f1a' },
-  { id: 'uk',       coords: UK,           fill: '#1a1f1a' },
-  { id: 'turkey',   coords: TURKEY,       fill: '#1a1f1a' },
-  { id: 'me',       coords: MIDDLE_EAST,  fill: '#1a1f1a' },
-  { id: 'africa',   coords: NE_AFRICA,    fill: '#1a1f1a' },
-  { id: 'arab',     coords: ARABIAN,      fill: '#1a1f1a' },
-  { id: 'casia',    coords: CENTRAL_ASIA, fill: '#1a1f1a' },
+  { id: 'europe',   coords: EUROPE,       fill: '#1c1c1c' },
+  { id: 'scan',     coords: SCANDINAVIA,  fill: '#1c1c1c' },
+  { id: 'uk',       coords: UK,           fill: '#1c1c1c' },
+  { id: 'turkey',   coords: TURKEY,       fill: '#1c1c1c' },
+  { id: 'me',       coords: MIDDLE_EAST,  fill: '#1c1c1c' },
+  { id: 'africa',   coords: NE_AFRICA,    fill: '#1c1c1c' },
+  { id: 'arab',     coords: ARABIAN,      fill: '#1c1c1c' },
+  { id: 'casia',    coords: CENTRAL_ASIA, fill: '#1c1c1c' },
 ];
 
 const OFFICES = [
@@ -213,9 +220,9 @@ export default function OfficesMap() {
 
   return (
     <div style={{
-      borderTop: '1px solid rgba(255,255,255,0.07)',
-      borderBottom: '1px solid rgba(255,255,255,0.07)',
-      background: '#060e14',
+      borderTop: '1px solid rgba(255,255,255,0.05)',
+      borderBottom: '1px solid rgba(255,255,255,0.05)',
+      background: '#0a0a0a',
     }}>
       <style>{animCSS}</style>
 
@@ -227,12 +234,11 @@ export default function OfficesMap() {
         >
           {/* Ocean gradient + land definitions */}
           <defs>
-            <radialGradient id="ocean-depth" cx="52%" cy="48%" r="55%">
-              <stop offset="0%"   stopColor="#0d1f2d" stopOpacity="1" />
-              <stop offset="50%"  stopColor="#091820" stopOpacity="1" />
-              <stop offset="100%" stopColor="#060e14" stopOpacity="1" />
+            <radialGradient id="ocean-depth" cx="50%" cy="50%" r="55%">
+              <stop offset="0%"   stopColor="#111111" stopOpacity="1" />
+              <stop offset="100%" stopColor="#080808" stopOpacity="1" />
             </radialGradient>
-            <filter id="coast-glow">
+            <filter id="coast-halo">
               <feGaussianBlur stdDeviation="2" />
             </filter>
           </defs>
@@ -241,24 +247,24 @@ export default function OfficesMap() {
           {/* Graticule */}
           {[-10,0,10,20,30,40,50,60,70].map(lon => (
             <line key={`v${lon}`} x1={mx(lon)} x2={mx(lon)} y1={0} y2={H}
-              stroke="rgba(255,255,255,0.025)" strokeWidth="1" />
+              stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
           ))}
           {[20,30,40,50,60].map(lat => (
             <line key={`h${lat}`} x1={0} x2={W} y1={my(lat)} y2={my(lat)}
-              stroke="rgba(255,255,255,0.025)" strokeWidth="1" />
+              stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
           ))}
 
-          {/* Coast glow layer (behind land) */}
+          {/* Coast halo layer (behind land — soft raised edge) */}
           {LANDMASSES.map(lm => (
-            <polygon key={`glow-${lm.id}`} points={pts(lm.coords)}
-              fill="none" stroke="rgba(74,222,128,0.06)" strokeWidth="3"
-              filter="url(#coast-glow)" />
+            <polygon key={`halo-${lm.id}`} points={pts(lm.coords)}
+              fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="4"
+              filter="url(#coast-halo)" />
           ))}
 
           {/* Land masses */}
           {LANDMASSES.map(lm => (
             <polygon key={lm.id} points={pts(lm.coords)}
-              fill={lm.fill} stroke="rgba(210,220,200,0.28)" strokeWidth="1.4" />
+              fill={lm.fill} stroke="rgba(255,255,255,0.22)" strokeWidth="1.6" />
           ))}
 
           {/* Flight path arcs with travelling dots */}
@@ -350,7 +356,7 @@ export default function OfficesMap() {
           top: 0, left: 0, right: 0,
           bottom: 0,
           pointerEvents: 'none',
-          background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(13,13,13,0.55) 75%, rgba(13,13,13,0.92) 100%)',
+          background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.92) 100%)',
         }} />
 
         {/* HTML hover/active cards — desktop only (hidden on mobile via CSS) */}

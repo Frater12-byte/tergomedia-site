@@ -104,6 +104,19 @@ export default function Home() {
       ))}
     </div>
 
+    {/* ── HOW WE WORK ── */}
+    <div className="sec">How we work</div>
+    <div className="fw fw-grid g2">
+      <div className="cell pad-lg">
+        <h3>From first call to live system — in weeks, not months</h3>
+        <p>We work in tight, outcome-focused sprints with fixed-price proposals and clear deliverables at each step. No bloated retainers. No surprises.</p>
+        <div style={{marginTop:28}}>
+          <Link href="/contact" className="btn btn-y">Start a project →</Link>
+        </div>
+      </div>
+      <div className="cell"><Stepper steps={PROCESS_STEPS} color="y" /></div>
+    </div>
+
     {/* ── ROI CALCULATOR ── */}
     <ROICalculator />
 
@@ -265,19 +278,6 @@ export default function Home() {
       <p style={{fontSize:13,color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",fontWeight:300,fontStyle:'italic'}}>
         Between the two: commercial leadership and deep technical execution — across Europe and the GCC.
       </p>
-    </div>
-
-    {/* ── HOW WE WORK ── */}
-    <div className="sec">How we work</div>
-    <div className="fw fw-grid g2">
-      <div className="cell pad-lg">
-        <h3>From first call to live system — in weeks, not months</h3>
-        <p>We work in tight, outcome-focused sprints with fixed-price proposals and clear deliverables at each step. No bloated retainers. No surprises.</p>
-        <div style={{marginTop:28}}>
-          <Link href="/contact" className="btn btn-y">Start a project →</Link>
-        </div>
-      </div>
-      <div className="cell"><Stepper steps={PROCESS_STEPS} color="y" /></div>
     </div>
 
     <CtaBar h="Ready to build something that actually works?" sub="Book a free 30-minute discovery call. No pitch, no commitment — just clarity on what's possible." />

@@ -46,38 +46,47 @@ const RESPONSE_UPLIFT = {
   'Over 24 hours':0.28,
 };
 
-// 12-month ramp: months 1-2 at 25%, 3-4 at 60%, 5-12 at 100%
-const RAMP = [0.25, 0.25, 0.60, 0.60, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
-
-/* ── Calculation ───────────────────────────────────────────────────────────── */
-function calcROI(sector, revenue, teamSize, manualPct, leads, responseTime) {
-  const hourlyRate          = SECTOR_RATES[sector] ?? 24;
-  const adminHoursPerPerson = SECTOR_ADMIN_HOURS[sector] ?? 5;
-  const hoursPerPersonPerMonth = adminHoursPerPerson * 4.33;
-
-  const hoursRecoveredPerMonth = Math.min(
-    teamSize * hoursPerPersonPerMonth * (manualPct / 100) * 0.45,
+/* ── Unified calculation ─────────────────────────────────────────────────── */
+function runFullCalculation({ sector, monthlyRevenue, teamSize, manualPct, monthlyLeads, responseTime }) {
+  const hourlyRate    = SECTOR_RATES[sector] || 24;
+  const hoursPerMonth = Math.min(
+    teamSize * (SECTOR_ADMIN_HOURS[sector] || 5) * 4.33 * (manualPct / 100) * 0.45,
     teamSize * 32
   );
-  const monthly = Math.min(hoursRecoveredPerMonth * hourlyRate, 35000);
+  const peakMonthlySavings = Math.min(Math.round(hoursPerMonth * hourlyRate), 35000);
 
-  const leadVolumeMultiplier = Math.min(1 + (leads - 150) / 1000, 1.6);
-  const uplift            = RESPONSE_UPLIFT[responseTime] ?? 0.18;
-  const attributionFactor = revenue < 100000 ? 0.25 : 0.32;
-  const monthlyUplift     = Math.min(
-    revenue * uplift * attributionFactor * leadVolumeMultiplier,
-    revenue * 0.20
+  const leadVolumeMultiplier = Math.min(1 + (monthlyLeads - 150) / 1000, 1.6);
+  const upliftPct          = RESPONSE_UPLIFT[responseTime] || 0.18;
+  const attributionFactor  = monthlyRevenue < 100000 ? 0.25 : 0.32;
+  const peakMonthlyRevenue = Math.min(
+    Math.round(monthlyRevenue * upliftPct * attributionFactor * leadVolumeMultiplier),
+    Math.round(monthlyRevenue * 0.20)
   );
-  const annualRevenue     = Math.min(monthlyUplift * 12 * 0.70, 180000);
 
-  const monthlyBreakdown = RAMP.map(r => monthly * r);
-  const cumulative       = monthlyBreakdown.map((_, i) => monthlyBreakdown.slice(0, i + 1).reduce((s, v) => s + v, 0));
-  const annualSavings    = cumulative[11];
-  const hoursPerYear     = Math.round(hoursRecoveredPerMonth * 12);
-  const leadPaybackBonus = Math.max(0.85, 1 - (leads - 150) / 3000);
-  const paybackMonths    = monthly > 0 ? (9500 / monthly) * leadPaybackBonus : null;
+  const RAMP_S = [0.25,0.25,0.60,0.60,1.0,1.0,1.0,1.05,1.05,1.10,1.10,1.15];
+  const RAMP_R = [0,   0.25,0.60,0.60,1.0,1.0,1.0,1.05,1.05,1.10,1.10,1.15];
 
-  return { monthly, cumulative, monthlyBreakdown, annualSavings, hoursPerYear, annualRevenue, paybackMonths };
+  const monthlySavingsArr = RAMP_S.map(r => Math.round(peakMonthlySavings * r));
+  const monthlyRevenueArr = RAMP_R.map(r => Math.round(peakMonthlyRevenue * r));
+
+  const cumSavings = [], cumRevenue = [];
+  let runS = 0, runR = 0;
+  for (let i = 0; i < 12; i++) {
+    runS += monthlySavingsArr[i];
+    runR += monthlyRevenueArr[i];
+    cumSavings.push(runS);
+    cumRevenue.push(runR);
+  }
+
+  const annualSavings  = cumSavings[11];
+  const annualRevenue  = cumRevenue[11];
+  const annualCombined = annualSavings + annualRevenue;
+  const hoursPerYear   = Math.round(hoursPerMonth * 12);
+  const paybackMonths  = peakMonthlySavings > 0
+    ? Math.round((9500 / peakMonthlySavings) * 10) / 10
+    : null;
+
+  return { peakMonthlySavings, annualSavings, hoursPerYear, annualRevenue, annualCombined, paybackMonths, monthlySavingsArr, monthlyRevenueArr, cumSavings, cumRevenue };
 }
 
 /* ── useCountUp hook ───────────────────────────────────────────────────────── */
@@ -251,28 +260,16 @@ function fmtAxisVal(v) {
   return `$${Math.round(v)}`;
 }
 
-/* ── Chart ramp arrays ─────────────────────────────────────────────────────── */
-const RAMP_SAVINGS = [0.25, 0.25, 0.60, 0.60, 1.0, 1.0, 1.0, 1.05, 1.05, 1.10, 1.10, 1.15];
-const RAMP_REVENUE = [0,    0.25, 0.60, 0.60, 1.0, 1.0, 1.0, 1.05, 1.05, 1.10, 1.10, 1.15];
-
 /* ── ROIChart ──────────────────────────────────────────────────────────────── */
-function ROIChart({ monthly, annualRevenue }) {
+function ROIChart({ cumSavings, cumRevenue }) {
   const W = 700, H = 260, PL = 54, PR = 20, PT = 28, PB = 36;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
   const [hovered, setHovered] = useState(null);
 
-  const monthlyRevenue = annualRevenue / 12;
-
-  const savingsM = RAMP_SAVINGS.map(r => monthly * r);
-  const revenueM = RAMP_REVENUE.map(r => monthlyRevenue * r);
-
-  const cumSavings = savingsM.reduce((acc, v, i) => { acc.push((acc[i - 1] || 0) + v); return acc; }, []);
-  const cumRevenue = revenueM.reduce((acc, v, i) => { acc.push((acc[i - 1] || 0) + v); return acc; }, []);
-  const cumTotal   = cumSavings.map((s, i) => s + cumRevenue[i]);
-
-  const maxY   = Math.max(...cumTotal, 1);
-  const yTicks = getYTicks(maxY);
+  const cumTotal = cumSavings.map((s, i) => s + cumRevenue[i]);
+  const maxY     = Math.max(...cumTotal, 1);
+  const yTicks   = getYTicks(maxY);
 
   const gap  = chartW / 12;
   const barW = Math.floor(gap * 0.52);
@@ -419,11 +416,11 @@ function ROIChart({ monthly, annualRevenue }) {
       {/* Footer stat callouts */}
       <div style={{ display: 'flex', gap: 1, marginTop: 1, background: 'rgba(255,255,255,0.04)' }}>
         <div style={{ flex: 1, padding: '14px 16px', background: '#141414' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Total cost savings</div>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Total cost savings (M12)</div>
           <div style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Exo',sans-serif", color: '#4ade80', lineHeight: 1 }}>{fmtAxisVal(lastSav)}</div>
         </div>
         <div style={{ flex: 1, padding: '14px 16px', background: '#141414' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Total combined benefit</div>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Total combined benefit (M12)</div>
           <div style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Exo',sans-serif", color: 'rgba(134,239,172,0.9)', lineHeight: 1 }}>{fmtAxisVal(lastTot)}</div>
         </div>
       </div>
@@ -470,7 +467,7 @@ export default function ROICalculator() {
   const debounceRef = useRef(null);
 
   const result = useMemo(
-    () => calcROI(sector, revenue, teamSize, manualPct, leads, responseTime),
+    () => runFullCalculation({ sector, monthlyRevenue: revenue, teamSize, manualPct, monthlyLeads: leads, responseTime }),
     [sector, revenue, teamSize, manualPct, leads, responseTime]
   );
 
@@ -496,10 +493,10 @@ export default function ROICalculator() {
   const fmtHours   = v => `${Math.round(v).toLocaleString()} hrs`;
   const fmtMonths  = v => {
     if (!v || v === null) return '—';
-    const r = Math.round(v);
-    if (r > 12) return '12+ mos';
-    if (r < 1)  return '< 1 mo';
-    return `${r} mo${r === 1 ? '' : 's'}`;
+    if (v > 12) return '12+ mos';
+    if (v < 1)  return '< 1 mo';
+    const r = Math.round(v * 10) / 10;
+    return `${r} mos`;
   };
 
   return (
@@ -669,7 +666,7 @@ export default function ROICalculator() {
           <KpiCard
             primary
             tag="Monthly savings"
-            rawValue={result.monthly}
+            rawValue={result.peakMonthlySavings}
             fmt={fmtDollar}
             sub="per month at full run-rate"
             accent={Y}
@@ -679,7 +676,7 @@ export default function ROICalculator() {
             tag="Annual impact"
             rawValue={result.annualSavings}
             fmt={fmtDollarK}
-            sub="total over 12 months"
+            sub="total cost savings over 12 months"
             accent={Y}
           />
         </div>
@@ -696,7 +693,7 @@ export default function ROICalculator() {
             tag="Revenue upside"
             rawValue={result.annualRevenue}
             fmt={fmtDollarK}
-            sub="from responding faster to leads"
+            sub="total revenue uplift over 12 months"
             accent={GREEN}
           />
           <KpiCard
@@ -705,6 +702,7 @@ export default function ROICalculator() {
             fmt={fmtMonths}
             sub="to recover a typical investment"
             accent={BLUE}
+            precision={1}
           />
         </div>
       </div>
@@ -743,8 +741,8 @@ export default function ROICalculator() {
         }}>
           <ROIChart
             key={chartKey}
-            monthly={result.monthly}
-            annualRevenue={result.annualRevenue}
+            cumSavings={result.cumSavings}
+            cumRevenue={result.cumRevenue}
           />
         </div>
       </div>

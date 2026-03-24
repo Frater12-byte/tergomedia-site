@@ -9,7 +9,7 @@ const SERVICES = [
 ];
 
 const SECTORS = [
-  { href: '/sectors/real-estate',           label: 'Real Estate · Dubai' },
+  { href: '/sectors/real-estate',           label: 'Real Estate' },
   { href: '/sectors/travel-hospitality',    label: 'Travel & Hospitality' },
   { href: '/sectors/agriculture',           label: 'Agriculture' },
   { href: '/sectors/professional-services', label: 'Professional Services' },

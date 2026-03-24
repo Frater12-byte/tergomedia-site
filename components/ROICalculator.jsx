@@ -263,7 +263,7 @@ export default function ROICalculator() {
         {/* Header */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          fontSize: 10, fontWeight: 700, letterSpacing: '0.18em',
+          fontSize: 10, fontWeight: 700, letterSpacing: '3px',
           textTransform: 'uppercase', color: Y,
           marginBottom: 18, fontFamily: "'Exo', sans-serif",
         }}>
@@ -274,19 +274,10 @@ export default function ROICalculator() {
           fontFamily: "'Exo', sans-serif",
           fontSize: 'clamp(28px,4vw,46px)',
           fontWeight: 800, letterSpacing: '-1.5px',
-          lineHeight: 1.0, color: '#fff', marginBottom: 12,
+          lineHeight: 1.0, color: '#fff', marginBottom: 40,
         }}>
           What could automation<br />save you?
         </h2>
-        <p style={{
-          fontFamily: "'Exo', sans-serif",
-          fontSize: 15, color: 'rgba(255,255,255,0.4)',
-          fontWeight: 300, lineHeight: 1.7, marginBottom: 48,
-          maxWidth: 480,
-        }}>
-          Adjust the inputs — we&apos;ll model your savings in real time.
-        </p>
-
         <div className="roi-layout-r">
 
           {/* ── INPUTS ── */}

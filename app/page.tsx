@@ -33,7 +33,7 @@ export default function Home() {
             <p className="hero-desc">Tergo Media is an AI, automation &amp; custom software agency. We build tools that work while you sleep — across <strong>Dubai, Bucharest, and Milano.</strong></p>
             <div className="btn-row">
               <Link href="/contact" className="btn btn-y">Book a free discovery call →</Link>
-              <Link href="/tools" className="btn btn-outline">Try our free tools</Link>
+              <Link href="/portfolio" className="btn btn-outline">See our work →</Link>
             </div>
           </div>
           <div style={{minWidth: 0, overflow: 'hidden'}}>
@@ -60,7 +60,7 @@ export default function Home() {
         ['10+','years shipping digital products','y'],
         ['40+','automation systems live in production','c'],
         ['3','offices — UAE, Romania, Italy','y'],
-        ['$7M+','revenue generated for our clients','p'],
+        ['$7M+','revenue generated across client projects','p'],
       ].map(([n,l,c])=>(
         <div className="stat" key={n}>
           <div className={`stat-n ${c}`}>{n}</div>
@@ -93,12 +93,11 @@ export default function Home() {
     </div>
 
     {/* ── SECTORS ── */}
-    <style>{`@media(min-width:769px) and (max-width:1024px){.sectors-grid{grid-template-columns:1fr 1fr!important}}`}</style>
     <div className="sec">Sectors we serve</div>
     <div className="fw fw-grid g3 sectors-grid">
       {[
         {c:'y',label:'Real estate',t:'Brokerages & developers',d:'Lead routing, CRM automation, AI follow-up, and document processing — from first enquiry to signed contract.',href:'/sectors/real-estate'},
-        {c:'c',label:'Travel & hospitality',t:'Tour operators & hotels',d:'Booking automation, AI itinerary generation, supplier comms, and revenue reporting — running without manual input.',href:'/sectors/travel-hospitality'},
+        {c:'c',label:'Travel & hospitality',t:'Tour operators & hotels',d:'Booking automation, AI itinerary generation, agency back-office workflows, and supplier integrations — built for tour operators and travel agencies that need their systems to talk to each other.',href:'/sectors/travel-hospitality'},
         {c:'p',label:'Agriculture',t:'Agri businesses & distributors',d:'IoT sensor monitoring, automated alerts, distributor portals, and inventory tracking — field to office, connected.',href:'/sectors/agriculture'},
         {c:'r',label:'Media & publishing',t:'Agencies & content platforms',d:'Content workflows, asset management, automated distribution, and performance reporting — built for teams that move fast.',href:'/sectors'},
         {c:'y',label:'Professional services',t:'Consultancies & service firms',d:'Invoice automation, KPI dashboards, client onboarding, and reporting — your admin runs itself so your team focuses on delivery.',href:'/sectors/professional-services'},
@@ -183,7 +182,7 @@ export default function Home() {
 
     {/* ── TEAM ── */}
     <div style={{maxWidth:1100,margin:'0 auto',padding:'56px clamp(24px,5vw,72px) 20px'}}>
-      <div style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:10,fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',color:'var(--y)',marginBottom:18,fontFamily:"'Exo', sans-serif"}}>
+      <div style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:10,fontWeight:700,letterSpacing:'3px',textTransform:'uppercase',color:'var(--y)',marginBottom:18,fontFamily:"'Exo', sans-serif"}}>
         <span style={{width:18,height:1,background:'var(--y)',display:'inline-block'}}/>
         The team behind it
       </div>
@@ -207,7 +206,11 @@ export default function Home() {
         .team-li-link{font-size:12px;font-weight:400;font-family:'Exo',sans-serif;color:rgba(255,255,255,0.3);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
         .team-li-link:hover{color:var(--y)}
         .team-role-chip{display:inline-block;padding:3px 10px;border:1px solid rgba(242,194,0,0.3);color:var(--y);background:rgba(242,194,0,0.06);font-size:10px;font-weight:600;font-family:'Exo',sans-serif;letter-spacing:0.05em;margin:0 4px 4px 0}
-        @media(max-width:768px){.team-cards-grid{grid-template-columns:1fr}.team-card:hover{transform:none}}
+        @media(max-width:768px){
+          .team-cards-grid{grid-template-columns:1fr}
+          .team-card:hover{transform:none}
+          .team-photo-wrap{width:100%;height:320px;border-radius:0}
+        }
         @media(prefers-reduced-motion:reduce){.team-card,.team-card::before{transition:none}}
       `}</style>
 

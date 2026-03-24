@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const YELLOW = '#F2C200';
 const W = 1000, H = 420;
@@ -113,9 +113,22 @@ const CONNECTIONS = [
   { id: 'c3', o1: OFFICES[2], o2: OFFICES[0] },
 ];
 
+// Mobile viewBox focuses on Europe–Middle East corridor
+const MOBILE_VB = '100 60 800 300';
+const DESKTOP_VB = `0 0 ${W} ${H}`;
+
 export default function OfficesMap() {
   const [activeId, setActiveId] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const activeOffice = OFFICES.find(o => o.id === activeId);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    setIsMobile(mq.matches);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   const animCSS = `
     @keyframes _pr1 { 0%{transform:scale(1);opacity:0.55} 100%{transform:scale(3.5);opacity:0} }
@@ -125,10 +138,10 @@ export default function OfficesMap() {
     .pulse-r2 { animation: _pr2 2.4s ease-out 0.6s infinite; transform-box:fill-box; transform-origin:center; }
     @media (prefers-reduced-motion: reduce) { .pulse-r1,.pulse-r2 { animation:none; } }
     @media (max-width: 768px) {
-      .offices-map-svg-wrap { min-height: 320px; padding: 0 !important; }
-      .offices-map-svg-wrap svg { min-height: 320px; }
-      .offices-tab-row { padding: 16px 16px 20px !important; gap: 6px !important; }
-      .offices-tab-row button { padding: 7px 12px !important; font-size: 11px !important; }
+      .offices-map-svg-wrap { min-height: 360px; padding: 0 !important; }
+      .offices-map-svg-wrap svg { min-height: 360px; }
+      .offices-tab-row { padding: 0 !important; gap: 0 !important; }
+      .offices-tab-row button { flex: 1 !important; min-height: 44px !important; font-size: 12px !important; padding: 10px 6px !important; }
     }
   `;
 
@@ -143,7 +156,7 @@ export default function OfficesMap() {
       {/* Map container */}
       <div className="offices-map-svg-wrap" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
         <svg
-          viewBox={`0 0 ${W} ${H}`}
+          viewBox={isMobile ? MOBILE_VB : DESKTOP_VB}
           style={{ width: '100%', height: 'auto', display: 'block' }}
         >
           {/* Background */}
@@ -187,14 +200,14 @@ export default function OfficesMap() {
                 onClick={() => setActiveId(activeId === office.id ? null : office.id)}
                 style={{ cursor: 'pointer' }}>
 
-                {/* Pulse rings */}
+                {/* Pulse rings — 1.4× larger on mobile */}
                 {!isActive && (
                   <>
-                    <circle cx={px} cy={py} r={9} fill="none"
+                    <circle cx={px} cy={py} r={isMobile ? 13 : 9} fill="none"
                       stroke={office.color} strokeWidth="1.2"
                       className="pulse-r1"
                       style={{ animationDelay: office.pulseDelay }} />
-                    <circle cx={px} cy={py} r={9} fill="none"
+                    <circle cx={px} cy={py} r={isMobile ? 13 : 9} fill="none"
                       stroke={office.color} strokeWidth="1"
                       className="pulse-r2"
                       style={{ animationDelay: office.pulseDelay }} />
@@ -202,12 +215,12 @@ export default function OfficesMap() {
                 )}
 
                 {/* Glow */}
-                <circle cx={px} cy={py} r={isActive ? 12 : 8}
+                <circle cx={px} cy={py} r={isActive ? (isMobile ? 17 : 12) : (isMobile ? 11 : 8)}
                   fill={office.color} opacity={isActive ? 0.18 : 0.1}
                   style={{ transition: 'all 0.25s' }} />
 
                 {/* Dot */}
-                <circle cx={px} cy={py} r={isActive ? 7 : 5}
+                <circle cx={px} cy={py} r={isActive ? (isMobile ? 10 : 7) : (isMobile ? 7 : 5)}
                   fill={office.color}
                   style={{ transition: 'all 0.2s', filter: isActive ? `drop-shadow(0 0 8px ${office.color})` : 'none' }} />
 
@@ -241,13 +254,29 @@ export default function OfficesMap() {
                 })()}
 
                 {/* City label (when not active) */}
-                {!isActive && (
+                {!isActive && !isMobile && (
                   <text x={px + 9} y={py - 7}
                     fontSize="9" fontWeight="700" fill={office.color} opacity="0.7"
                     fontFamily="Exo, sans-serif" letterSpacing="0.5">
                     {office.city.toUpperCase()}
                   </text>
                 )}
+                {/* City label pill on mobile */}
+                {!isActive && isMobile && (() => {
+                  const pw = office.city.length * 13 + 28;
+                  return (
+                    <g>
+                      <rect x={px + 12} y={py - 46} width={pw} height={36}
+                        rx="9" fill="rgba(0,0,0,0.6)" />
+                      <text x={px + 12 + pw / 2} y={py - 22}
+                        textAnchor="middle" dominantBaseline="middle"
+                        fontSize="22" fontWeight="700" fill="#fff"
+                        fontFamily="Exo, sans-serif">
+                        {office.city}
+                      </text>
+                    </g>
+                  );
+                })()}
               </g>
             );
           })}
@@ -268,13 +297,14 @@ export default function OfficesMap() {
       }}>
         {OFFICES.map(o => {
           const isAct = activeId === o.id;
+          const bgRgb = o.color === YELLOW ? '242,194,0' : o.color === '#00C9A7' ? '0,201,167' : '167,139,250';
           return (
             <button key={o.id}
               onClick={() => setActiveId(activeId === o.id ? null : o.id)}
               style={{
                 padding: '8px 20px',
                 border: `1px solid ${isAct ? o.color : 'rgba(255,255,255,0.1)'}`,
-                background: isAct ? `rgba(${o.color === YELLOW ? '245,197,64' : o.color === '#00C9A7' ? '0,201,167' : '167,139,250'},0.08)` : 'transparent',
+                background: isAct ? `rgba(${bgRgb},0.08)` : 'transparent',
                 color: isAct ? o.color : 'rgba(255,255,255,0.4)',
                 fontSize: 12, fontWeight: 600,
                 fontFamily: "'Exo', sans-serif",

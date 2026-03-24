@@ -1,214 +1,322 @@
 'use client';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
-const Y = '#F2C200'; // matches var(--y)
+/* ── Design tokens ─────────────────────────────────────────────────────────── */
+const Y     = '#F2C200';
+const GREEN = '#4ade80';
+const BLUE  = '#60a5fa';
 
-const SECTORS = {
-  'Real Estate':           { hours: 6 },
-  'Travel & Hospitality':  { hours: 5 },
-  'Professional Services': { hours: 8 },
-  'Agriculture':           { hours: 4 },
-  'E-commerce':            { hours: 5 },
-  'Other':                 { hours: 5 },
+/* ── Data ──────────────────────────────────────────────────────────────────── */
+const SECTORS = [
+  'Real Estate',
+  'Travel & Hospitality',
+  'Agriculture',
+  'Media & Publishing',
+  'Professional Services',
+  'E-commerce & Retail',
+  'Other',
+];
+
+const SECTOR_RATES = {
+  'Real Estate':           26,
+  'Travel & Hospitality':  24,
+  'Agriculture':           20,
+  'Media & Publishing':    28,
+  'Professional Services': 30,
+  'E-commerce & Retail':   22,
+  'Other':                 24,
 };
 
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const RAMP   = [0.30, 0.30, 0.65, 0.65, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+const RESPONSE_TIMES = ['Under 1 hour', '1–4 hours', '4–24 hours', 'Over 24 hours'];
 
-function fmtUSD(n) {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `$${Math.round(n / 1_000)}K`;
-  return `$${Math.round(n).toLocaleString('en-US')}`;
+const RESPONSE_UPLIFT = {
+  'Under 1 hour': 0.04,
+  '1–4 hours':    0.09,
+  '4–24 hours':   0.18,
+  'Over 24 hours':0.28,
+};
+
+// 12-month ramp: months 1-2 at 25%, 3-4 at 60%, 5-12 at 100%
+const RAMP = [0.25, 0.25, 0.60, 0.60, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+
+/* ── Calculation ───────────────────────────────────────────────────────────── */
+function calcROI(sector, revenue, teamSize, manualPct, leads, responseTime) {
+  const rate      = SECTOR_RATES[sector] ?? 24;
+  const rawHours  = teamSize * (manualPct / 100) * 160;
+  const cappedHrs = Math.min(rawHours, teamSize * 32);
+  const rawMonthly = cappedHrs * rate;
+  const monthly    = Math.min(rawMonthly, 35000);
+
+  const uplift        = RESPONSE_UPLIFT[responseTime] ?? 0.18;
+  const revenueGrowth = revenue * uplift * 0.15;
+
+  const cumulative    = RAMP.map((r, i) => RAMP.slice(0, i + 1).reduce((s, v) => s + v * monthly, 0));
+  const annualSavings = cumulative[11];
+  const hoursPerYear  = Math.round(cappedHrs * 12);
+  const annualRevenue = revenueGrowth * 12;
+  const paybackMonths = monthly > 0 ? Math.ceil(9500 / monthly) : 99;
+
+  return { monthly, cumulative, annualSavings, hoursPerYear, annualRevenue, paybackMonths };
 }
-function fmtHrs(n) {
-  return `${Math.round(n).toLocaleString('en-US')} hrs`;
-}
 
-function calcROI(sector, employees, margin) {
-  const hours = SECTORS[sector].hours;
-  const hourlyRate = 25 + ((margin - 5) / (90 - 5)) * 10;
-  const peakMonthly = Math.min(employees * hours * 0.5 * 4.33 * hourlyRate, 80000);
-  const monthly = RAMP.map(r => Math.round(peakMonthly * r));
-  const annual = monthly.reduce((a, b) => a + b, 0);
-  let cum = 0;
-  const cumulative = monthly.map(m => { cum += m; return cum; });
-  const hoursPerYear = Math.round(employees * hours * 0.5 * 52);
-  return { monthly, cumulative, annual, peakMonthly: Math.round(peakMonthly), hoursPerYear };
-}
+/* ── useCountUp hook ───────────────────────────────────────────────────────── */
+function useCountUp(target, duration = 420, precision = 0) {
+  const [val, setVal] = useState(target);
+  const rafRef   = useRef(null);
+  const fromRef  = useRef(target);
 
-function ROIChart({ monthly, cumulative }) {
-  const [hovered, setHovered] = useState(null);
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) { setVal(target); return; }
 
-  const W = 600, H = 260;
-  const PL = 68, PR = 68, PT = 20, PB = 36;
-  const iW = W - PL - PR, iH = H - PT - PB;
+    cancelAnimationFrame(rafRef.current);
+    const from   = fromRef.current;
+    const startT = performance.now();
 
-  const maxM = Math.max(...monthly, 1);
-  const maxC = Math.max(...cumulative, 1);
-
-  const bgW = iW / 12;
-  const bw  = bgW * 0.52;
-  const bxFn  = i => PL + i * bgW + bgW * 0.24;
-  const cxFn  = i => PL + i * bgW + bgW / 2;
-  const barH  = v => Math.max((v / maxM) * iH, 1);
-  const barYFn  = v => PT + iH - barH(v);
-  const lineYFn = v => PT + iH * (1 - v / maxC);
-  const barOp = i => i < 2 ? 0.38 : i < 4 ? 0.68 : 1.0;
-
-  // Smooth bezier path through cumulative points
-  const pts = cumulative.map((v, i) => [cxFn(i), lineYFn(v)]);
-  let lp = `M ${pts[0][0]} ${pts[0][1]}`;
-  for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
-    const dx = (x1 - x0) / 3;
-    lp += ` C ${x0 + dx} ${y0}, ${x1 - dx} ${y1}, ${x1} ${y1}`;
-  }
-
-  const animCSS = `
-    @keyframes _barGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-    @keyframes _lineIn  { to   { stroke-dashoffset: 0; } }
-    @keyframes _dotIn   { from { opacity:0; transform:scale(0); } to { opacity:1; transform:scale(1); } }
-    @media (prefers-reduced-motion: reduce) {
-      .rba,.rla,.rda { animation: none !important; stroke-dashoffset: 0 !important; }
+    function tick(now) {
+      const elapsed  = now - startT;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased    = 1 - Math.pow(1 - progress, 3);
+      const cur      = from + (target - from) * eased;
+      setVal(parseFloat(cur.toFixed(precision)));
+      if (progress < 1) rafRef.current = requestAnimationFrame(tick);
+      else fromRef.current = target;
     }
-  `;
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [target, duration, precision]);
 
-  const gridTs = [0.25, 0.5, 0.75, 1.0];
+  return val;
+}
+
+/* ── KpiCard ───────────────────────────────────────────────────────────────── */
+function KpiCard({ tag, rawValue, fmt, sub, accent, precision = 0 }) {
+  const animated = useCountUp(rawValue, 420, precision);
 
   return (
-    <div style={{ position: 'relative' }}>
-      <style>{animCSS}</style>
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
+    <div style={{ background: '#141414', padding: 'clamp(16px,2.5vw,26px)', display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888' }}>{tag}</div>
+      <div style={{ fontSize: 'clamp(20px,2.8vw,30px)', fontWeight: 900, fontFamily: "'Exo',sans-serif", color: accent, lineHeight: 1.1 }}>
+        {fmt(animated)}
+      </div>
+      {sub && <div style={{ fontSize: 11, color: '#555', lineHeight: 1.5, fontWeight: 300 }}>{sub}</div>}
+    </div>
+  );
+}
 
-        {/* Grid */}
-        {gridTs.map((t, i) => (
-          <line key={i} x1={PL} x2={W - PR}
-            y1={PT + iH * (1 - t)} y2={PT + iH * (1 - t)}
-            stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+/* ── SliderInput ───────────────────────────────────────────────────────────── */
+function SliderInput({ label, helper, min, max, step, value, onChange, fmt }) {
+  const pct = ((value - min) / (max - min) * 100).toFixed(1) + '%';
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: '#ccc', letterSpacing: 0.3 }}>{label}</span>
+        <span style={{ fontSize: 14, fontWeight: 900, color: Y, fontFamily: "'Exo',sans-serif" }}>{fmt(value)}</span>
+      </div>
+      <input
+        type="range" min={min} max={max} step={step} value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        className="roi-slider"
+        style={{ '--sp': pct }}
+      />
+      {helper && <div style={{ fontSize: 11, color: '#555', lineHeight: 1.5 }}>{helper}</div>}
+    </div>
+  );
+}
+
+/* ── PillGroup ─────────────────────────────────────────────────────────────── */
+function PillGroup({ label, options, value, onChange, small }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {label && <span style={{ fontSize: 12, fontWeight: 700, color: '#ccc', letterSpacing: 0.3 }}>{label}</span>}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        {options.map(opt => {
+          const active = opt === value;
+          return (
+            <button key={opt} onClick={() => onChange(opt)} style={{
+              padding: small ? '5px 10px' : '7px 14px',
+              borderRadius: 4,
+              border: `1px solid ${active ? Y : 'rgba(255,255,255,0.1)'}`,
+              background: active ? 'rgba(242,194,0,0.12)' : 'transparent',
+              color: active ? Y : '#888',
+              fontSize: small ? 11 : 12,
+              fontWeight: active ? 700 : 400,
+              fontFamily: "'Exo',sans-serif",
+              cursor: 'pointer',
+              transition: 'all .15s',
+              letterSpacing: 0.2,
+            }}>
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ── Illustration ──────────────────────────────────────────────────────────── */
+function Illustration() {
+  return (
+    <svg viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style={{ width: '100%', maxWidth: 200, height: 'auto', opacity: 0.82, flexShrink: 0 }}>
+      {/* Desk */}
+      <rect x="20" y="108" width="160" height="6" rx="3" fill={Y} opacity="0.25" />
+      <rect x="30" y="114" width="8" height="26" rx="2" fill={Y} opacity="0.15" />
+      <rect x="162" y="114" width="8" height="26" rx="2" fill={Y} opacity="0.15" />
+      {/* Monitor */}
+      <rect x="72" y="72" width="56" height="37" rx="3" stroke={Y} strokeWidth="1.5" fill="rgba(242,194,0,0.04)" />
+      <rect x="95" y="109" width="10" height="5" rx="1" fill={Y} opacity="0.18" />
+      <rect x="87" y="114" width="26" height="2" rx="1" fill={Y} opacity="0.13" />
+      {/* Screen lines */}
+      <line x1="80" y1="83" x2="120" y2="83" stroke={Y} strokeWidth="1" opacity="0.28" />
+      <line x1="80" y1="89" x2="112" y2="89" stroke={Y} strokeWidth="1" opacity="0.18" />
+      <line x1="80" y1="95" x2="116" y2="95" stroke={Y} strokeWidth="1" opacity="0.18" />
+      {/* Person left */}
+      <circle cx="40" cy="78" r="7" stroke="white" strokeWidth="1.2" fill="none" opacity="0.45" />
+      <path d="M30 108 Q40 94 50 108" stroke="white" strokeWidth="1.2" fill="none" opacity="0.45" />
+      <line x1="40" y1="85" x2="40" y2="100" stroke="white" strokeWidth="1.2" opacity="0.45" />
+      <line x1="40" y1="90" x2="32" y2="97" stroke="white" strokeWidth="1.2" opacity="0.45" />
+      <line x1="40" y1="90" x2="48" y2="97" stroke="white" strokeWidth="1.2" opacity="0.45" />
+      {/* Person right */}
+      <circle cx="160" cy="78" r="7" stroke="white" strokeWidth="1.2" fill="none" opacity="0.45" />
+      <path d="M150 108 Q160 94 170 108" stroke="white" strokeWidth="1.2" fill="none" opacity="0.45" />
+      <line x1="160" y1="85" x2="160" y2="100" stroke="white" strokeWidth="1.2" opacity="0.45" />
+      <line x1="160" y1="90" x2="152" y2="97" stroke="white" strokeWidth="1.2" opacity="0.45" />
+      <line x1="160" y1="90" x2="168" y2="97" stroke="white" strokeWidth="1.2" opacity="0.45" />
+      {/* Gear icon */}
+      <g opacity="0.55">
+        <circle cx="24" cy="40" r="6" stroke={Y} strokeWidth="1.2" fill="none" />
+        <circle cx="24" cy="40" r="2.5" stroke={Y} strokeWidth="1" fill="none" />
+        {[0, 60, 120, 180, 240, 300].map(a => (
+          <line key={a}
+            x1={24 + 6.8 * Math.cos(a * Math.PI / 180)}
+            y1={40 + 6.8 * Math.sin(a * Math.PI / 180)}
+            x2={24 + 8.6 * Math.cos(a * Math.PI / 180)}
+            y2={40 + 8.6 * Math.sin(a * Math.PI / 180)}
+            stroke={Y} strokeWidth="2" strokeLinecap="round" />
         ))}
+      </g>
+      {/* Lightning bolt */}
+      <path d="M176 26 L170 40 L174 40 L168 54 L180 36 L175 36 Z"
+        stroke={Y} strokeWidth="1.2" fill="rgba(242,194,0,0.1)" opacity="0.65" />
+      {/* Envelope */}
+      <rect x="144" y="16" width="20" height="14" rx="2" stroke="white" strokeWidth="1.2" fill="none" opacity="0.4" />
+      <polyline points="144,16 154,24 164,16" stroke="white" strokeWidth="1.2" fill="none" opacity="0.4" />
+      {/* Checkmark circle */}
+      <circle cx="50" cy="26" r="7" stroke={GREEN} strokeWidth="1.2" fill="none" opacity="0.6" />
+      <polyline points="46,26 49,29 55,22" stroke={GREEN} strokeWidth="1.5" fill="none" opacity="0.6" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Automation arc */}
+      <path d="M80 50 Q100 38 120 50" stroke={Y} strokeWidth="1.2" fill="none" opacity="0.3" strokeDasharray="3 2" />
+      <polygon points="120,50 115,46 115,54" fill={Y} opacity="0.3" />
+    </svg>
+  );
+}
 
-        {/* Left Y-axis (monthly) */}
-        {[0, 0.5, 1].map((t, i) => (
-          <text key={i} x={PL - 8} y={PT + iH * (1 - t) + 4}
-            textAnchor="end" fontSize="9" fill="rgba(255,255,255,0.28)"
-            fontFamily="Exo, sans-serif">
-            {t === 0 ? '$0' : fmtUSD(maxM * t)}
-          </text>
-        ))}
+/* ── ROIChart ──────────────────────────────────────────────────────────────── */
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-        {/* Right Y-axis (cumulative) */}
-        {[0, 0.5, 1].map((t, i) => (
-          <text key={i} x={W - PR + 8} y={PT + iH * (1 - t) + 4}
-            textAnchor="start" fontSize="9" fill={`rgba(242,194,0,${t === 0 ? 0.25 : 0.45})`}
-            fontFamily="Exo, sans-serif">
-            {t === 0 ? '$0' : fmtUSD(maxC * t)}
-          </text>
-        ))}
+function ROIChart({ cumulative, monthly }) {
+  const W = 700, H = 220, PL = 54, PR = 20, PT = 24, PB = 36;
+  const chartW = W - PL - PR;
+  const chartH = H - PT - PB;
+  const maxVal = Math.max(...cumulative, monthly * 12, 1);
+  const [hovered, setHovered] = useState(null);
 
-        {/* Axis labels */}
-        <text x={PL} y={PT - 7} fontSize="8" fill="rgba(255,255,255,0.2)"
-          fontFamily="Exo, sans-serif" letterSpacing="1">MONTHLY</text>
-        <text x={W - PR} y={PT - 7} textAnchor="end" fontSize="8"
-          fill={`rgba(242,194,0,0.35)`} fontFamily="Exo, sans-serif" letterSpacing="1">CUMULATIVE</text>
+  const gap  = chartW / 12;
+  const barW = Math.floor(gap * 0.52);
+
+  function xFor(i) { return PL + gap * i + gap * 0.24; }
+  function yFor(v) { return PT + chartH - (v / maxVal) * chartH; }
+
+  const pts = cumulative.map((v, i) => [xFor(i) + barW / 2, yFor(v)]);
+  let linePath = `M ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1];
+    const [x1, y1] = pts[i];
+    const cx = (x0 + x1) / 2;
+    linePath += ` C ${cx} ${y0} ${cx} ${y1} ${x1} ${y1}`;
+  }
+
+  function fmtAxis(v) {
+    if (v >= 100000) return `$${(v / 1000).toFixed(0)}K`;
+    if (v >= 1000)   return `$${(v / 1000).toFixed(0)}K`;
+    return `$${Math.round(v)}`;
+  }
+
+  return (
+    <div style={{ position: 'relative', width: '100%' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+        {/* Grid lines + Y-axis ticks */}
+        {[0, 0.25, 0.5, 0.75, 1].map((t, i) => {
+          const v = maxVal * t;
+          const y = yFor(v);
+          return (
+            <g key={i}>
+              <line x1={PL} y1={y} x2={W - PR} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+              <text x={PL - 6} y={y + 4} textAnchor="end" fill="#555" fontSize="9" fontFamily="'Exo',sans-serif">
+                {fmtAxis(v)}
+              </text>
+            </g>
+          );
+        })}
 
         {/* Bars */}
-        {monthly.map((v, i) => {
-          const h = barH(v);
-          const bx = bxFn(i);
-          const by = barYFn(v);
+        {cumulative.map((v, i) => {
+          const barH = Math.max((v / maxVal) * chartH, 1);
+          const x = xFor(i);
+          const y = PT + chartH - barH;
           const isHov = hovered === i;
           return (
             <g key={i}
               onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              style={{ cursor: 'default' }}>
-              <rect x={bx} y={by} width={bw} height={h}
-                fill={Y}
-                opacity={isHov ? 1 : barOp(i)}
-                className="rba"
-                style={{
-                  transformBox: 'fill-box',
-                  transformOrigin: 'bottom',
-                  animation: `_barGrow 0.5s cubic-bezier(0.34,1.56,0.64,1) ${i * 0.05}s both`,
-                }} />
-              {/* invisible wide hit-area */}
-              <rect x={bx - 4} y={PT} width={bw + 8} height={iH} fill="transparent" />
+              onMouseLeave={() => setHovered(null)}>
+              <rect x={x} y={y} width={barW} height={barH} rx="2"
+                fill={isHov ? Y : 'rgba(242,194,0,0.18)'}
+                style={{ transition: 'fill .15s' }} />
+              <rect x={x - 4} y={PT} width={barW + 8} height={chartH} fill="transparent" />
             </g>
           );
         })}
 
         {/* Cumulative line */}
-        <path d={lp} fill="none"
-          stroke="rgba(255,255,255,0.55)" strokeWidth="1.8"
-          strokeLinecap="round" strokeLinejoin="round"
-          pathLength="1" className="rla"
-          style={{
-            strokeDasharray: 1,
-            strokeDashoffset: 1,
-            animation: '_lineIn 1.1s cubic-bezier(0.4,0,0.2,1) 0.35s forwards',
-          }} />
+        <path d={linePath} stroke={Y} strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.85" />
 
-        {/* Cumulative dots */}
-        {cumulative.map((v, i) => (
-          <circle key={i}
-            cx={cxFn(i)} cy={lineYFn(v)}
-            r={i === 11 ? 4 : 2.5}
-            fill={i === 11 ? Y : 'rgba(255,255,255,0.75)'}
-            className="rda"
-            style={{
-              transformBox: 'fill-box',
-              transformOrigin: 'center',
-              animation: `_dotIn 0.3s ease ${0.35 + i * 0.08}s both`,
-            }} />
+        {/* Line dots */}
+        {pts.map(([x, y], i) => (
+          <circle key={i} cx={x} cy={y}
+            r={hovered === i ? 5 : 3}
+            fill={hovered === i ? Y : '#141414'}
+            stroke={Y} strokeWidth="1.5"
+            style={{ transition: 'r .15s' }}
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered(null)} />
         ))}
-
-        {/* Month-12 annotation */}
-        <g style={{ animation: `_dotIn 0.4s ease 1.35s both` }} className="rda">
-          <rect
-            x={cxFn(11) - 28} y={lineYFn(cumulative[11]) - 26}
-            width={56} height={18}
-            fill="rgba(242,194,0,0.12)" stroke={`rgba(242,194,0,0.35)`} strokeWidth="1" />
-          <text x={cxFn(11)} y={lineYFn(cumulative[11]) - 13}
-            textAnchor="middle" fontSize="9" fontWeight="700" fill={Y}
-            fontFamily="Exo, sans-serif">
-            {fmtUSD(cumulative[11])}
-          </text>
-        </g>
 
         {/* Month labels */}
         {MONTHS.map((m, i) => (
-          <text key={i} x={cxFn(i)} y={H - 6}
-            textAnchor="middle" fontSize="9"
-            fill={hovered === i ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)'}
-            fontFamily="Exo, sans-serif">
+          <text key={i} x={xFor(i) + barW / 2} y={H - 8}
+            textAnchor="middle" fill={hovered === i ? 'rgba(255,255,255,0.6)' : '#444'}
+            fontSize="9" fontFamily="'Exo',sans-serif">
             {m}
           </text>
         ))}
 
         {/* Tooltip */}
         {hovered !== null && (() => {
-          const tx0 = cxFn(hovered);
-          const tw = 124, th = 56;
-          const tx = Math.min(Math.max(tx0 - tw / 2, PL), W - PR - tw);
-          const ty = Math.max(barYFn(monthly[hovered]) - th - 8, PT);
+          const [tx, ty] = pts[hovered];
+          const tipW = 118, tipH = 52;
+          const tipX = tx + tipW + 8 > W ? tx - tipW - 8 : tx + 8;
+          const tipY = Math.max(ty - tipH / 2, PT);
           return (
             <g pointerEvents="none">
-              <rect x={tx} y={ty} width={tw} height={th}
-                fill="#191919" stroke={Y} strokeWidth="1" />
-              <text x={tx + tw / 2} y={ty + 15} textAnchor="middle"
-                fontSize="9" fontWeight="700" fill="rgba(255,255,255,0.45)"
-                fontFamily="Exo, sans-serif" letterSpacing="1.5">
-                {MONTHS[hovered].toUpperCase()}
-              </text>
-              <text x={tx + tw / 2} y={ty + 33} textAnchor="middle"
-                fontSize="13" fontWeight="700" fill={Y}
-                fontFamily="Exo, sans-serif">
-                {fmtUSD(monthly[hovered])}
-              </text>
-              <text x={tx + tw / 2} y={ty + 50} textAnchor="middle"
-                fontSize="9" fill="rgba(255,255,255,0.35)"
-                fontFamily="Exo, sans-serif">
-                Cum: {fmtUSD(cumulative[hovered])}
+              <rect x={tipX} y={tipY} width={tipW} height={tipH} rx="4"
+                fill="#1c1c1c" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+              <text x={tipX + 10} y={tipY + 16} fill="#666" fontSize="9" fontFamily="'Exo',sans-serif"
+                fontWeight="700" letterSpacing="1">CUMULATIVE M{hovered + 1}</text>
+              <text x={tipX + 10} y={tipY + 36} fill={Y} fontSize="15" fontFamily="'Exo',sans-serif"
+                fontWeight="900">
+                ${Math.round(cumulative[hovered]).toLocaleString()}
               </text>
             </g>
           );
@@ -218,221 +326,225 @@ function ROIChart({ monthly, cumulative }) {
   );
 }
 
+/* ── Profile text builder ──────────────────────────────────────────────────── */
+function buildProfile(sector, teamSize, revenue, manualPct, responseTime) {
+  const hrs = Math.round(teamSize * (manualPct / 100) * 160 * 0.7);
+  const rev  = revenue >= 1000 ? `$${(revenue / 1000).toFixed(0)}K` : `$${revenue}`;
+  const templates = {
+    'Real Estate':
+      `A ${teamSize}-person real estate team generating ${rev}/month currently spends roughly ${hrs} hours per month on manual admin — lead follow-up, listing updates, contract chasing, and CRM data entry. With response times averaging ${responseTime.toLowerCase()}, a significant share of inbound leads are going cold before the first conversation. Automation can reclaim that time and move faster on every enquiry.`,
+    'Travel & Hospitality':
+      `With a team of ${teamSize} handling ${rev}/month across bookings and supplier coordination, an estimated ${hrs} staff-hours each month go to tasks that can be automated: quote generation, supplier confirmations, itinerary updates, and payment chasing. Guests expecting replies ${responseTime.toLowerCase()} after enquiring represent your highest conversion window.`,
+    'Agriculture':
+      `Your ${teamSize}-person operation managing ${rev}/month likely absorbs ${hrs} hours per month in manual data handling — stock counts, distributor updates, weather-triggered alerts, and compliance reporting. With the right integrations, your team stops chasing data and starts acting on it.`,
+    'Media & Publishing':
+      `A ${teamSize}-person media team with ${rev}/month in revenue spends an estimated ${hrs} hours per month on content scheduling, advertiser reporting, invoice reconciliation, and CRM updates. Automating these workflows frees your team to focus on editorial output rather than operational overhead.`,
+    'Professional Services':
+      `With ${teamSize} professionals billing against ${rev}/month in revenue, time lost to manual admin directly erodes margin. An estimated ${hrs} hours per month are spent on client onboarding, proposal generation, scheduling, and status updates — work that structured automation handles end-to-end.`,
+    'E-commerce & Retail':
+      `Your ${teamSize}-person team driving ${rev}/month in e-commerce revenue is likely spending ${hrs} hours per month on order processing, inventory sync, customer service queues, and returns management. Automating these fulfilment workflows reduces lead time and frees headcount for higher-value tasks.`,
+    'Other':
+      `A ${teamSize}-person team with ${rev}/month in revenue typically absorbs ${hrs} hours per month in repeatable manual tasks — data entry, status updates, follow-up communications, and reporting. These are the highest-value automation targets regardless of sector.`,
+  };
+  return templates[sector] ?? templates['Other'];
+}
+
+/* ── Main component ────────────────────────────────────────────────────────── */
 export default function ROICalculator() {
-  const [sector, setSector]     = useState('');
-  const [employees, setEmployees] = useState(25);
-  const [margin, setMargin]     = useState(45);
-  const [chartKey, setChartKey] = useState(0);
+  const [sector,       setSector]       = useState('Real Estate');
+  const [revenue,      setRevenue]      = useState(50000);
+  const [teamSize,     setTeamSize]     = useState(10);
+  const [manualPct,    setManualPct]    = useState(35);
+  const [leads,        setLeads]        = useState(200);
+  const [responseTime, setResponseTime] = useState('4–24 hours');
+  const [profileText,  setProfileText]  = useState(
+    () => buildProfile('Real Estate', 10, 50000, 35, '4–24 hours')
+  );
+  const debounceRef = useRef(null);
 
-  const result = useMemo(() => sector ? calcROI(sector, employees, margin) : null,
-    [sector, employees, margin]);
-
-  useEffect(() => { if (result) setChartKey(k => k + 1); }, [result]);
-
-  const inputLabel = (num, text) => (
-    <div style={{
-      display: 'flex', alignItems: 'center', gap: 8,
-      fontSize: 10, fontWeight: 700, letterSpacing: '0.15em',
-      textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)',
-      fontFamily: "'Exo', sans-serif",
-    }}>
-      <span style={{ color: Y }}>{num}</span>{text}
-    </div>
+  const result = useMemo(
+    () => calcROI(sector, revenue, teamSize, manualPct, leads, responseTime),
+    [sector, revenue, teamSize, manualPct, leads, responseTime]
   );
 
+  const updateProfile = useCallback((s, t, r, m, rt, immediate) => {
+    if (immediate) {
+      clearTimeout(debounceRef.current);
+      setProfileText(buildProfile(s, t, r, m, rt));
+    } else {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => setProfileText(buildProfile(s, t, r, m, rt)), 600);
+    }
+  }, []);
+
+  function handleSector(v)      { setSector(v);      updateProfile(v, teamSize, revenue, manualPct, responseTime, true); }
+  function handleRevenue(v)     { setRevenue(v);     updateProfile(sector, teamSize, v, manualPct, responseTime, false); }
+  function handleTeam(v)        { setTeamSize(v);    updateProfile(sector, v, revenue, manualPct, responseTime, false); }
+  function handleManual(v)      { setManualPct(v);   updateProfile(sector, teamSize, revenue, v, responseTime, false); }
+  function handleLeads(v)       { setLeads(v);       updateProfile(sector, teamSize, revenue, manualPct, responseTime, false); }
+  function handleResponse(v)    { setResponseTime(v); updateProfile(sector, teamSize, revenue, manualPct, v, false); }
+
+  const fmtDollar  = v => `$${Math.round(v).toLocaleString()}`;
+  const fmtDollarK = v => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${Math.round(v)}`;
+  const fmtHours   = v => `${Math.round(v).toLocaleString()} hrs`;
+  const fmtMonths  = v => `${Math.round(v)} mo${Math.round(v) === 1 ? '' : 's'}`;
+
   return (
-    <section style={{
-      borderTop: '1px solid rgba(255,255,255,0.07)',
-      borderBottom: '1px solid rgba(255,255,255,0.07)',
-      background: '#0d0d0d',
-    }}>
+    <div style={{ background: '#0d0d0d', borderTop: '1px solid #222', borderBottom: '1px solid #222' }}>
       <style>{`
-        .roi-layout-r { display: grid; grid-template-columns: minmax(260px,320px) 1fr; gap: 52px; align-items: start; }
-        .roi-stat-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,0.07); }
-        @media (max-width: 768px) {
-          .roi-layout-r { grid-template-columns: 1fr; gap: 36px; }
-          .roi-stat-cards { grid-template-columns: 1fr 1fr; }
+        .roi-slider {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 100%;
+          height: 4px;
+          border-radius: 2px;
+          outline: none;
+          cursor: pointer;
+          background: linear-gradient(to right,
+            #F2C200 0%, #F2C200 var(--sp, 50%),
+            rgba(255,255,255,0.1) var(--sp, 50%), rgba(255,255,255,0.1) 100%
+          );
         }
-        @media (max-width: 480px) {
-          .roi-stat-cards { grid-template-columns: 1fr; }
+        .roi-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 18px; height: 18px;
+          border-radius: 50%;
+          background: #F2C200;
+          box-shadow: 0 0 8px rgba(242,194,0,0.55);
+          cursor: pointer;
+        }
+        .roi-slider::-moz-range-thumb {
+          width: 18px; height: 18px;
+          border-radius: 50%;
+          background: #F2C200;
+          box-shadow: 0 0 8px rgba(242,194,0,0.55);
+          border: none;
+          cursor: pointer;
+        }
+        .roi-kpi-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 1px;
+          background: rgba(255,255,255,0.06);
+        }
+        .roi-kpi-card { grid-column: span 2; }
+        .roi-kpi-card:nth-child(4) { grid-column: span 3; }
+        .roi-kpi-card:nth-child(5) { grid-column: span 3; }
+        @media (max-width: 1024px) {
+          .roi-kpi-grid { grid-template-columns: repeat(4, 1fr); }
+          .roi-kpi-card { grid-column: span 2; }
+          .roi-kpi-card:nth-child(4) { grid-column: span 2; }
+          .roi-kpi-card:nth-child(5) { grid-column: span 4; }
+        }
+        @media (max-width: 768px) {
+          .roi-kpi-grid { grid-template-columns: 1fr 1fr; }
+          .roi-kpi-card { grid-column: span 1; }
+          .roi-kpi-card:nth-child(4) { grid-column: span 1; }
+          .roi-kpi-card:nth-child(5) { grid-column: span 2; }
+          .roi-input-grid { grid-template-columns: 1fr !important; }
+          .roi-bottom-row { flex-direction: column !important; }
+          .roi-profile-col { border-right: none !important; border-bottom: 1px solid #222; }
         }
       `}</style>
 
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: 'clamp(56px,8vw,96px) clamp(24px,5vw,72px)' }}>
-
-        {/* Header */}
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          fontSize: 10, fontWeight: 700, letterSpacing: '3px',
-          textTransform: 'uppercase', color: Y,
-          marginBottom: 18, fontFamily: "'Exo', sans-serif",
-        }}>
-          <span style={{ width: 18, height: 1, background: Y, display: 'inline-block' }} />
-          Free estimate
+      {/* Section header */}
+      <div style={{ padding: 'clamp(48px,6vw,80px) clamp(24px,5vw,72px) 0', maxWidth: 1100, margin: '0 auto' }}>
+        <div className="sec" style={{ marginBottom: 16 }}>Free Estimate</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 24, marginBottom: 48 }}>
+          <h2 style={{ fontSize: 'clamp(24px,3.5vw,40px)', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.5px', margin: 0, maxWidth: 520 }}>
+            What could automation<br />save your team?
+          </h2>
+          <Illustration />
         </div>
-        <h2 style={{
-          fontFamily: "'Exo', sans-serif",
-          fontSize: 'clamp(28px,4vw,46px)',
-          fontWeight: 800, letterSpacing: '-1.5px',
-          lineHeight: 1.0, color: '#fff', marginBottom: 40,
-        }}>
-          What could automation<br />save you?
-        </h2>
-        <div className="roi-layout-r">
+      </div>
 
-          {/* ── INPUTS ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+      {/* Inputs */}
+      <div style={{ padding: '0 clamp(24px,5vw,72px)', maxWidth: 1100, margin: '0 auto 1px' }}>
+        <div style={{ marginBottom: 32 }}>
+          <PillGroup label="Your sector" options={SECTORS} value={sector} onChange={handleSector} />
+        </div>
+        <div className="roi-input-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(24px,3vw,40px) clamp(32px,5vw,64px)', marginBottom: 40 }}>
+          <SliderInput
+            label="Monthly revenue"
+            helper="Your organisation's total monthly revenue."
+            min={8000} max={500000} step={1000}
+            value={revenue} onChange={handleRevenue}
+            fmt={v => v >= 1000 ? `$${(v / 1000).toFixed(0)}K` : `$${v}`}
+          />
+          <SliderInput
+            label="Team size"
+            helper="Number of full-time employees."
+            min={3} max={80} step={1}
+            value={teamSize} onChange={handleTeam}
+            fmt={v => `${v} people`}
+          />
+          <SliderInput
+            label="Manual work share"
+            helper="Approximate % of the team's time spent on manual, repeatable tasks."
+            min={10} max={80} step={5}
+            value={manualPct} onChange={handleManual}
+            fmt={v => `${v}%`}
+          />
+          <SliderInput
+            label="Monthly inbound leads"
+            helper="Enquiries, sign-ups, or new leads received per month."
+            min={10} max={2000} step={10}
+            value={leads} onChange={handleLeads}
+            fmt={v => v.toLocaleString()}
+          />
+        </div>
+        <div style={{ marginBottom: 48 }}>
+          <PillGroup label="Current lead response time" options={RESPONSE_TIMES} value={responseTime} onChange={handleResponse} small />
+        </div>
+      </div>
 
-            {/* Sector */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {inputLabel('01', 'Sector')}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-                {Object.keys(SECTORS).map(s => (
-                  <button key={s} onClick={() => setSector(s)} style={{
-                    padding: '7px 13px',
-                    border: `1px solid ${sector === s ? Y : 'rgba(255,255,255,0.1)'}`,
-                    background: sector === s ? 'rgba(242,194,0,0.08)' : 'transparent',
-                    color: sector === s ? Y : 'rgba(255,255,255,0.4)',
-                    fontSize: 11, fontWeight: 600,
-                    fontFamily: "'Exo', sans-serif",
-                    cursor: 'pointer', transition: 'all 0.15s',
-                    letterSpacing: '0.02em',
-                  }}>
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Team size */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                {inputLabel('02', 'Team size')}
-                <span style={{
-                  fontSize: 26, fontWeight: 800, color: '#fff',
-                  letterSpacing: '-1px', fontFamily: "'Exo', sans-serif", lineHeight: 1,
-                }}>{employees}</span>
-              </div>
-              <input type="range" min={1} max={200} step={1} value={employees}
-                onChange={e => setEmployees(Number(e.target.value))}
-                style={{ width: '100%', accentColor: Y, cursor: 'pointer', height: 3 }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: 'rgba(255,255,255,0.18)', fontFamily: "'Exo', sans-serif" }}>
-                <span>1</span><span>200</span>
-              </div>
-            </div>
-
-            {/* Gross margin */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                {inputLabel('03', 'Gross margin')}
-                <span style={{
-                  fontSize: 26, fontWeight: 800, color: '#fff',
-                  letterSpacing: '-1px', fontFamily: "'Exo', sans-serif", lineHeight: 1,
-                }}>{margin}%</span>
-              </div>
-              <input type="range" min={5} max={90} step={1} value={margin}
-                onChange={e => setMargin(Number(e.target.value))}
-                style={{ width: '100%', accentColor: Y, cursor: 'pointer', height: 3 }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: 'rgba(255,255,255,0.18)', fontFamily: "'Exo', sans-serif" }}>
-                <span>5%</span><span>90%</span>
-              </div>
-            </div>
-
+      {/* KPI cards */}
+      <div style={{ borderTop: '1px solid #222' }}>
+        <div className="roi-kpi-grid">
+          <div className="roi-kpi-card">
+            <KpiCard tag="Monthly savings" rawValue={result.monthly} fmt={fmtDollar} sub="At automation maturity" accent={Y} />
           </div>
-
-          {/* ── RESULTS ── */}
-          <div>
-            {!result ? (
-              <div style={{
-                border: '1px solid rgba(255,255,255,0.06)',
-                minHeight: 300,
-                display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center',
-                gap: 10, textAlign: 'center',
-                color: 'rgba(255,255,255,0.18)',
-              }}>
-                <span style={{ fontSize: 28 }}>→</span>
-                <p style={{ fontSize: 13, fontFamily: "'Exo', sans-serif", fontWeight: 300 }}>
-                  Select a sector to see your projection
-                </p>
-              </div>
-            ) : (
-              <>
-                {/* Stat cards */}
-                <div className="roi-stat-cards" style={{ marginBottom: 1 }}>
-                  {[
-                    { label: 'Monthly at peak',  value: fmtUSD(result.peakMonthly) },
-                    { label: 'Annual impact',     value: fmtUSD(result.annual) },
-                    { label: 'Hours recovered',   value: fmtHrs(result.hoursPerYear) },
-                  ].map((s, i) => (
-                    <div key={i} style={{ background: '#0d0d0d', padding: '20px 18px' }}>
-                      <div style={{
-                        fontSize: 'clamp(18px,2vw,24px)',
-                        fontWeight: 800, color: Y,
-                        letterSpacing: '-0.5px', lineHeight: 1,
-                        fontFamily: "'Exo', sans-serif", marginBottom: 7,
-                      }}>
-                        {s.value}
-                      </div>
-                      <div style={{
-                        fontSize: 9, fontWeight: 700, letterSpacing: '0.13em',
-                        textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)',
-                        fontFamily: "'Exo', sans-serif",
-                      }}>
-                        {s.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Chart */}
-                <div style={{
-                  background: '#0d0d0d',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                  borderTop: 'none', padding: '20px 12px 10px',
-                }}>
-                  <ROIChart key={chartKey} monthly={result.monthly} cumulative={result.cumulative} />
-                  <div style={{ display: 'flex', gap: 18, marginTop: 10, flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ width: 10, height: 10, background: Y, display: 'inline-block', flexShrink: 0 }} />
-                      <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.22)', fontFamily: "'Exo', sans-serif", letterSpacing: '1px' }}>MONTHLY SAVINGS</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ width: 16, height: 2, background: 'rgba(255,255,255,0.5)', display: 'inline-block', flexShrink: 0 }} />
-                      <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.22)', fontFamily: "'Exo', sans-serif", letterSpacing: '1px' }}>CUMULATIVE</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* CTA */}
-                <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-                  <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noopener noreferrer"
-                    style={{
-                      background: Y, color: '#000',
-                      fontFamily: "'Exo', sans-serif",
-                      fontWeight: 700, fontSize: 13,
-                      letterSpacing: '0.04em', padding: '14px 28px',
-                      textDecoration: 'none', display: 'inline-block',
-                      transition: 'opacity 0.2s',
-                    }}>
-                    Book a free audit call →
-                  </a>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.28)', fontFamily: "'Exo', sans-serif", fontWeight: 300 }}>
-                    We&apos;ll validate this for your workflows
-                  </span>
-                </div>
-              </>
-            )}
+          <div className="roi-kpi-card">
+            <KpiCard tag="Annual impact" rawValue={result.annualSavings} fmt={fmtDollarK} sub="12-month cumulative" accent={Y} />
+          </div>
+          <div className="roi-kpi-card">
+            <KpiCard tag="Hours recovered" rawValue={result.hoursPerYear} fmt={fmtHours} sub="Per year across the team" accent="white" />
+          </div>
+          <div className="roi-kpi-card">
+            <KpiCard tag="Revenue growth potential" rawValue={result.annualRevenue} fmt={fmtDollarK} sub="From faster lead response" accent={GREEN} />
+          </div>
+          <div className="roi-kpi-card">
+            <KpiCard tag="Estimated payback" rawValue={result.paybackMonths} fmt={fmtMonths} sub="Based on a typical engagement" accent={BLUE} />
           </div>
         </div>
+      </div>
 
-        <p style={{
-          marginTop: 40, fontSize: 11, color: 'rgba(255,255,255,0.13)',
-          fontFamily: "'Exo', sans-serif", fontWeight: 300, lineHeight: 1.6,
+      {/* Profile + chart row */}
+      <div className="roi-bottom-row" style={{ display: 'flex', borderTop: '1px solid #222' }}>
+        <div className="roi-profile-col" style={{
+          flex: '0 0 clamp(240px,30%,360px)',
+          borderRight: '1px solid #222',
+          padding: 'clamp(24px,3vw,40px)',
         }}>
-          Estimates based on industry benchmarks. Conservative baseline — actual results vary by workflow complexity.
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888', marginBottom: 16 }}>Your profile</div>
+          <div style={{ borderLeft: `3px solid ${Y}`, paddingLeft: 16 }}>
+            <p style={{ fontSize: 13, color: '#888', lineHeight: 1.8, fontWeight: 300, margin: 0 }}>{profileText}</p>
+          </div>
+        </div>
+        <div style={{ flex: 1, padding: 'clamp(24px,3vw,40px)', minWidth: 0 }}>
+          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888', marginBottom: 20 }}>
+            12-month cumulative savings
+          </div>
+          <ROIChart cumulative={result.cumulative} monthly={result.monthly} />
+        </div>
+      </div>
+
+      {/* Disclaimer */}
+      <div style={{ padding: 'clamp(20px,2.5vw,32px) clamp(24px,5vw,72px)', borderTop: '1px solid #1a1a1a' }}>
+        <p style={{ fontSize: 11, color: '#444', lineHeight: 1.7, fontWeight: 300, margin: '0 auto', maxWidth: 1100 }}>
+          These figures are <span style={{ color: Y }}>best-case scenario estimates</span> based on industry-average automation yields and typical team structures. Actual results depend on workflow complexity, data quality, and implementation scope. We recommend a discovery call before drawing conclusions from this calculator.
         </p>
       </div>
-    </section>
+    </div>
   );
 }

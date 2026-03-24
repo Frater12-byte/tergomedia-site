@@ -40,7 +40,7 @@ export default function Footer() {
 
         {/* Brand column */}
         <div className="footer-brand">
-          <Image src="/logo.png" alt="Tergo Media — AI Automation & Custom Software Agency" width={156} height={43} style={{objectFit:'contain',objectPosition:'left center'}} />
+          <Image src="/logo.png" alt="Tergo Media — AI Automation & Custom Software Agency" width={180} height={50} style={{objectFit:'contain',objectPosition:'left center'}} />
           <p className="footer-tagline">
             AI · Automation · Custom Software<br />
             Dubai · Bucharest · Milan

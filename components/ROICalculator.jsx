@@ -257,7 +257,7 @@ function smoothPath(points) {
   let d = `M ${points[0].x} ${points[0].y}`;
   for (let i = 1; i < points.length; i++) {
     const prev = points[i - 1], curr = points[i];
-    const tension = 0.35;
+    const tension = 0.4;
     const cpx1 = prev.x + (curr.x - prev.x) * tension;
     const cpy1 = prev.y;
     const cpx2 = curr.x - (curr.x - prev.x) * tension;
@@ -275,10 +275,12 @@ function ROIChart({ monthlyBreakdown, sector }) {
   const lineRef   = useRef(null);
   const annotRef  = useRef(null);
 
-  // Visual-only noise layer — does NOT affect KPI cards
+  // Bars: ramp values with small sector variance for natural look (can vary slightly)
   const variance = SECTOR_VARIANCE[sector] || SECTOR_VARIANCE['Other'];
   const chartMonthlyValues = monthlyBreakdown.map((v, i) => Math.max(v * (1 + variance[i]), 0));
-  const chartCumulative = chartMonthlyValues.reduce((acc, v, i) => {
+  // Cumulative line: ALWAYS built from clean monthlyBreakdown — never from varied bar values.
+  // This guarantees the line is always monotonically increasing regardless of variance sign.
+  const chartCumulative = monthlyBreakdown.reduce((acc, v, i) => {
     acc.push((acc[i - 1] || 0) + v);
     return acc;
   }, []);
@@ -477,24 +479,27 @@ function ROIChart({ monthlyBreakdown, sector }) {
 }
 
 /* ── Profile text builder ──────────────────────────────────────────────────── */
+// Values interpolated below (teamSize, rev, manualPct, responseTime) come from
+// controlled React state — numeric or from a fixed options array — not user-typed input.
+// dangerouslySetInnerHTML is safe here.
+const SP = (txt) => `<span style="color:#F5C540;font-weight:500">${txt}</span>`;
 function buildProfile(sector, teamSize, revenue, manualPct, responseTime) {
-  const hrs = Math.round(teamSize * (manualPct / 100) * 160 * 0.7);
-  const rev  = revenue >= 1000 ? `$${(revenue / 1000).toFixed(0)}K` : `$${revenue}`;
+  const rev = revenue >= 1000 ? `$${(revenue / 1000).toFixed(0)}K` : `$${revenue}`;
   const templates = {
     'Real Estate':
-      `A ${teamSize}-person real estate team generating ${rev}/month currently spends roughly ${hrs} hours per month on manual admin — lead follow-up, listing updates, contract chasing, and CRM data entry. With response times averaging ${responseTime.toLowerCase()}, a significant share of inbound leads are going cold before the first conversation. Automation can reclaim that time and move faster on every enquiry.`,
+      `A ${SP(`${teamSize}-person`)} real estate operation generating around ${SP(`${rev}/month`)} — we know this profile well. The biggest time sink is usually lead follow-up and CRM hygiene. At ${SP(`${responseTime.toLowerCase()} response times`)}, you're likely losing warm leads to faster competitors. Our typical engagement for a brokerage your size starts with automating lead capture and WhatsApp follow-up, then moves into CRM sync and pipeline reporting. Most clients in this bracket see their ${SP('admin load drop within the first 30 days')}.`,
     'Travel & Hospitality':
-      `With a team of ${teamSize} handling ${rev}/month across bookings and supplier coordination, an estimated ${hrs} staff-hours each month go to tasks that can be automated: quote generation, supplier confirmations, itinerary updates, and payment chasing. Guests expecting replies ${responseTime.toLowerCase()} after enquiring represent your highest conversion window.`,
+      `A ${SP(`${teamSize}-person`)} travel operation at ${SP(`${rev}/month`)} — this is exactly the profile we've worked with most. Tour operators and travel agencies at this scale typically have three problems: ${SP('manual booking confirmations, disconnected supplier comms, and reporting that takes someone a full day each week')}. We've automated all three. The typical result is ${SP('30–40% of your team\'s admin time back')}, and a noticeably faster client experience.`,
     'Agriculture':
-      `Your ${teamSize}-person operation managing ${rev}/month likely absorbs ${hrs} hours per month in manual data handling — stock counts, distributor updates, weather-triggered alerts, and compliance reporting. With the right integrations, your team stops chasing data and starts acting on it.`,
-    'Media & Publishing':
-      `A ${teamSize}-person media team with ${rev}/month in revenue spends an estimated ${hrs} hours per month on content scheduling, advertiser reporting, invoice reconciliation, and CRM updates. Automating these workflows frees your team to focus on editorial output rather than operational overhead.`,
+      `A ${SP(`${teamSize}-person`)} agri business at ${SP(`${rev}/month`)} — lean operations where every hour counts. At this scale, the manual overhead is usually in ${SP('inventory tracking, distributor communication, and reporting that still happens in spreadsheets')}. We've built IoT monitoring systems and distributor portals for businesses exactly like this. Automation here isn't about replacing people — it's about ${SP('giving your team visibility without the manual data collection')}.`,
     'Professional Services':
-      `With ${teamSize} professionals billing against ${rev}/month in revenue, time lost to manual admin directly erodes margin. An estimated ${hrs} hours per month are spent on client onboarding, proposal generation, scheduling, and status updates — work that structured automation handles end-to-end.`,
+      `A ${SP(`${teamSize}-person`)} service firm at ${SP(`${rev}/month`)} — the profile where automation delivers fastest. Consultancies and service firms at this scale are usually drowning in ${SP('manual reporting, client onboarding paperwork, and status update emails')}. With ${SP(`${manualPct}% of your team's time going to admin`)}, you're carrying significant overhead that compounds as you grow. Our typical engagement ${SP('delivers the first automations within two weeks')}.`,
+    'Media & Publishing':
+      `A ${SP(`${teamSize}-person`)} media or content team at ${SP(`${rev}/month`)} — a sector where speed is everything and manual processes are invisible until they become bottlenecks. ${SP('Content distribution, asset management, and performance reporting')} are the usual culprits. We've helped teams your size ${SP('cut their weekly reporting overhead in half')} and automate the distribution workflows that used to require a dedicated coordinator.`,
     'E-commerce & Retail':
-      `Your ${teamSize}-person team driving ${rev}/month in e-commerce revenue is likely spending ${hrs} hours per month on order processing, inventory sync, customer service queues, and returns management. Automating these fulfilment workflows reduces lead time and frees headcount for higher-value tasks.`,
+      `A ${SP(`${teamSize}-person`)} e-commerce operation at ${SP(`${rev}/month`)} — the scale where manual processes start visibly hurting conversion. ${SP('Order management, catalogue updates, and customer communication')} are the three areas where automation pays back fastest. At ${SP(`${responseTime.toLowerCase()} response times`)} on enquiries, you're also likely ${SP('leaving repeat purchase revenue on the table')}. Our typical engagement for an operation your size has a payback under three months.`,
     'Other':
-      `A ${teamSize}-person team with ${rev}/month in revenue typically absorbs ${hrs} hours per month in repeatable manual tasks — data entry, status updates, follow-up communications, and reporting. These are the highest-value automation targets regardless of sector.`,
+      `A ${SP(`${teamSize}-person`)} team at ${SP(`${rev}/month`)} — whatever your sector, at this scale the pattern is almost always the same: ${SP('smart people doing work that should be automated')}. With ${SP(`${manualPct}% of time going to manual tasks`)}, the opportunity is real. We start every engagement with a ${SP('free workflow audit')} so we can show you exactly where the hours are going — and what it would take to get them back.`,
   };
   return templates[sector] ?? templates['Other'];
 }
@@ -685,7 +690,9 @@ export default function ROICalculator() {
         }}>
           <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888', marginBottom: 16 }}>Your profile</div>
           <div style={{ borderLeft: `3px solid ${Y}`, paddingLeft: 16 }}>
-            <p style={{ fontSize: 13, color: '#888', lineHeight: 1.8, fontWeight: 300, margin: 0 }}>{profileText}</p>
+            {/* Values in profileText are from controlled state — safe for dangerouslySetInnerHTML */}
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.68)', lineHeight: 1.8, fontWeight: 300, margin: 0 }}
+               dangerouslySetInnerHTML={{ __html: profileText }} />
           </div>
         </div>
         <div style={{ flex: 1, padding: 'clamp(24px,3vw,40px)', minWidth: 0 }}>

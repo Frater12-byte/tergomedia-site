@@ -40,7 +40,7 @@ export default function Nav() {
       <div className="nav-wrap">
         <div className="nav-inner">
           <div className="nav-logo">
-            <Link href="/"><Image src="/logo.png" alt="Tergo Media — AI Automation & Custom Software Agency" width={156} height={43} style={{objectFit:'contain',objectPosition:'left center'}} priority /></Link>
+            <Link href="/"><Image src="/logo.png" alt="Tergo Media — AI Automation & Custom Software Agency" width={180} height={50} style={{objectFit:'contain',objectPosition:'left center'}} priority /></Link>
           </div>
 
           {/* Desktop nav */}

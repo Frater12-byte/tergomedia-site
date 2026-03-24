@@ -14,7 +14,7 @@ export default function Chatbot() {
   const [typing, setTyping] = useState(false);
   const [unread, setUnread] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (open) {
@@ -27,10 +27,22 @@ export default function Chatbot() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [msgs, typing]);
 
+  function handleInput() {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+    el.style.overflowY = el.scrollHeight > 120 ? 'auto' : 'hidden';
+  }
+
   async function send() {
     const text = input.trim();
     if (!text || typing) return;
     setInput('');
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.overflowY = 'hidden';
+    }
     setMsgs(m => [...m, { role: 'user', text }]);
     setTyping(true);
     try {
@@ -77,16 +89,20 @@ export default function Chatbot() {
             <div ref={bottomRef} />
           </div>
           <div className="chat-input-row">
-            <input
+            <textarea
               ref={inputRef}
               className="chat-input"
               placeholder="Type a message..."
               value={input}
+              rows={1}
               onChange={e => setInput(e.target.value)}
+              onInput={handleInput}
               onKeyDown={onKey}
+              style={{ resize: 'none', overflowY: 'hidden' }}
             />
             <button className="chat-send" onClick={send} disabled={typing}>Send</button>
           </div>
+          <span className="chat-hint">Shift+Enter for new line</span>
         </div>
       )}
       <button className="chat-btn" onClick={() => setOpen(o => !o)} aria-label="Open chat">

@@ -6,16 +6,20 @@ const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/8b37425b-b3b4-4cf9-aa3
 type Msg = { role: 'bot' | 'user'; text: string };
 
 export default function Chatbot() {
-  const [open, setOpen] = useState(false);
-  const [msgs, setMsgs] = useState<Msg[]>([
-    { role: 'bot', text: 'Hi! I\'m the Tergo Media assistant. What can I help you with today?' },
+  const [open, setOpen]   = useState(false);
+  const [msgs, setMsgs]   = useState<Msg[]>([
+    { role: 'bot', text: "Hi! I'm the Tergo Media assistant. What can I help you with today?" },
   ]);
-  const [input, setInput] = useState('');
+  const [input,  setInput]  = useState('');
   const [typing, setTyping] = useState(false);
   const [unread, setUnread] = useState(0);
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const bottomRef   = useRef<HTMLDivElement>(null);
+  const inputRef    = useRef<HTMLTextAreaElement>(null);
+  const chatRef     = useRef<HTMLDivElement>(null);
+  const msgsRef     = useRef<HTMLDivElement>(null);
+
+  // Focus + unread reset on open
   useEffect(() => {
     if (open) {
       setUnread(0);
@@ -23,9 +27,52 @@ export default function Chatbot() {
     }
   }, [open]);
 
+  // Scroll to bottom when messages or typing state changes
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [msgs, typing]);
+
+  // Prevent body scroll when chat is open on mobile
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (open && window.innerWidth <= 768) {
+      document.body.style.overflow  = 'hidden';
+      document.body.style.position  = 'fixed';
+      document.body.style.width     = '100%';
+    } else {
+      document.body.style.overflow  = '';
+      document.body.style.position  = '';
+      document.body.style.width     = '';
+    }
+    return () => {
+      document.body.style.overflow  = '';
+      document.body.style.position  = '';
+      document.body.style.width     = '';
+    };
+  }, [open]);
+
+  // visualViewport resize — iOS keyboard compensation
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    function handleVVResize() {
+      const container = chatRef.current;
+      if (!container || !open || !vv || window.innerWidth > 768) return;
+      container.style.height = vv.height + 'px';
+      container.style.top    = vv.offsetTop + 'px';
+      if (msgsRef.current) {
+        msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
+      }
+    }
+
+    vv.addEventListener('resize', handleVVResize);
+    vv.addEventListener('scroll', handleVVResize);
+    return () => {
+      vv.removeEventListener('resize', handleVVResize);
+      vv.removeEventListener('scroll', handleVVResize);
+    };
+  }, [open]);
 
   function handleInput() {
     const el = inputRef.current;
@@ -40,16 +87,16 @@ export default function Chatbot() {
     if (!text || typing) return;
     setInput('');
     if (inputRef.current) {
-      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height    = 'auto';
       inputRef.current.style.overflowY = 'hidden';
     }
     setMsgs(m => [...m, { role: 'user', text }]);
     setTyping(true);
     try {
-      const res = await fetch(WEBHOOK, {
-        method: 'POST',
+      const res  = await fetch(WEBHOOK, {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chatInput: text, sessionId: 'web-' + Math.random().toString(36).slice(2,9) }),
+        body:    JSON.stringify({ chatInput: text, sessionId: 'web-' + Math.random().toString(36).slice(2,9) }),
       });
       const data = await res.json();
       const reply: string =
@@ -72,12 +119,12 @@ export default function Chatbot() {
   return (
     <>
       {open && (
-        <div className="chat-window">
+        <div ref={chatRef} className="chat-window">
           <div className="chat-header">
             <span className="chat-header-title">Tergo Media Assistant</span>
             <button className="chat-close" onClick={() => setOpen(false)} aria-label="Close chat">×</button>
           </div>
-          <div className="chat-msgs">
+          <div ref={msgsRef} className="chat-msgs">
             {msgs.map((m, i) => (
               <div key={i} className={`chat-msg ${m.role}`}>{m.text}</div>
             ))}
@@ -99,11 +146,11 @@ export default function Chatbot() {
               onInput={handleInput}
               onKeyDown={onKey}
               onFocus={() => {
-                if (window.innerWidth <= 768) {
-                  setTimeout(() => {
-                    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-                  }, 300);
-                }
+                if (window.innerWidth > 768) return;
+                setTimeout(() => {
+                  msgsRef.current?.scrollTo({ top: msgsRef.current.scrollHeight, behavior: 'smooth' });
+                  chatRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 350);
               }}
               style={{ resize: 'none', overflowY: 'hidden' }}
             />

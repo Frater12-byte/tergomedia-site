@@ -8,7 +8,7 @@ const NWM = 82, NHM = 42;
 const SPEED_D = 90;
 const SPEED_M = 65;
 const MAX_NOTIFS = 2;
-const COL_PCT_DESKTOP = [0.07, 0.20, 0.33, 0.50, 0.66, 0.84];
+const COL_PCT_DESKTOP = [0.05, 0.17, 0.29, 0.41, 0.54, 0.70, 0.87];
 const TRAIL_LEN = 20;
 const RING_DUR  = 600;
 const ROUTER_DUR = 300;
@@ -16,23 +16,24 @@ const FINAL_RING_DUR = 700;
 const DRAMATIC_INTERVAL = 8000;
 const MOBILE_BP = 768;
 const DOT_COUNT = 120;
+const NEUTRAL = '180,190,210';
+const COLOUR_TRANS_DUR = 0.3;
 
-// Mobile layout percentages (centers)
-const MRY = [0.07, 0.19, 0.31, 0.47, 0.63, 0.79];
+// Mobile layout
+const MRY = [0.04, 0.14, 0.24, 0.35, 0.48, 0.62, 0.79];
 const MCX = [0.20, 0.50, 0.80];
 
-// Desktop row centers
-const DRY = [0.20, 0.50, 0.80];
+// Desktop row centers: [high-main, med-main, low-main, high-sub, med-sub]
+const DRY = [0.14, 0.50, 0.83, 0.32, 0.67];
 
-// Light pools (drawn each frame over black)
+// Light pools (reduced opacity — CSS bg handles ambient glow)
 const POOLS = [
-  { x: 0.15, y: 0.3,  r: 0.22, c: '#4ade80', a: 0.04  },
-  { x: 0.5,  y: 0.5,  r: 0.28, c: '#818cf8', a: 0.035 },
-  { x: 0.82, y: 0.25, r: 0.2,  c: '#F5C540', a: 0.04  },
-  { x: 0.65, y: 0.8,  r: 0.18, c: '#f472b6', a: 0.03  },
+  { x: 0.15, y: 0.3,  r: 0.22, c: '#60a5fa', a: 0.02  },
+  { x: 0.5,  y: 0.5,  r: 0.28, c: '#818cf8', a: 0.018 },
+  { x: 0.82, y: 0.25, r: 0.2,  c: '#a78bfa', a: 0.02  },
+  { x: 0.65, y: 0.8,  r: 0.18, c: '#a78bfa', a: 0.015 },
 ];
 
-// Per-stream completion notifications
 const COMPLETION_MSGS = [
   '🎯  Deal created — +$420 revenue',
   '⏱  1.4 hrs saved this cycle',
@@ -41,30 +42,52 @@ const COMPLETION_MSGS = [
 
 // ─── node definitions ─────────────────────────────────────────────────────────
 const NODES = [
-  { id:'new-lead',     label:'New Lead In',    type:'TRIGGER', color:'#F5C540', dc:0, dr:1, mc:1, mr:0 },
-  { id:'ai-qualify',   label:'AI Qualify',      type:'AI',      color:'#818cf8', dc:1, dr:1, mc:1, mr:1 },
-  { id:'lead-router',  label:'Lead Router',     type:'ROUTER',  color:'#c084fc', dc:2, dr:1, mc:1, mr:2 },
-  { id:'enrich',       label:'Enrich',          type:'ENRICH',  color:'#2dd4bf', dc:3, dr:0, mc:0, mr:3 },
-  { id:'log-contact',  label:'Log Contact',     type:'LOG',     color:'#34d399', dc:3, dr:1, mc:1, mr:3 },
-  { id:'tag-low',      label:'Tag: Low',        type:'TAG',     color:'#f87171', dc:3, dr:2, mc:2, mr:3 },
-  { id:'route-agent',  label:'Route Agent',     type:'ROUTE',   color:'#f472b6', dc:4, dr:0, mc:0, mr:4 },
-  { id:'email-drip',   label:'Email Drip',      type:'EMAIL',   color:'#60a5fa', dc:4, dr:1, mc:1, mr:4 },
-  { id:'nurture-30d',  label:'Nurture 30d',     type:'NURTURE', color:'#fb923c', dc:4, dr:2, mc:2, mr:4 },
-  { id:'whatsapp-crm', label:'WhatsApp + CRM',  type:'ACTION',  color:'#4ade80', dc:5, dr:0, mc:0, mr:5 },
-  { id:'pipeline-upd', label:'Pipeline Update', type:'CRM',     color:'#fbbf24', dc:5, dr:1, mc:1, mr:5 },
-  { id:'archive',      label:'Archive',         type:'ARCHIVE', color:'#6b7280', dc:5, dr:2, mc:2, mr:5 },
+  // Shared entry cols 0-2
+  { id:'new-lead',       label:'New Lead In',    type:'TRIGGER', color:'#F5C540', dc:0, dr:1, mc:1, mr:0 },
+  { id:'ai-qualify',     label:'AI Qualify',     type:'AI',      color:'#818cf8', dc:1, dr:1, mc:1, mr:1 },
+  { id:'lead-router',    label:'Lead Router',    type:'ROUTER',  color:'#c084fc', dc:2, dr:1, mc:1, mr:2 },
+  // High lane
+  { id:'enrich',         label:'Enrich',         type:'ENRICH',  color:'#60a5fa', dc:3, dr:0, mc:0, mr:3 },
+  { id:'budget-check',   label:'Budget Check',   type:'ROUTER',  color:'#60a5fa', dc:4, dr:0, mc:0, mr:4 },
+  { id:'route-agent',    label:'Route Agent',    type:'ROUTE',   color:'#60a5fa', dc:5, dr:0, mc:0, mr:5 },
+  { id:'discovery-call', label:'Discovery Call', type:'LOG',     color:'#60a5fa', dc:5, dr:3, mc:0, mr:5, desktopOnly:true },
+  { id:'whatsapp-crm',   label:'WhatsApp + CRM', type:'ACTION',  color:'#60a5fa', dc:6, dr:0, mc:0, mr:6 },
+  // Medium lane
+  { id:'log-contact',    label:'Log Contact',    type:'LOG',     color:'#a78bfa', dc:3, dr:1, mc:1, mr:3 },
+  { id:'email-drip',     label:'Email Drip',     type:'EMAIL',   color:'#a78bfa', dc:4, dr:1, mc:1, mr:4 },
+  { id:'book-meeting',   label:'Book Meeting',   type:'ROUTE',   color:'#a78bfa', dc:5, dr:1, mc:1, mr:5 },
+  { id:'re-engage',      label:'Re-engage +7d',  type:'EMAIL',   color:'#a78bfa', dc:5, dr:4, mc:1, mr:5, desktopOnly:true },
+  { id:'pipeline-upd',   label:'Pipeline Upd',   type:'CRM',     color:'#a78bfa', dc:6, dr:1, mc:1, mr:6 },
+  // Low lane
+  { id:'tag-low',        label:'Tag: Low',       type:'TAG',     color:'#93c5fd', dc:3, dr:2, mc:2, mr:3 },
+  { id:'nurture-30d',    label:'Nurture 30d',    type:'NURTURE', color:'#93c5fd', dc:4, dr:2, mc:2, mr:4 },
+  { id:'archive',        label:'Archive',        type:'ARCHIVE', color:'#6b7280', dc:6, dr:2, mc:2, mr:6 },
 ];
 
-// ─── stream definitions ───────────────────────────────────────────────────────
+// ─── path variants [streamIdx, nodeIds] ───────────────────────────────────────
+const PATH_VARIANTS = [
+  [0, ['new-lead','ai-qualify','lead-router','enrich','budget-check','route-agent','whatsapp-crm']],
+  [0, ['new-lead','ai-qualify','lead-router','enrich','budget-check','discovery-call','whatsapp-crm']],
+  [1, ['new-lead','ai-qualify','lead-router','log-contact','email-drip','book-meeting','pipeline-upd']],
+  [1, ['new-lead','ai-qualify','lead-router','log-contact','email-drip','re-engage','pipeline-upd']],
+  [2, ['new-lead','ai-qualify','lead-router','tag-low','nurture-30d','archive']],
+];
+
+// ─── stream definitions (colour + stats + notifs) ─────────────────────────────
 const STREAMS = [
-  { id:'green',  color:'#4ade80', nodeIds:['new-lead','ai-qualify','lead-router','enrich','route-agent','whatsapp-crm'],    notifs:['Score: 91 🔥','Agent assigned','WhatsApp sent ✓','Deal created! 🎯'], dc:{ leads:1, hours:2.5, revenue:420 } },
-  { id:'yellow', color:'#fbbf24', nodeIds:['new-lead','ai-qualify','lead-router','log-contact','email-drip','pipeline-upd'], notifs:['Score: 58','Logged to Airtable','Email drip live','Pipeline updated'],   dc:{ leads:1, hours:1.4, revenue:190 } },
-  { id:'red',    color:'#f87171', nodeIds:['new-lead','ai-qualify','lead-router','tag-low','nurture-30d','archive'],          notifs:['Score: 19','Tagged: nurture','30d sequence on','Watching…'],             dc:{ leads:1, hours:0.3, revenue:35  } },
+  { id:'high',   color:'#60a5fa', notifs:['Budget check →','Agent assigned','Deal created! 🎯',''],    dc:{ leads:1, hours:2.5, revenue:420 } },
+  { id:'medium', color:'#a78bfa', notifs:['Email drip live','Meeting booked','Pipeline updated',''],   dc:{ leads:1, hours:1.4, revenue:190 } },
+  { id:'low',    color:'#93c5fd', notifs:['Tagged: nurture','30d sequence on','Watching…',''],         dc:{ leads:1, hours:0.3, revenue:35  } },
 ];
 
 // ─── pure helpers ─────────────────────────────────────────────────────────────
 function hexRgb(h) {
   return `${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)}`;
+}
+
+function lerpRgb(r1, r2, t) {
+  const a = r1.split(',').map(Number), b = r2.split(',').map(Number);
+  return `${Math.round(a[0]+(b[0]-a[0])*t)},${Math.round(a[1]+(b[1]-a[1])*t)},${Math.round(a[2]+(b[2]-a[2])*t)}`;
 }
 
 function nodeRect(n, W, H, mob) {
@@ -124,23 +147,25 @@ function getPos(p, segs) {
 function buildPaths(W, H, mob) {
   const pos = {};
   for (const n of NODES) { const r=nodeRect(n,W,H,mob); pos[n.id]=[r.cx,r.cy]; }
-  return STREAMS.map(stream => {
+  return PATH_VARIANTS.map(([, nodeIds]) => {
     const segs = [];
-    for (let i = 0; i < stream.nodeIds.length-1; i++) {
-      const [ax,ay]=pos[stream.nodeIds[i]], [bx,by]=pos[stream.nodeIds[i+1]];
+    for (let i = 0; i < nodeIds.length-1; i++) {
+      const [ax,ay]=pos[nodeIds[i]], [bx,by]=pos[nodeIds[i+1]];
       const pts=mkWaypoints(ax,ay,bx,by,mob), {ls,tot}=segLens(pts);
-      segs.push({pts,ls,tot,toId:stream.nodeIds[i+1]});
+      segs.push({pts,ls,tot,toId:nodeIds[i+1]});
     }
     return {segs, totalLen:segs.reduce((s,g)=>s+g.tot,0)};
   });
 }
 
-function mkParticle(paths, si, frac, isVIP=false, isSurge=false) {
-  const {segs,totalLen}=paths[si];
+function mkParticle(paths, vi, frac, isVIP=false, isSurge=false) {
+  const {segs,totalLen}=paths[vi];
   let rem=(((frac%1)+1)%1)*totalLen, segI=0, d=rem;
   for(let i=0;i<segs.length;i++){if(d<=segs[i].tot){segI=i;break;}d-=segs[i].tot;segI=i+1;}
   if(segI>=segs.length){segI=segs.length-1;d=segs[segI].tot;}
-  return {si:segI,d,trail:[],streamIdx:si,isVIP,isSurge,id:Math.random().toString(36).slice(2)};
+  return {si:segI, d, trail:[], variantIdx:vi, streamIdx:PATH_VARIANTS[vi][0],
+          isVIP, isSurge, colorT:0, colorBurstDone:false,
+          id:Math.random().toString(36).slice(2)};
 }
 
 // ─── canvas shape primitives ──────────────────────────────────────────────────
@@ -195,11 +220,9 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
   ctx.shadowColor = n.color; ctx.shadowBlur = 16;
 
   if (n.type === 'TRIGGER') {
-    // Hexagon
     pathHex(ctx,cx,cy,nw,nh);
     ctx.fillStyle=fill; ctx.fill();
     ctx.strokeStyle=STROKE; ctx.lineWidth=LWIDTH; ctx.stroke();
-    // Top tint
     ctx.save(); pathHex(ctx,cx,cy,nw,nh); ctx.clip();
     ctx.fillStyle=`rgba(${rgb},0.08)`; ctx.fillRect(lx,ly,nw,nh*0.38); ctx.restore();
     ctx.shadowBlur=0;
@@ -210,7 +233,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.textAlign='left';
 
   } else if (n.type === 'ROUTER') {
-    // Diamond
     pathDiamond(ctx,cx,cy,nw,nh);
     ctx.fillStyle=fill; ctx.fill();
     ctx.strokeStyle=STROKE; ctx.lineWidth=LWIDTH; ctx.stroke();
@@ -224,7 +246,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.textAlign='left';
 
   } else if (n.type === 'TAG' || n.type === 'CRM') {
-    // Circle
     const cr=Math.min(nw,nh)/2-1;
     ctx.beginPath(); ctx.arc(cx,cy,cr,0,Math.PI*2);
     ctx.fillStyle=fill; ctx.fill();
@@ -239,11 +260,9 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.textAlign='left';
 
   } else if (n.type === 'LOG' || n.type === 'ROUTE') {
-    // Pill / stadium
     pathPill(ctx,lx,ly,nw,nh);
     ctx.fillStyle=fill; ctx.fill();
     ctx.strokeStyle=`rgba(${rgb},0.3)`; ctx.lineWidth=1; ctx.stroke();
-    // Left accent (tinted strip clipped to pill)
     ctx.save(); pathPill(ctx,lx,ly,nw,nh); ctx.clip();
     ctx.fillStyle=`rgba(${rgb},0.18)`; ctx.fillRect(lx,ly,5,nh); ctx.restore();
     ctx.shadowBlur=0;
@@ -253,7 +272,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillText(n.label,lx+nh/2+3,ly+18);
 
   } else if (n.type === 'ENRICH') {
-    // Notched top-right
     pathNotched(ctx,lx,ly,nw,nh,5,11);
     ctx.fillStyle=fill; ctx.fill();
     ctx.strokeStyle=`rgba(${rgb},0.35)`; ctx.lineWidth=1; ctx.stroke();
@@ -267,7 +285,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillText(n.label,lx+8,ly+18);
 
   } else if (n.type === 'EMAIL') {
-    // Rounded rect + envelope icon
     rrect(ctx,lx,ly,nw,nh,5);
     ctx.fillStyle=fill; ctx.fill();
     ctx.strokeStyle=`rgba(${rgb},0.3)`; ctx.lineWidth=1; ctx.stroke();
@@ -275,7 +292,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillStyle=`rgba(${rgb},0.07)`; ctx.fillRect(lx,ly,nw,16); ctx.restore();
     ctx.fillStyle=n.color; ctx.fillRect(lx,ly,3,nh);
     ctx.shadowBlur=0;
-    // Envelope icon
     const ex=lx+nw-22, ey=ly+nh/2-6, ew=16, eh=11;
     ctx.strokeStyle=`rgba(${rgb},0.65)`; ctx.lineWidth=1;
     ctx.strokeRect(ex,ey,ew,eh);
@@ -286,7 +302,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillText(n.label,lx+8,ly+18);
 
   } else if (n.type === 'ACTION') {
-    // Rounded rect + lightning bolt
     rrect(ctx,lx,ly,nw,nh,5);
     ctx.fillStyle=fill; ctx.fill();
     ctx.strokeStyle=`rgba(${rgb},0.3)`; ctx.lineWidth=1; ctx.stroke();
@@ -294,7 +309,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillStyle=`rgba(${rgb},0.07)`; ctx.fillRect(lx,ly,nw,16); ctx.restore();
     ctx.fillStyle=n.color; ctx.fillRect(lx,ly,3,nh);
     ctx.shadowBlur=0;
-    // Lightning bolt
     const bx=lx+nw-21, by=ly+8;
     ctx.fillStyle=`rgba(${rgb},0.75)`;
     ctx.beginPath();
@@ -307,7 +321,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillText(n.label,lx+8,ly+18);
 
   } else if (n.type === 'AI') {
-    // Rounded rect + circuit arcs
     rrect(ctx,lx,ly,nw,nh,5);
     ctx.fillStyle=fill; ctx.fill();
     ctx.strokeStyle=STROKE; ctx.lineWidth=LWIDTH; ctx.stroke();
@@ -315,7 +328,6 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillStyle=`rgba(${rgb},0.07)`; ctx.fillRect(lx,ly,nw,16); ctx.restore();
     ctx.fillStyle=n.color; ctx.fillRect(lx,ly,3,nh);
     ctx.shadowBlur=0;
-    // Circuit arcs
     ctx.strokeStyle=`rgba(${rgb},0.4)`; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.arc(cx,ly+11,4,0,Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.arc(cx-15,ly+nh-13,3,0,Math.PI*2); ctx.stroke();
@@ -326,7 +338,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillText(n.label,lx+8,ly+18);
 
   } else {
-    // NURTURE / ARCHIVE / default: dashed-border rounded rect
+    // NURTURE / ARCHIVE / default
     rrect(ctx,lx,ly,nw,nh,5);
     ctx.fillStyle=fill; ctx.fill();
     ctx.setLineDash([4,3]);
@@ -356,6 +368,7 @@ export default function AIWorkflowSection() {
   const cLeads = useRef(null);
   const cHours = useRef(null);
   const cRev   = useRef(null);
+  const cPace  = useRef(null);
 
   const st = useRef({
     W:0, H:0, mob:false,
@@ -365,8 +378,9 @@ export default function AIWorkflowSection() {
     tick:0, lastTime:0,
     rings:[],
     routerBurst:null,
+    colorBursts:[],
     bottleneck:null,
-    counters:{ leads:12400, hours:850, revenue:2100000 },
+    counters:{ leads:0, hours:0, revenue:0 },
     notifDb:{},
     completionNotifCount:[0,0,0],
     activeNotifCount:0,
@@ -386,7 +400,7 @@ export default function AIWorkflowSection() {
     function setupLayout() {
       const W   = wrap.offsetWidth;
       const mob = W < MOBILE_BP;
-      const H   = mob ? Math.max(MRY.length * (NHM + 24) + 40, 520) : 480;
+      const H   = mob ? Math.max(MRY.length*(NHM+22)+40, 500) : 520;
       const dpr = window.devicePixelRatio || 1;
       canvas.width  = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
@@ -399,7 +413,7 @@ export default function AIWorkflowSection() {
       const s = st.current;
       s.W=W; s.H=H; s.mob=mob;
       s.paths=buildPaths(W,H,mob);
-      s.rings=[]; s.routerBurst=null; s.bottleneck=null;
+      s.rings=[]; s.routerBurst=null; s.colorBursts=[]; s.bottleneck=null;
       s.completionNotifCount=[0,0,0];
 
       // Generate fixed micro-dots
@@ -408,10 +422,13 @@ export default function AIWorkflowSection() {
         s.dots.push({x:Math.random()*W, y:Math.random()*H, r:0.8+Math.random()*0.4, a:0.06+Math.random()*0.06});
       }
 
-      // 3 particles per stream
-      const ps=[];
-      for(let si=0;si<3;si++) [0,0.38,0.72].forEach(frac=>ps.push(mkParticle(s.paths,si,frac)));
-      s.particles=ps;
+      // Spawn particles — all 5 variants on desktop, main 3 on mobile
+      const variants = mob ? [0, 2, 4] : [0, 1, 2, 3, 4];
+      const ps = [];
+      variants.forEach(vi => {
+        [0, 0.55].forEach(frac => ps.push(mkParticle(s.paths, vi, frac)));
+      });
+      s.particles = ps;
     }
 
     // ── notifications ─────────────────────────────────────────────────────
@@ -464,10 +481,12 @@ export default function AIWorkflowSection() {
 
     // ── counter display ───────────────────────────────────────────────────
     function updateCounters() {
-      const {leads,hours,revenue}=st.current.counters;
-      if(cLeads.current) cLeads.current.textContent=Math.round(leads).toLocaleString()+'+';
-      if(cHours.current) cHours.current.textContent=Math.round(hours);
-      if(cRev.current)   cRev.current.textContent=revenue>=1e6?`$${(revenue/1e6).toFixed(1)}M`:`$${Math.round(revenue/1000)}K`;
+      const {leads, hours, revenue} = st.current.counters;
+      const pace = 1.0 + Math.min(leads / 180, 1.0) * 3.2;
+      if(cLeads.current) cLeads.current.textContent = leads===0 ? '0+' : Math.round(leads).toLocaleString()+'+';
+      if(cHours.current) cHours.current.textContent = Math.round(hours);
+      if(cRev.current)   cRev.current.textContent = revenue>=1e6 ? `$${(revenue/1e6).toFixed(1)}M` : (revenue>=1000 ? `$${Math.round(revenue/1000)}K` : `$${Math.round(revenue)}`);
+      if(cPace.current)  cPace.current.textContent = pace.toFixed(1)+'x';
     }
 
     // ── dramatic events ───────────────────────────────────────────────────
@@ -480,7 +499,7 @@ export default function AIWorkflowSection() {
       } else if(type==='bottleneck'){
         spawnSysNotif('AI processing at capacity','#f87171');
         st.current.bottleneck={t:0,dur:1500};
-        setTimeout(()=>{spawnSysNotif('✓ Resolved','#4ade80');st.current.bottleneck=null;},1600);
+        setTimeout(()=>{spawnSysNotif('✓ Resolved','#60a5fa');st.current.bottleneck=null;},1600);
       } else {
         spawnSysNotif('VIP lead detected 🌟','#FFD700');
         const vip=mkParticle(st.current.paths,0,Math.random(),true,false);
@@ -507,7 +526,7 @@ export default function AIWorkflowSection() {
       ctx.fillStyle='#000000';
       ctx.fillRect(0,0,W,H);
 
-      // ── Radial light pools (pulsing) ──
+      // ── Radial light pools (reduced, CSS handles ambient) ──
       for(const pool of POOLS){
         const px=pool.x*W, py=pool.y*H, pr=pool.r*Math.max(W,H);
         const pulse=1+0.3*Math.sin(s.tick*0.008);
@@ -518,8 +537,8 @@ export default function AIWorkflowSection() {
         ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
       }
 
-      // ── Micro dots (fixed, brighten near particles) ──
-      const ppos=particles.map(p=>getPos(p,paths[p.streamIdx].segs));
+      // ── Micro dots ──
+      const ppos=particles.map(p=>getPos(p,paths[p.variantIdx].segs));
       for(const dot of dots){
         let alpha=dot.a;
         for(const pp of ppos){
@@ -530,32 +549,33 @@ export default function AIWorkflowSection() {
         ctx.beginPath(); ctx.arc(dot.x,dot.y,dot.r,0,Math.PI*2); ctx.fill();
       }
 
-      // ── Ghost connector trails ──
-      for(let si=0;si<STREAMS.length;si++){
-        const rgb=hexRgb(STREAMS[si].color);
+      // ── Ghost connector trails (one per stream) ──
+      [0,2,4].forEach(vi=>{
+        const rgb=hexRgb(STREAMS[PATH_VARIANTS[vi][0]].color);
         ctx.save();
-        ctx.strokeStyle=`rgba(${rgb},0.1)`; ctx.lineWidth=1; ctx.setLineDash([3,9]);
-        for(const seg of paths[si].segs){
+        ctx.strokeStyle=`rgba(${rgb},0.09)`; ctx.lineWidth=1; ctx.setLineDash([3,9]);
+        for(const seg of paths[vi].segs){
           ctx.beginPath(); ctx.moveTo(seg.pts[0][0],seg.pts[0][1]);
           for(let i=1;i<seg.pts.length;i++) ctx.lineTo(seg.pts[i][0],seg.pts[i][1]);
           ctx.stroke();
         }
         ctx.restore();
-      }
+      });
 
-      // ── Lane separator lines (desktop only, behind nodes) ──
+      // ── Lane separator lines (desktop, main 3 rows) ──
       if(!mob){
         ctx.save();
         ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1; ctx.setLineDash([2,14]);
-        for(const ry of DRY){
-          const lineY=ry*H;
-          ctx.beginPath(); ctx.moveTo(W*0.35,lineY); ctx.lineTo(W*0.96,lineY); ctx.stroke();
+        for(let i=0;i<3;i++){
+          const lineY=DRY[i]*H;
+          ctx.beginPath(); ctx.moveTo(W*0.32,lineY); ctx.lineTo(W*0.96,lineY); ctx.stroke();
         }
         ctx.setLineDash([]); ctx.restore();
       }
 
       // ── Nodes ──
       for(const n of NODES){
+        if(n.desktopOnly && mob) continue;
         const isBN=!!(s.bottleneck&&n.id==='ai-qualify');
         drawNode(ctx,n,W,H,mob,isBN,s.tick);
       }
@@ -564,11 +584,30 @@ export default function AIWorkflowSection() {
       if(!s.prm){
         for(let pi=particles.length-1;pi>=0;pi--){
           const p=particles[pi];
-          const stream=STREAMS[p.streamIdx], path=paths[p.streamIdx];
+          const stream=STREAMS[p.streamIdx];
+          const path=paths[p.variantIdx];
           const pSpeed=speed*(p.vipSpeed||1);
-          const pColor=p.isVIP?'#FFD700':stream.color;
-          const pRgb=p.isVIP?'255,215,0':hexRgb(stream.color);
-          const pR=p.isVIP?5:4;
+
+          // Determine display colour (neutral → lane colour transition at router)
+          const isAfterRouter = p.si >= 2;
+          if(isAfterRouter && p.colorT < 1){
+            p.colorT = Math.min(p.colorT + dt / COLOUR_TRANS_DUR, 1);
+            if(!p.colorBurstDone){
+              p.colorBurstDone = true;
+              const rNode = NODES.find(n=>n.id==='lead-router');
+              if(rNode){
+                const rr = nodeRect(rNode,W,H,mob);
+                s.colorBursts.push({x:rr.cx, y:rr.cy, color:stream.color, t:0});
+              }
+            }
+          } else if(!isAfterRouter){
+            p.colorT = 0;
+            p.colorBurstDone = false;
+          }
+
+          const displayRgb = p.isVIP ? '255,215,0' : (p.colorT < 1 ? lerpRgb(NEUTRAL, hexRgb(stream.color), p.colorT) : hexRgb(stream.color));
+          const displayColor = p.isVIP ? '#FFD700' : `rgb(${displayRgb})`;
+          const pR = p.isVIP ? 5 : 4;
 
           const pos=getPos(p,path.segs);
           p.trail.push([pos[0],pos[1]]);
@@ -604,27 +643,21 @@ export default function AIWorkflowSection() {
           // Path complete
           if(p.si>=path.segs.length){
             if(p.isSurge||p.isVIP){particles.splice(pi,1);continue;}
-
-            // Counters
             s.counters.leads+=stream.dc.leads;
             s.counters.hours+=stream.dc.hours;
             s.counters.revenue+=stream.dc.revenue;
             updateCounters();
-
-            // Final node position for effects
-            const finalId=stream.nodeIds[stream.nodeIds.length-1];
+            const nodeIds=PATH_VARIANTS[p.variantIdx][1];
+            const finalId=nodeIds[nodeIds.length-1];
             const finalNode=NODES.find(n=>n.id===finalId);
             if(finalNode){
               const fr=nodeRect(finalNode,W,H,mob);
-              // Large ring burst
               s.rings.push({x:fr.cx,y:fr.cy,color:stream.color,t:0,isFinal:true});
-              // Completion notification at right edge of canvas, lane y
-              const notifX=mob?W*0.5:W*0.91;
+              const notifX=mob?W*0.5:W*0.92;
               const notifY=mob?fr.ly-10:DRY[finalNode.dr]*H;
               spawnCompletionNotif(COMPLETION_MSGS[p.streamIdx],notifX,notifY,stream.color,p.streamIdx);
             }
-
-            p.si=0; p.d=0; p.trail=[];
+            p.si=0; p.d=0; p.trail=[]; p.colorT=0; p.colorBurstDone=false;
             continue;
           }
 
@@ -632,7 +665,7 @@ export default function AIWorkflowSection() {
           if(p.trail.length>1){
             ctx.save();
             for(let t=0;t<p.trail.length-1;t++){
-              ctx.strokeStyle=`rgba(${pRgb},${(t/p.trail.length)*0.5})`;
+              ctx.strokeStyle=`rgba(${displayRgb},${(t/p.trail.length)*0.5})`;
               ctx.lineWidth=1.5*(t/p.trail.length);
               ctx.beginPath(); ctx.moveTo(p.trail[t][0],p.trail[t][1]); ctx.lineTo(p.trail[t+1][0],p.trail[t+1][1]); ctx.stroke();
             }
@@ -642,11 +675,11 @@ export default function AIWorkflowSection() {
           // Draw particle
           const cur=getPos(p,path.segs);
           ctx.save();
-          ctx.shadowColor=pColor; ctx.shadowBlur=7;
-          ctx.fillStyle=`rgba(${pRgb},0.15)`;
+          ctx.shadowColor=displayColor; ctx.shadowBlur=7;
+          ctx.fillStyle=`rgba(${displayRgb},0.15)`;
           ctx.beginPath(); ctx.arc(cur[0],cur[1],7,0,Math.PI*2); ctx.fill();
           ctx.shadowBlur=p.isVIP?20:8;
-          ctx.fillStyle=pColor;
+          ctx.fillStyle=displayColor;
           ctx.beginPath(); ctx.arc(cur[0],cur[1],pR,0,Math.PI*2); ctx.fill();
           ctx.shadowBlur=0;
           ctx.fillStyle='rgba(255,255,255,0.85)';
@@ -689,6 +722,22 @@ export default function AIWorkflowSection() {
           ctx.restore();
         }
 
+        // ── Colour burst (4-line star at router on lane colour reveal) ──
+        for(let ci=s.colorBursts.length-1;ci>=0;ci--){
+          const cb=s.colorBursts[ci];
+          cb.t+=dt*1000;
+          if(cb.t>=200){s.colorBursts.splice(ci,1);continue;}
+          const prog=cb.t/200, fade=1-prog, len=12+14*prog;
+          const rgb=hexRgb(cb.color);
+          ctx.save();
+          ctx.strokeStyle=`rgba(${rgb},${fade*0.85})`; ctx.lineWidth=1.5;
+          for(let i=0;i<4;i++){
+            const a=(Math.PI/4)+(Math.PI/2)*i;
+            ctx.beginPath(); ctx.moveTo(cb.x,cb.y); ctx.lineTo(cb.x+Math.cos(a)*len,cb.y+Math.sin(a)*len); ctx.stroke();
+          }
+          ctx.restore();
+        }
+
         // ── Router burst ──
         if(s.routerBurst){
           s.routerBurst.t+=dt*1000;
@@ -720,20 +769,6 @@ export default function AIWorkflowSection() {
       rafRef.current=requestAnimationFrame(draw);
     }
 
-    // ── stats count-up ────────────────────────────────────────────────────
-    function animateStats() {
-      const snap={...st.current.counters};
-      const dur=2000, start=performance.now();
-      function tick(now){
-        const raw=Math.min((now-start)/dur,1), t=1-Math.pow(1-raw,3);
-        if(cLeads.current) cLeads.current.textContent=Math.round(t*snap.leads).toLocaleString()+'+';
-        if(cHours.current) cHours.current.textContent=Math.round(t*snap.hours);
-        if(cRev.current)   cRev.current.textContent=`$${(t*snap.revenue/1e6).toFixed(1)}M`;
-        if(raw<1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    }
-
     // ── init ─────────────────────────────────────────────────────────────
     setupLayout();
     updateCounters();
@@ -742,24 +777,60 @@ export default function AIWorkflowSection() {
     function onResize(){clearTimeout(resizeTimer.current);resizeTimer.current=setTimeout(setupLayout,200);}
     window.addEventListener('resize',onResize);
 
-    const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)animateStats();});},{threshold:0.15});
+    // Reset counters to zero and restart organic count-up on every viewport entry
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          st.current.counters = { leads:0, hours:0, revenue:0 };
+          st.current.completionNotifCount = [0,0,0];
+          st.current.notifDb = {};
+          updateCounters();
+        }
+      });
+    }, { threshold: 0.2 });
     if(sect) observer.observe(sect);
-    if(sect){const r=sect.getBoundingClientRect();if(r.top<window.innerHeight)animateStats();}
+    // Check if already in view
+    if(sect){ const r=sect.getBoundingClientRect(); if(r.top<window.innerHeight){ st.current.counters={leads:0,hours:0,revenue:0}; updateCounters(); } }
 
     return()=>{cancelAnimationFrame(rafRef.current);clearTimeout(resizeTimer.current);window.removeEventListener('resize',onResize);observer.disconnect();};
   },[]);
 
   return (
-    <section ref={sectionRef} style={{ background:'#000000', margin:'0', padding:'72px 0 0', overflowX:'hidden' }}>
+    <section
+      ref={sectionRef}
+      style={{
+        position:'relative',
+        width:'100vw',
+        marginLeft:'calc(-50vw + 50%)',
+        background:'#000000',
+        overflowX:'hidden',
+        paddingTop:'72px',
+      }}
+    >
       <style>{`
+        .wf-bg { position:absolute;inset:0;pointer-events:none;z-index:0; }
+        .wf-bg::before {
+          content:'';
+          position:absolute;
+          inset:0;
+          background:
+            radial-gradient(ellipse 40% 35% at 12% 30%, rgba(96,165,250,0.06) 0%, transparent 70%),
+            radial-gradient(ellipse 50% 40% at 50% 55%, rgba(129,140,248,0.05) 0%, transparent 70%),
+            radial-gradient(ellipse 35% 30% at 85% 20%, rgba(245,197,64,0.04) 0%, transparent 70%),
+            radial-gradient(ellipse 30% 35% at 70% 80%, rgba(167,139,250,0.05) 0%, transparent 70%),
+            radial-gradient(ellipse 25% 25% at 20% 75%, rgba(147,197,253,0.04) 0%, transparent 70%);
+        }
+        .wf-content { position:relative;z-index:1; }
         .aiwf-inner { max-width:1100px; margin:0 auto; padding:0 clamp(24px,5vw,72px); }
         .aiwf-tag   { display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#818cf8;margin-bottom:18px;font-family:'Exo',sans-serif; }
         .aiwf-hed   { font-family:'Exo',sans-serif;font-size:clamp(22px,3.2vw,38px);font-weight:800;letter-spacing:-1px;line-height:1.1;color:#fff;margin-bottom:36px;max-width:680px; }
-        .aiwf-stats { display:flex;margin-bottom:28px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;overflow:hidden; }
-        .aiwf-sstat { flex:1;padding:20px 24px;border-right:1px solid rgba(255,255,255,0.07); }
-        .aiwf-sstat:last-child { border-right:none; }
-        .aiwf-sv    { font-family:'Exo',sans-serif;font-size:clamp(22px,2.6vw,32px);font-weight:800;line-height:1;margin-bottom:6px; }
+        .aiwf-stats { display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:28px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;overflow:hidden; }
+        .aiwf-sstat { padding:20px 16px; }
+        .aiwf-sstat:not(:nth-child(4n)) { border-right:1px solid rgba(255,255,255,0.07); }
+        .aiwf-sv    { font-family:'Exo',sans-serif;font-size:clamp(20px,2.4vw,30px);font-weight:800;line-height:1;margin-bottom:6px; }
         .aiwf-sl    { font-size:11px;color:rgba(255,255,255,0.38);letter-spacing:0.3px; }
+        .aiwf-sl2   { font-size:10px;color:rgba(255,255,255,0.55);letter-spacing:0.3px;margin-top:2px; }
+        .aiwf-cvs-wrap { width:min(1400px,96vw);margin-left:50%;transform:translateX(-50%);position:relative;margin-bottom:0; }
         .aiwf-cvs   { position:relative;overflow:visible; }
         .aiwf-notif { position:absolute;inset:0;pointer-events:none;overflow:hidden; }
         .aiwf-cta   { display:flex;justify-content:space-between;align-items:center;padding:40px clamp(24px,5vw,72px) 72px;max-width:1100px;margin:0 auto;gap:32px; }
@@ -768,9 +839,10 @@ export default function AIWorkflowSection() {
         .aiwf-btns  { display:flex;gap:12px;flex-shrink:0; }
         .aiwf-btn-g { border-color:#F5C540!important;color:#F5C540!important; }
         @media(max-width:768px){
-          .aiwf-stats { flex-direction:column; }
-          .aiwf-sstat { border-right:none;border-bottom:1px solid rgba(255,255,255,0.07); }
-          .aiwf-sstat:last-child { border-bottom:none; }
+          .aiwf-stats { grid-template-columns:repeat(2,1fr); }
+          .aiwf-sstat { border-right:none!important; }
+          .aiwf-sstat:nth-child(odd) { border-right:1px solid rgba(255,255,255,0.07)!important; }
+          .aiwf-sstat:nth-child(1),.aiwf-sstat:nth-child(2) { border-bottom:1px solid rgba(255,255,255,0.07); }
           .aiwf-cta   { flex-direction:column;text-align:center; }
           .aiwf-cta-s { max-width:100%; }
           .aiwf-btns  { flex-direction:column;width:100%; }
@@ -778,31 +850,42 @@ export default function AIWorkflowSection() {
         }
       `}</style>
 
-      <div className="aiwf-inner">
-        <div className="aiwf-tag">
-          <span style={{width:18,height:1,background:'#818cf8',display:'inline-block'}}/>
-          See it in action
-        </div>
-        <h2 className="aiwf-hed">This is what your business looks like on autopilot.</h2>
+      <div className="wf-bg"/>
 
-        <div className="aiwf-stats">
-          <div className="aiwf-sstat">
-            <div className="aiwf-sv" style={{color:'#fff'}}><span ref={cLeads}>12,400+</span></div>
-            <div className="aiwf-sl">Leads processed</div>
+      <div className="wf-content">
+        <div className="aiwf-inner">
+          <div className="aiwf-tag">
+            <span style={{width:18,height:1,background:'#818cf8',display:'inline-block'}}/>
+            See it in action
           </div>
-          <div className="aiwf-sstat">
-            <div className="aiwf-sv" style={{color:'#4ade80'}}><span ref={cHours}>850</span></div>
-            <div className="aiwf-sl">Hours saved / mo</div>
-          </div>
-          <div className="aiwf-sstat">
-            <div className="aiwf-sv" style={{color:'#F5C540'}}><span ref={cRev}>$2.1M</span></div>
-            <div className="aiwf-sl">Revenue potential</div>
+          <h2 className="aiwf-hed">This is what your business looks like on autopilot.</h2>
+
+          <div className="aiwf-stats">
+            <div className="aiwf-sstat">
+              <div className="aiwf-sv" style={{color:'#fff'}}><span ref={cLeads}>0+</span></div>
+              <div className="aiwf-sl">Leads processed</div>
+            </div>
+            <div className="aiwf-sstat">
+              <div className="aiwf-sv" style={{color:'#60a5fa'}}><span ref={cHours}>0</span></div>
+              <div className="aiwf-sl">Hours saved / mo</div>
+            </div>
+            <div className="aiwf-sstat">
+              <div className="aiwf-sv" style={{color:'#a78bfa'}}><span ref={cRev}>$0</span></div>
+              <div className="aiwf-sl">Revenue potential</div>
+            </div>
+            <div className="aiwf-sstat">
+              <div className="aiwf-sv" style={{color:'#c084fc'}}><span ref={cPace}>1.0x</span></div>
+              <div className="aiwf-sl2">Revenue pace</div>
+              <div className="aiwf-sl">vs manual process</div>
+            </div>
           </div>
         </div>
 
-        <div ref={wrapRef} className="aiwf-cvs">
-          <canvas ref={canvasRef} style={{display:'block'}}/>
-          <div ref={notifRef} className="aiwf-notif"/>
+        <div className="aiwf-cvs-wrap">
+          <div ref={wrapRef} className="aiwf-cvs">
+            <canvas ref={canvasRef} style={{display:'block'}}/>
+            <div ref={notifRef} className="aiwf-notif"/>
+          </div>
         </div>
       </div>
 

@@ -3,10 +3,12 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 // ─── constants ────────────────────────────────────────────────────────────────
-const NW = 110, NH = 54;
-const NWM = 86, NHM = 44;
-const SPEED_D = 280;   // updated per task
-const SPEED_M = 200;
+const NW = 108, NH = 54;
+const NWM = 82, NHM = 42;
+const SPEED_D = 90;
+const SPEED_M = 65;
+const MAX_NOTIFS = 2;
+const COL_PCT_DESKTOP = [0.07, 0.20, 0.33, 0.50, 0.66, 0.84];
 const TRAIL_LEN = 20;
 const RING_DUR  = 600;
 const ROUTER_DUR = 300;
@@ -16,7 +18,7 @@ const MOBILE_BP = 768;
 const DOT_COUNT = 120;
 
 // Mobile layout percentages (centers)
-const MRY = [0.08, 0.22, 0.36, 0.52, 0.68, 0.84];
+const MRY = [0.07, 0.19, 0.31, 0.47, 0.63, 0.79];
 const MCX = [0.20, 0.50, 0.80];
 
 // Desktop row centers
@@ -65,18 +67,16 @@ function hexRgb(h) {
   return `${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)}`;
 }
 
-// Dynamic column spacing: col0 near left, col5 right-edge at 92% of W
 function nodeRect(n, W, H, mob) {
-  const nw = mob ? NWM : NW;
-  const nh = mob ? NHM : NH;
+  const narrow = !mob && W < 700;
+  const nw = mob ? NWM : (narrow ? 88 : NW);
+  const nh = mob ? NHM : (narrow ? 46 : NH);
   let cx, cy;
   if (mob) {
     cx = MCX[n.mc] * W;
     cy = MRY[n.mr] * H;
   } else {
-    const minCx = nw / 2 + W * 0.025;
-    const maxCx = W * 0.92 - nw / 2;
-    cx = minCx + n.dc * (maxCx - minCx) / 5;
+    cx = COL_PCT_DESKTOP[n.dc] * W;
     cy = DRY[n.dr] * H;
   }
   return { lx: cx - nw / 2, ly: cy - nh / 2, cx, cy, nw, nh };
@@ -203,7 +203,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.save(); pathHex(ctx,cx,cy,nw,nh); ctx.clip();
     ctx.fillStyle=`rgba(${rgb},0.08)`; ctx.fillRect(lx,ly,nw,nh*0.38); ctx.restore();
     ctx.shadowBlur=0;
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top'; ctx.textAlign='center';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top'; ctx.textAlign='center';
     ctx.fillText(n.type,cx,ly+nh*0.14);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs}px 'Exo',sans-serif`;
     ctx.fillText(n.label,cx,cy-fs*0.5);
@@ -217,7 +217,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.save(); pathDiamond(ctx,cx,cy,nw,nh); ctx.clip();
     ctx.fillStyle=`rgba(${rgb},0.06)`; ctx.fillRect(lx,ly,nw,nh); ctx.restore();
     ctx.shadowBlur=0;
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top'; ctx.textAlign='center';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top'; ctx.textAlign='center';
     ctx.fillText(n.type,cx,cy-nh/2+7);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs}px 'Exo',sans-serif`;
     ctx.fillText(n.label,cx,cy-fs*0.5);
@@ -232,7 +232,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.beginPath(); ctx.arc(cx,cy,cr-1.5,0,Math.PI*2);
     ctx.fillStyle=`rgba(${rgb},0.07)`; ctx.fill();
     ctx.shadowBlur=0;
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top'; ctx.textAlign='center';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top'; ctx.textAlign='center';
     ctx.fillText(n.type,cx,cy-cr*0.52);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs-1}px 'Exo',sans-serif`;
     ctx.fillText(n.label,cx,cy-fs*0.5+2);
@@ -247,7 +247,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.save(); pathPill(ctx,lx,ly,nw,nh); ctx.clip();
     ctx.fillStyle=`rgba(${rgb},0.18)`; ctx.fillRect(lx,ly,5,nh); ctx.restore();
     ctx.shadowBlur=0;
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top';
     ctx.fillText(n.type,lx+nh/2+3,ly+5);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs}px 'Exo',sans-serif`;
     ctx.fillText(n.label,lx+nh/2+3,ly+18);
@@ -261,7 +261,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.fillStyle=`rgba(${rgb},0.07)`; ctx.fillRect(lx,ly,nw,16); ctx.restore();
     ctx.fillStyle=n.color; ctx.fillRect(lx,ly,3,nh);
     ctx.shadowBlur=0;
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top';
     ctx.fillText(n.type,lx+8,ly+5);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs}px 'Exo',sans-serif`;
     ctx.fillText(n.label,lx+8,ly+18);
@@ -280,7 +280,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.strokeStyle=`rgba(${rgb},0.65)`; ctx.lineWidth=1;
     ctx.strokeRect(ex,ey,ew,eh);
     ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex+ew/2,ey+eh*0.55); ctx.lineTo(ex+ew,ey); ctx.stroke();
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top';
     ctx.fillText(n.type,lx+8,ly+5);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs}px 'Exo',sans-serif`;
     ctx.fillText(n.label,lx+8,ly+18);
@@ -301,7 +301,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.moveTo(bx+7,by); ctx.lineTo(bx+2,by+9); ctx.lineTo(bx+6,by+9);
     ctx.lineTo(bx+3,by+17); ctx.lineTo(bx+10,by+8); ctx.lineTo(bx+6,by+8); ctx.lineTo(bx+9,by);
     ctx.closePath(); ctx.fill();
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top';
     ctx.fillText(n.type,lx+8,ly+5);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs}px 'Exo',sans-serif`;
     ctx.fillText(n.label,lx+8,ly+18);
@@ -320,7 +320,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.beginPath(); ctx.arc(cx,ly+11,4,0,Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.arc(cx-15,ly+nh-13,3,0,Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.arc(cx+15,ly+nh-13,3,0,Math.PI*2); ctx.stroke();
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top';
     ctx.fillText(n.type,lx+8,ly+5);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs}px 'Exo',sans-serif`;
     ctx.fillText(n.label,lx+8,ly+18);
@@ -334,7 +334,7 @@ function drawNode(ctx, n, W, H, mob, isBN, tick) {
     ctx.setLineDash([]);
     ctx.fillStyle=n.color; ctx.fillRect(lx,ly,3,nh);
     ctx.shadowBlur=0;
-    ctx.fillStyle=n.color; ctx.font=`700 6px 'Exo',sans-serif`; ctx.textBaseline='top';
+    ctx.fillStyle=n.color; ctx.font=`700 6.5px 'Exo',sans-serif`; ctx.textBaseline='top';
     ctx.fillText(n.type,lx+8,ly+5);
     ctx.fillStyle='rgba(255,255,255,0.92)'; ctx.font=`600 ${fs}px 'Exo',sans-serif`;
     ctx.fillText(n.label,lx+8,ly+18);
@@ -369,6 +369,7 @@ export default function AIWorkflowSection() {
     counters:{ leads:12400, hours:850, revenue:2100000 },
     notifDb:{},
     completionNotifCount:[0,0,0],
+    activeNotifCount:0,
     dramaticNext:DRAMATIC_INTERVAL,
     prm:false,
   });
@@ -385,7 +386,7 @@ export default function AIWorkflowSection() {
     function setupLayout() {
       const W   = wrap.offsetWidth;
       const mob = W < MOBILE_BP;
-      const H   = mob ? 560 : 480;
+      const H   = mob ? Math.max(MRY.length * (NHM + 24) + 40, 520) : 480;
       const dpr = window.devicePixelRatio || 1;
       canvas.width  = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
@@ -409,21 +410,29 @@ export default function AIWorkflowSection() {
 
       // 3 particles per stream
       const ps=[];
-      for(let si=0;si<3;si++) [0,0.33,0.66].forEach(frac=>ps.push(mkParticle(s.paths,si,frac)));
+      for(let si=0;si<3;si++) [0,0.38,0.72].forEach(frac=>ps.push(mkParticle(s.paths,si,frac)));
       s.particles=ps;
     }
 
     // ── notifications ─────────────────────────────────────────────────────
-    function spawnNotif(text, x, y, color, mob) {
+    function spawnNotif(text, x, y, color, mob, onRemove) {
       const cont=notifRef.current; if(!cont) return;
       const el=document.createElement('div');
       el.textContent=text;
       const rgb=hexRgb(color);
-      const t0=mob?y+50:y-20, t1=mob?y+80:y-58;
-      el.style.cssText=`position:absolute;left:${x}px;top:${t0}px;background:rgba(${rgb},0.12);border:1px solid rgba(${rgb},0.4);color:${color};font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;pointer-events:none;transform:translateX(-50%);white-space:nowrap;font-family:'Exo',sans-serif;opacity:1;z-index:10;`;
+      const transform=mob?'translateY(-50%)':'translateX(-50%)';
+      const t1=mob?y-30:y-38;
+      el.style.cssText=`position:absolute;left:${x}px;top:${y}px;background:rgba(${rgb},0.12);border:1px solid rgba(${rgb},0.4);color:${color};font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;pointer-events:none;transform:${transform};white-space:nowrap;font-family:'Exo',sans-serif;opacity:1;z-index:10;`;
       cont.appendChild(el);
       requestAnimationFrame(()=>{el.style.transition='opacity 1s,top 1s';el.style.opacity='0';el.style.top=`${t1}px`;});
-      setTimeout(()=>el.parentNode&&el.remove(),1100);
+      setTimeout(()=>{el.parentNode&&el.remove();if(onRemove)onRemove();},1100);
+    }
+
+    function tryShowNotif(text, x, y, color, mob) {
+      const s=st.current;
+      if(s.activeNotifCount>=MAX_NOTIFS) return;
+      s.activeNotifCount++;
+      spawnNotif(text,x,y,color,mob,()=>{s.activeNotifCount=Math.max(0,s.activeNotifCount-1);});
     }
 
     function spawnCompletionNotif(text, x, y, color, streamIdx) {
@@ -534,6 +543,17 @@ export default function AIWorkflowSection() {
         ctx.restore();
       }
 
+      // ── Lane separator lines (desktop only, behind nodes) ──
+      if(!mob){
+        ctx.save();
+        ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1; ctx.setLineDash([2,14]);
+        for(const ry of DRY){
+          const lineY=ry*H;
+          ctx.beginPath(); ctx.moveTo(W*0.35,lineY); ctx.lineTo(W*0.96,lineY); ctx.stroke();
+        }
+        ctx.setLineDash([]); ctx.restore();
+      }
+
       // ── Nodes ──
       for(const n of NODES){
         const isBN=!!(s.bottleneck&&n.id==='ai-qualify');
@@ -566,14 +586,16 @@ export default function AIWorkflowSection() {
               const r=nodeRect(arrivedNode,W,H,mob);
               s.rings.push({x:r.cx,y:r.cy,color:stream.color,t:0,isFinal:false});
               if(arrivedSeg.toId==='lead-router') s.routerBurst={x:r.cx,y:r.cy,t:0};
-              const isLate=mob?arrivedNode.mr>=3:arrivedNode.dc>=3;
+              const isLate=mob?arrivedNode.mr>=4:arrivedNode.dc>=4;
               if(isLate&&!p.isSurge){
                 const now=Date.now(), key=`${p.id}-${p.si}`;
-                if(!s.notifDb[key]||now-s.notifDb[key]>2000){
+                if(!s.notifDb[key]||now-s.notifDb[key]>4000){
                   s.notifDb[key]=now;
-                  const idx=mob?arrivedNode.mr-3:arrivedNode.dc-3;
+                  const idx=mob?arrivedNode.mr-4:arrivedNode.dc-4;
                   const msg=stream.notifs[idx];
-                  if(msg) spawnNotif(msg,r.cx,r.cy,stream.color,mob);
+                  const nx=mob?r.cx+r.nw/2+14:r.cx;
+                  const ny=mob?r.cy:r.ly-20;
+                  if(msg) tryShowNotif(msg,nx,ny,stream.color,mob);
                 }
               }
             }
@@ -597,7 +619,8 @@ export default function AIWorkflowSection() {
               // Large ring burst
               s.rings.push({x:fr.cx,y:fr.cy,color:stream.color,t:0,isFinal:true});
               // Completion notification at right edge of canvas, lane y
-              const notifX=W*0.88, notifY=fr.cy;
+              const notifX=mob?W*0.5:W*0.91;
+              const notifY=mob?fr.ly-10:DRY[finalNode.dr]*H;
               spawnCompletionNotif(COMPLETION_MSGS[p.streamIdx],notifX,notifY,stream.color,p.streamIdx);
             }
 

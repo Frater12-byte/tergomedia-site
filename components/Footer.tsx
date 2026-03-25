@@ -47,6 +47,7 @@ export default function Footer() {
           </p>
           <div className="footer-social">
             <a href="https://www.linkedin.com/company/tergomedia" target="_blank" rel="noreferrer" title="LinkedIn">in</a>
+            <a href="https://www.youtube.com/@BuildWithTergo" target="_blank" rel="noreferrer" title="YouTube">▶</a>
             <a href="mailto:hello@tergomedia.com" title="Email">@</a>
             <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer" title="Book a call">↗</a>
           </div>

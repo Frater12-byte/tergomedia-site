@@ -127,33 +127,6 @@ function getYTicks(maxValue) {
   return [0, step, step * 2, step * 3, Math.ceil(maxValue / step) * step];
 }
 
-/* ── KpiCard ───────────────────────────────────────────────────────────────── */
-function KpiCard({ tag, rawValue, fmt, sub, accent, precision = 0, primary = false }) {
-  const animated = useCountUp(rawValue, 420, precision);
-  return (
-    <div style={{
-      background: '#141414',
-      padding: primary ? '28px clamp(18px,3vw,32px)' : '20px clamp(14px,2.5vw,24px)',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 6,
-      borderTop: `${primary ? 3 : 2}px solid ${accent}`,
-    }}>
-      <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#888' }}>{tag}</div>
-      <div style={{
-        fontSize: primary ? 'clamp(28px,3.5vw,38px)' : 'clamp(20px,2.5vw,28px)',
-        fontWeight: 900,
-        fontFamily: "'Exo',sans-serif",
-        color: accent,
-        lineHeight: 1.1,
-      }}>
-        {fmt(animated)}
-      </div>
-      {sub && <div style={{ fontSize: 11, color: '#555', lineHeight: 1.5, fontWeight: 300 }}>{sub}</div>}
-    </div>
-  );
-}
-
 /* ── SliderInput ───────────────────────────────────────────────────────────── */
 function SliderInput({ label, helper, min, max, step, value, onChange, fmt }) {
   const pct = ((value - min) / (max - min) * 100).toFixed(1) + '%';
@@ -261,7 +234,7 @@ function fmtAxisVal(v) {
 }
 
 /* ── ROIChart ──────────────────────────────────────────────────────────────── */
-function ROIChart({ cumSavings, cumRevenue }) {
+function ROIChart({ cumSavings, cumRevenue, hoursPerYear, paybackMonths }) {
   const W = 700, H = 260, PL = 54, PR = 20, PT = 28, PB = 36;
   const chartW = W - PL - PR;
   const chartH = H - PT - PB;
@@ -413,15 +386,34 @@ function ROIChart({ cumSavings, cumRevenue }) {
         })()}
       </svg>
 
-      {/* Footer stat callouts */}
-      <div style={{ display: 'flex', gap: 1, marginTop: 1, background: 'rgba(255,255,255,0.04)' }}>
-        <div style={{ flex: 1, padding: '14px 16px', background: '#141414' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Total cost savings (M12)</div>
-          <div style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Exo',sans-serif", color: '#4ade80', lineHeight: 1 }}>{fmtAxisVal(lastSav)}</div>
+      {/* Unified 4-stat footer row */}
+      <div className="roi-stats-row">
+        <div className="roi-stat-cell">
+          <div className="roi-stat-label">Total cost savings (M12)</div>
+          <div className="roi-stat-value" style={{ color: '#4ade80' }}>{fmtAxisVal(lastSav)}</div>
+          <div className="roi-stat-sub">cost savings (M12)</div>
         </div>
-        <div style={{ flex: 1, padding: '14px 16px', background: '#141414' }}>
-          <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#555', marginBottom: 6 }}>Total combined benefit (M12)</div>
-          <div style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Exo',sans-serif", color: 'rgba(134,239,172,0.9)', lineHeight: 1 }}>{fmtAxisVal(lastTot)}</div>
+        <div className="roi-stat-divider" />
+        <div className="roi-stat-cell">
+          <div className="roi-stat-label">Total combined benefit (M12)</div>
+          <div className="roi-stat-value" style={{ color: 'rgba(134,239,172,0.9)' }}>{fmtAxisVal(lastTot)}</div>
+          <div className="roi-stat-sub">combined (M12)</div>
+        </div>
+        <div className="roi-stat-divider" />
+        <div className="roi-stat-cell">
+          <div className="roi-stat-label">Hours recovered</div>
+          <div className="roi-stat-value" style={{ color: 'rgba(255,255,255,0.75)' }}>
+            {hoursPerYear ? Math.round(hoursPerYear).toLocaleString() + '\u00a0hrs' : '—'}
+          </div>
+          <div className="roi-stat-sub">hours back per year</div>
+        </div>
+        <div className="roi-stat-divider" />
+        <div className="roi-stat-cell">
+          <div className="roi-stat-label">Estimated payback</div>
+          <div className="roi-stat-value" style={{ color: '#60a5fa' }}>
+            {paybackMonths == null ? '—' : paybackMonths > 12 ? '12+\u00a0mos' : paybackMonths < 1 ? '<\u00a01\u00a0mo' : `${Math.round(paybackMonths * 10) / 10}\u00a0mos`}
+          </div>
+          <div className="roi-stat-sub">to recover investment</div>
         </div>
       </div>
     </div>
@@ -531,19 +523,43 @@ export default function ROICalculator() {
           border: none;
           cursor: pointer;
         }
-        /* KPI rows */
-        .roi-kpi-row1 {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1px;
-          background: rgba(255,255,255,0.06);
-          margin-bottom: 1px;
+        /* Unified stats row (chart footer) */
+        .roi-stats-row {
+          display: flex;
+          align-items: stretch;
+          border-top: 1px solid rgba(255,255,255,0.06);
+          margin-top: 12px;
         }
-        .roi-kpi-row2 {
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: 1px;
+        .roi-stat-cell {
+          flex: 1;
+          padding: 14px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        }
+        .roi-stat-label {
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #555;
+        }
+        .roi-stat-value {
+          font-size: 22px;
+          font-weight: 700;
+          font-family: 'Exo', sans-serif;
+          line-height: 1;
+        }
+        .roi-stat-sub {
+          font-size: 11px;
+          color: #555;
+          font-weight: 300;
+        }
+        .roi-stat-divider {
+          width: 1px;
           background: rgba(255,255,255,0.06);
+          flex-shrink: 0;
+          align-self: stretch;
         }
         /* Input columns */
         .roi-input-cols {
@@ -578,13 +594,16 @@ export default function ROICalculator() {
         .roi-disc-cta:hover { background: rgba(245,197,64,0.08); }
         @media (max-width: 768px) {
           .roi-input-cols { grid-template-columns: 1fr; }
-          .roi-kpi-row2   { grid-template-columns: 1fr; }
           .roi-illustration { display: none !important; }
           .roi-chart-legend { flex-direction: column; gap: 8px !important; }
           .roi-disc-cta { display: block; text-align: center; width: 100%; box-sizing: border-box; }
-        }
-        @media (max-width: 480px) {
-          .roi-kpi-row1 { grid-template-columns: 1fr; }
+          .roi-stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+          }
+          .roi-stat-divider { display: none; }
+          .roi-stat-cell { padding: 10px 0; }
         }
       `}</style>
 
@@ -659,54 +678,6 @@ export default function ROICalculator() {
       {/* ── Separator ── */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', margin: '0 clamp(24px,5vw,72px)' }} />
 
-      {/* ── KPI cards ── */}
-      <div style={{ maxWidth: 1100, margin: '48px auto 0', padding: '0 clamp(24px,5vw,72px)' }}>
-        {/* Row 1: primary — Monthly savings + Annual impact */}
-        <div className="roi-kpi-row1">
-          <KpiCard
-            primary
-            tag="Monthly savings"
-            rawValue={result.peakMonthlySavings}
-            fmt={fmtDollar}
-            sub="per month at full run-rate"
-            accent={Y}
-          />
-          <KpiCard
-            primary
-            tag="Annual impact"
-            rawValue={result.annualSavings}
-            fmt={fmtDollarK}
-            sub="total cost savings over 12 months"
-            accent={Y}
-          />
-        </div>
-        {/* Row 2: secondary — Hours + Revenue + Payback */}
-        <div className="roi-kpi-row2">
-          <KpiCard
-            tag="Hours recovered"
-            rawValue={result.hoursPerYear}
-            fmt={fmtHours}
-            sub="hours back per year"
-            accent="white"
-          />
-          <KpiCard
-            tag="Revenue upside"
-            rawValue={result.annualRevenue}
-            fmt={fmtDollarK}
-            sub="total revenue uplift over 12 months"
-            accent={GREEN}
-          />
-          <KpiCard
-            tag="Estimated payback"
-            rawValue={result.paybackMonths}
-            fmt={fmtMonths}
-            sub="to recover a typical investment"
-            accent={BLUE}
-            precision={1}
-          />
-        </div>
-      </div>
-
       {/* ── Profile card (full-width, illustration inside) ── */}
       <div style={{ maxWidth: 1100, margin: '40px auto 0', padding: '0 clamp(24px,5vw,72px)' }}>
         <div style={{
@@ -743,6 +714,8 @@ export default function ROICalculator() {
             key={chartKey}
             cumSavings={result.cumSavings}
             cumRevenue={result.cumRevenue}
+            hoursPerYear={result.hoursPerYear}
+            paybackMonths={result.paybackMonths}
           />
         </div>
       </div>

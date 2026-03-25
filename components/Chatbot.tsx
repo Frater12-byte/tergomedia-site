@@ -98,6 +98,13 @@ export default function Chatbot() {
               onChange={e => setInput(e.target.value)}
               onInput={handleInput}
               onKeyDown={onKey}
+              onFocus={() => {
+                if (window.innerWidth <= 768) {
+                  setTimeout(() => {
+                    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+                  }, 300);
+                }
+              }}
               style={{ resize: 'none', overflowY: 'hidden' }}
             />
             <button className="chat-send" onClick={send} disabled={typing}>Send</button>

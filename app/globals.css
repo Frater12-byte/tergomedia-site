@@ -608,8 +608,8 @@ input[type=range] { flex: 1; accent-color: var(--y); height: 3px; }
   .g2 .cell p { max-width: 100%; }
   .pc-service { padding: 28px 20px; }
   .stat { padding: 28px 20px; }
-  .chat-window { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; border-radius: 0; z-index: 10000; max-width: none; }
-  .chat-msgs { flex: 1; max-height: none; -webkit-overflow-scrolling: touch; }
+  .chat-window { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; border-radius: 0; z-index: 10000; max-width: none; display: flex; flex-direction: column; }
+  .chat-msgs { flex: 1; max-height: none; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .chat-input { font-size: 16px !important; }
   .chat-input-row { flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
   .chat-hint { display: none !important; }

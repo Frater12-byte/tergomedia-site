@@ -4,6 +4,7 @@ import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/co
 import ROICalculator from '@/components/ROICalculator';
 import OfficesMap from '@/components/OfficesMap';
 import PortfolioCarousel from '@/components/PortfolioCarousel';
+import AIWorkflowSection from '@/components/AIWorkflowSection';
 
 export const metadata: Metadata = {
   title: 'Tergo Media — AI Automation & Custom Software | Dubai',
@@ -80,6 +81,9 @@ export default function Home() {
         </div>
       ))}
     </div>
+
+    {/* ── AI WORKFLOW ── */}
+    <AIWorkflowSection />
 
     {/* ── PORTFOLIO ── */}
     <PortfolioCarousel />

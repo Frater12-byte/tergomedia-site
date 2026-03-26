@@ -50,7 +50,7 @@ export default function Nav() {
                 {l.label}
               </Link>
             ))}
-            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn nav-cta">Book a call</a>
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y nav-cta">Book a call</a>
           </div>
 
           {/* Hamburger button */}

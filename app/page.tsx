@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (<>
     {/* ── HERO ── */}
-    <div className="hero">
+    <div className="hero" style={{position:'relative',overflow:'hidden'}}>
       <div className="hero-grid-bg" />
       <div className="hero-inner-mag">
         <div className="eyebrow y">AI · Automation · Custom Software</div>
@@ -48,15 +48,15 @@ export default function Home() {
     </div>
 
     {/* ── STATS ── */}
-    <div className="stats-fw fw-grid g4">
+    <div className="stats-fw g4" style={{display:'grid'}}>
       {[
-        ['10+','years shipping digital products','y'],
-        ['40+','automation systems live in production','c'],
-        ['3','offices — UAE, Romania, Italy','y'],
-        ['$7M+','revenue generated across client projects','p'],
-      ].map(([n,l,c])=>(
+        ['10','years shipping digital products','+'],
+        ['40','automation systems live in production','+'],
+        ['3','offices — UAE, Romania, Italy',''],
+        ['$7M','revenue generated across client projects','+'],
+      ].map(([n,l,s])=>(
         <div className="stat" key={n}>
-          <div className={`stat-n ${c}`}>{n}</div>
+          <div className="stat-n" style={{fontFamily:"var(--font-exo2),'Exo 2',sans-serif"}}>{n}<span className="suf">{s}</span></div>
           <div className="stat-l">{l}</div>
         </div>
       ))}
@@ -155,7 +155,7 @@ export default function Home() {
     <h2 style={{padding:'0 clamp(24px,5vw,72px) 24px',maxWidth:1100,margin:'0 auto',fontSize:'clamp(20px,2.8vw,32px)',fontWeight:700,lineHeight:1.2,letterSpacing:'-0.3px',color:'#fff',fontFamily:"'Exo',sans-serif"}}>
       Trusted by operators across Europe and the GCC
     </h2>
-    <div className="reviews-scroll-wrap">
+    <div className="reviews-scroll-wrap" style={{paddingBottom:'56px'}}>
       <div className="reviews-scroll-track">
         {[
           {q:'We cooperated with Tergo Media since 2019 on digital transformation, software development and RPA. Always on time and optimised budget.',who:'Fausto Migliori',role:'Managing Director · Future Days, Milan',tc:'y'},
@@ -164,7 +164,7 @@ export default function Home() {
           {q:'Francesco and his team understood what we needed faster than any agency I\'ve worked with. The result was exactly what we wanted, delivered ahead of schedule.',who:'Ravi Sharma',role:'Founder · Stacklane, Dubai',tc:'y'},
           {q:'Tergo built our entire operations portal in six weeks. Solid architecture, clean code, and they actually pushed back when our brief had gaps — that\'s rare.',who:'Domenico Castagna',role:'CEO · Novatex Italia SpA, Milan',tc:'c'},
         ].map(t=>(
-          <div className={`review-card at-${t.tc}`} key={t.who}>
+          <div className="review-card" key={t.who}>
             <span className="pull-quote-mark" style={{color:'var(--y)',opacity:0.45}}>&ldquo;</span>
             <p className="pull-quote-text" style={{fontWeight:300,fontStyle:'italic',color:'rgba(255,255,255,0.70)'}}>{t.q}</p>
             <div style={{borderTop:'1px solid var(--b)',paddingTop:16,marginTop:'auto'}}>

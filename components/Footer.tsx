@@ -30,7 +30,7 @@ export default function Footer() {
           0%,100% { transform: scale(1); opacity: 1; }
           50%      { transform: scale(1.15); opacity: 0.7; }
         }
-        .footer-dot { display: inline-block; font-size: 13px; color: #F5C540; opacity: 1; animation: dotPulse 2.5s ease-in-out infinite; }
+        .footer-dot { display: inline-block; width: 4px; height: 4px; background: var(--y); animation: dotPulse 2.5s ease-in-out infinite; }
         .footer-dot-2 { animation-delay: 0.8s; }
         .footer-dot-3 { animation-delay: 1.6s; }
         @media (prefers-reduced-motion: reduce) { .footer-dot { animation: none; } }
@@ -94,9 +94,9 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <div className="footer-offices">
-            <span className="footer-office"><span className="footer-dot" style={{color:'var(--y)'}}>●</span> Dubai, UAE</span>
-            <span className="footer-office"><span className="footer-dot footer-dot-2" style={{color:'var(--y)'}}>●</span> Bucharest, Romania</span>
-            <span className="footer-office"><span className="footer-dot footer-dot-3" style={{color:'var(--y)'}}>●</span> Milan, Italy</span>
+            <span className="footer-office"><span className="footer-dot" style={{display:'inline-block',width:4,height:4,background:'var(--y)'}}></span> Dubai, UAE</span>
+            <span className="footer-office"><span className="footer-dot footer-dot-2" style={{display:'inline-block',width:4,height:4,background:'var(--y)'}}></span> Bucharest, Romania</span>
+            <span className="footer-office"><span className="footer-dot footer-dot-3" style={{display:'inline-block',width:4,height:4,background:'var(--y)'}}></span> Milan, Italy</span>
           </div>
           <div className="footer-copy">© 2026 Tergo Media · All rights reserved</div>
         </div>

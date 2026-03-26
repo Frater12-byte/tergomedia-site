@@ -1,9 +1,24 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { Exo_2, DM_Sans } from 'next/font/google';
 import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import Chatbot from '@/components/Chatbot';
+
+const exo2 = Exo_2({
+  subsets: ['latin'],
+  weight: ['300','400','600','700','800','900'],
+  variable: '--font-exo2',
+  display: 'swap',
+});
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['300','400','500'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.tergomedia.com'),
@@ -103,7 +118,7 @@ const JSON_LD = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${exo2.variable} ${dmSans.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/TERGO_Media_Branding copy.png" />

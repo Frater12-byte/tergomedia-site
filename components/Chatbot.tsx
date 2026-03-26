@@ -121,7 +121,15 @@ export default function Chatbot() {
       {open && (
         <div ref={chatRef} className="chat-window">
           <div className="chat-header">
-            <span className="chat-header-title">Tergo Media Assistant</span>
+            <div style={{display:'flex',alignItems:'center',gap:10}}>
+              <div style={{width:34,height:34,background:'rgba(249,202,0,0.12)',border:'1px solid rgba(249,202,0,0.3)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <span style={{fontFamily:"var(--font-exo2),'Exo 2',sans-serif",fontWeight:900,fontSize:16,color:'var(--y)'}}>L</span>
+              </div>
+              <div>
+                <div className="chat-header-title">Layla</div>
+                <div style={{fontSize:10,color:'rgba(255,255,255,0.35)',marginTop:1}}>Online — AI assistant</div>
+              </div>
+            </div>
             <button className="chat-close" onClick={() => setOpen(false)} aria-label="Close chat">×</button>
           </div>
           <div ref={msgsRef} className="chat-msgs">

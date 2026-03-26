@@ -319,8 +319,8 @@ export function CtaBar({ h, sub }: { h: string; sub: string }) {
         <p>{sub}</p>
       </div>
       <div className="cta-bar-right">
-        <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer">Book a slot →</a>
-        <a href="mailto:hello@tergomedia.com">→ hello@tergomedia.com</a>
+        <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark">Book a slot →</a>
+        <a href="mailto:hello@tergomedia.com" className="btn btn-ol">→ hello@tergomedia.com</a>
         <small>Dubai · Bucharest · Milan · Response within 24h</small>
       </div>
     </div>
@@ -336,7 +336,7 @@ export function Ticker({ items }: { items: { text: string; color?: string }[] })
         {doubled.map((item, i) => (
           <span key={i} className="ticker-item">
             <span style={item.color ? { color: `var(--${item.color})` } : {}}>{item.text}</span>
-            <span className="td" />
+            <span className="td">▸</span>
           </span>
         ))}
       </div>

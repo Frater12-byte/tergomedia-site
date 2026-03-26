@@ -319,7 +319,7 @@ export function CtaBar({ h, sub }: { h: string; sub: string }) {
         <p>{sub}</p>
       </div>
       <div className="cta-bar-right">
-        <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer">→ Book on Calendly</a>
+        <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer">Book a slot →</a>
         <a href="mailto:hello@tergomedia.com">→ hello@tergomedia.com</a>
         <small>Dubai · Bucharest · Milan · Response within 24h</small>
       </div>

@@ -20,7 +20,7 @@ export default function Contact() {
         <h1>Let&apos;s figure out<br/>what you<br/><em className="y">actually need</em>.</h1>
         <p className="hero-desc" style={{maxWidth:580}}>Book a free 30-minute call. We&apos;ll listen, ask the right questions, and tell you honestly what will move the needle — no sales pitch, no commitment.</p>
         <div className="btn-row">
-          <a className="btn btn-y" href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer">Book on Calendly →</a>
+          <a className="btn btn-y" href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer">Book a slot →</a>
           <a className="btn btn-outline" href="mailto:hello@tergomedia.com">hello@tergomedia.com</a>
         </div>
       </div>
@@ -31,7 +31,7 @@ export default function Contact() {
           <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'var(--y)',marginBottom:10}}>Book a call</div>
           <h3>Free 30-minute discovery call</h3>
           <p style={{marginBottom:16}}>We use this call to understand what you&apos;re working on and whether we&apos;re the right fit. Most people leave with clarity even if we don&apos;t end up working together.</p>
-          <a className="btn btn-y" href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer">Open Calendly →</a>
+          <a className="btn btn-y" href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer">Book a slot →</a>
         </div>
         <div style={{borderTop:'1px solid var(--b)',paddingTop:24,marginBottom:28}}>
           <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'var(--c)',marginBottom:10}}>WhatsApp</div>

@@ -740,7 +740,7 @@ export default function ROICalculator() {
                 These figures are <span style={{ color: Y }}>best-case scenario estimates</span> based on industry-average automation yields and typical team structures. Actual results depend on workflow complexity, data quality, and implementation scope. We recommend a discovery call before drawing conclusions from this calculator.
               </p>
               <a
-                href="https://calendly.com/tergo-media/30min"
+                href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/"
                 target="_blank"
                 rel="noreferrer"
                 className="roi-disc-cta"

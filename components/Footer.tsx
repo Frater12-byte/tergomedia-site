@@ -49,7 +49,7 @@ export default function Footer() {
             <a href="https://www.linkedin.com/company/tergomedia" target="_blank" rel="noreferrer" title="LinkedIn">in</a>
             <a href="https://www.youtube.com/@BuildWithTergo" target="_blank" rel="noreferrer" title="YouTube">▶</a>
             <a href="mailto:hello@tergomedia.com" title="Email">@</a>
-            <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer" title="Book a call">↗</a>
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" title="Book a call">↗</a>
           </div>
         </div>
 
@@ -78,7 +78,7 @@ export default function Footer() {
             <a href="mailto:hello@tergomedia.com">hello@tergomedia.com</a>
           </div>
           <div className="footer-contact-item">
-            <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer">Book a discovery call →</a>
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer">Book a discovery call →</a>
           </div>
           <div className="footer-contact-item" style={{ marginTop: 8 }}>
             <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer">Maria — CEO</a>

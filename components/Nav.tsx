@@ -50,7 +50,7 @@ export default function Nav() {
                 {l.label}
               </Link>
             ))}
-            <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer" className="btn nav-cta">Book a call</a>
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn nav-cta">Book a call</a>
           </div>
 
           {/* Hamburger button */}
@@ -83,7 +83,7 @@ export default function Nav() {
             </Link>
           ))}
           <div className="mob-cta-wrap">
-            <a href="https://calendly.com/tergo-media/30min" target="_blank" rel="noreferrer" className="mob-cta-btn">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="mob-cta-btn">
               Book a free call →
             </a>
             <a href="mailto:hello@tergomedia.com" className="mob-cta-email">hello@tergomedia.com</a>

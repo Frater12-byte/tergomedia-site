@@ -122,7 +122,7 @@ const CARD_DATA = {
   milano: {
     timezone: 'GMT+1 · available 9am–6pm',
     linkText: 'Book a discovery call →',
-    linkHref: 'https://calendly.com/tergo-media/30min',
+    linkHref: 'https://outlook.office.com/book/TergoMedia1@tergomedia.com/',
     translateX: '-20%', // far left — shift card mostly right
   },
 };

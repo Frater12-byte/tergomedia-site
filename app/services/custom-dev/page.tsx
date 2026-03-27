@@ -1,61 +1,86 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { FlowGraphic, Stepper, CtaBar } from '@/components/Graphics';
+import type { Metadata } from 'next';
+
 export const metadata: Metadata = {
-  title: 'Custom Web & Mobile App Development — React, Node.js, Python | Tergo Media',
-  description: 'Production-grade custom software in React, Next.js, Node.js, Python, PHP, and native iOS & Android. Shipped in weeks, built to last.',
-  alternates: { canonical: 'https://www.tergomedia.com/services/custom-dev' },
+  title: 'Custom Web & Mobile Development — Tergo Media',
+  description: 'React, Next.js, Node.js, Python, PHP, iOS and Android — production-grade custom software shipped in weeks.',
 };
-export default function CustomDev() { return (<>
-  <div className="hero"><div className="hero-grid-bg" />
-    <div className="hero-inner">
-      <div>
-        <div className="eyebrow c">Custom Development</div>
-        <h1>Ship <em className="c">real</em><br/>software.<br/>Not <em className="y">templates</em>.</h1>
-        <p className="hero-desc">We design and build <strong>custom web apps, mobile apps, and APIs</strong> from scratch. React, Next.js, Node.js, Python, PHP, native iOS &amp; Android — we own the full stack.</p>
-        <div className="btn-row"><Link href="/contact" className="btn btn-c">Start a project →</Link><Link href="/portfolio" className="btn btn-outline">See our work</Link></div>
-      </div>
-      <div><FlowGraphic color="c" nodes={[{text:'Scope & architecture defined',status:'Week 1'},{text:'UI/UX designed & approved',status:'Week 2'},{text:'Backend APIs built & tested',status:'Weeks 2–3'},{text:"Frontend connected & QA'd",status:'Week 3–4'},{text:'Deployed to production',status:'Week 4–6'}]} title="Typical project timeline" resultLabel="Average delivery" resultText="4–6 weeks from kickoff to production" /></div>
-    </div>
-  </div>
-  <div className="stats-fw fw-grid g4">
-    {[['6','languages & frameworks in our core stack','c'],['4–6 wks','average time to production launch','y'],['iOS + Android','native mobile apps built in-house','c'],['100%','code ownership handed over on completion','p']].map(([n,l,c])=>(<div className="stat" key={n}><div className={`stat-n ${c}`}>{n}</div><div className="stat-l">{l}</div></div>))}
-  </div>
-  <div className="sec">What we build</div>
-  <div className="fw fw-grid g3">
-    {[{n:'01',t:'Web apps & portals',d:'B2B dashboards, client portals, admin panels. React + Next.js frontend, Node.js or Python backend, PostgreSQL.',tags:['React','Next.js','Node.js'],tc:'c'},{n:'02',t:'E-commerce & marketplaces',d:'Custom e-commerce, booking platforms, marketplace logic. WooCommerce, headless, or fully custom.',tags:['PHP','WooCommerce','Stripe'],tc:'y'},{n:'03',t:'Mobile apps',d:'Native iOS and Android. React Native for cross-platform, Swift/Kotlin when native performance matters.',tags:['iOS · Android','React Native'],tc:'c'},{n:'04',t:'APIs & backend systems',d:'RESTful APIs, GraphQL, microservices, webhooks. Python FastAPI, Node Express, PHP Laravel.',tags:['Python','PHP Laravel','Node.js'],tc:'p'},{n:'05',t:'AI-powered apps',d:'Applications with AI baked in — GPT-4o, Claude, embeddings, RAG pipelines. Not wrappers — real products.',tags:['GPT-4o','Claude API','RAG'],tc:'y'},{n:'06',t:'Integrations & data pipelines',d:'Connect any two systems. CRM → ERP, portal → accounting. Python or Node pipelines, built to last.',tags:['APIs','Python','Webhooks'],tc:'r'}].map(s=>(<div className="pc-service" key={s.n} style={{borderTop:`2px solid var(--${s.tc})`}}><div className="pc-service-num">{s.n}</div><div className="pc-service-accent" style={{background:`var(--${s.tc})`}} /><div className="pc-service-title">{s.t}</div><div className="pc-service-desc">{s.d}</div><div>{s.tags.map(t=><span key={t} className={`tag ${s.tc}`}>{t}</span>)}</div></div>))}
-  </div>
-  <div className="sec">Tech stack — no lock-in</div>
-  <div className="fw fw-grid g6">
-    {[['Frontend','React\nNext.js\nTypeScript\nTailwind'],['Backend','Node.js\nPython\nPHP / Laravel\nFastAPI'],['Mobile','React Native\nSwift\nKotlin\nExpo'],['Data','PostgreSQL\nSupabase\nMongoDB\nRedis'],['AI','OpenAI\nAnthropic\nLangChain\nPinecone'],['Deploy','Vercel\nAWS\nDocker\ncPanel / VPS']].map(([title,items])=>(<div className="cell pad-sm" key={title}><div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'var(--m)',marginBottom:10,paddingBottom:8,borderBottom:'1px solid var(--b)'}}>{title}</div><div style={{fontSize:11,color:'var(--l)',lineHeight:1.8}}>{items.split('\n').map((i:string,idx:number)=><div key={idx}>{i}</div>)}</div></div>))}
-  </div>
-  <div className="sec">Recent builds</div>
-  <div className="fw fw-grid g2">
-    {[
-      {n:'01',tc:'y',t:'Brokerage Revenue Analyzer',d:'Next.js + AI. Built in 3 weeks. 40+ Dubai brokerages using it. Zero backend maintenance.',tags:['Next.js','OpenAI','Vercel']},
-      {n:'02',tc:'c',t:'SaaS Stack Auditor',d:'AI-powered audit tool on Vercel serverless. Handles 100+ submissions/day with zero infra management.',tags:['Next.js','Claude API','Serverless']},
-      {n:'03',tc:'p',t:'Farm monitoring system (HayGuard)',d:'React + Node.js + IoT. Real-time sensor data, automated alert system. Under 30 second alert delivery.',tags:['React','Node.js','IoT']},
-      {n:'04',tc:'r',t:'Invoice management system',d:'Multi-currency (EUR/USD/AED/RON), recurring billing, analytics. Runs Tergo Media\'s own agency operations.',tags:['Next.js','PostgreSQL','Stripe']},
-    ].map(s=>(
-      <div className={`cell at-${s.tc}`} key={s.n}>
-        <div className="num">{s.n}</div>
-        <h3>{s.t}</h3><p>{s.d}</p>
-        <div style={{marginTop:10}}>{s.tags.map(t=><span key={t} className={`tag ${s.tc}`}>{t}</span>)}</div>
-      </div>
-    ))}
-  </div>
-  <div className="sec">How we price</div>
-  <div className="fw fw-grid g3">
-    {[
-      {tc:'y',t:'Fixed scope',d:'You know what you want. We define it precisely, price it, and build it. No surprises, no scope creep. Most projects work this way.'},
-      {tc:'c',t:'Time & materials',d:'Exploratory or fast-moving projects where scope evolves. Weekly billing, daily visibility on progress. You can stop anytime.'},
-      {tc:'p',t:'Retainer',d:'Ongoing development and maintenance. Fixed monthly hours, priority response, no onboarding overhead on new requests.'},
-    ].map(p=>(
-      <div className={`cell at-${p.tc} pad-lg`} key={p.t}>
-        <h3>{p.t}</h3>
-        <p style={{marginTop:10}}>{p.d}</p>
-      </div>
-    ))}
-  </div>
-  <CtaBar h="Have a product idea?" sub="Tell us what you want to build. We'll scope it, price it, and ship it." />
-</>); }
+
+export default function CustomDevPage() {
+  const TECH = ['React','Next.js','Node.js','Python','PHP','Laravel','iOS (Swift)','Android (Kotlin)','PostgreSQL','MongoDB','AWS','Docker'];
+  return (
+    <>
+      <section className="page-hero">
+        <svg className="poly-bg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="900,0 1440,80 1440,320 1100,420 800,280 850,0" fill="rgba(0,200,255,0.02)" stroke="#00c8ff" strokeWidth="0.5" strokeOpacity="0.1"/>
+          <circle cx="900" cy="0" r="2" fill="#00c8ff" fillOpacity="0.2"/>
+        </svg>
+        <div className="hero-glow-1" /><div className="hero-glow-2" />
+        <div className="container">
+          <div className="page-hero-eyebrow">Service 02</div>
+          <h1>Custom Web &<br /><em>Mobile Apps</em></h1>
+          <p>React, Next.js, Node.js, Python, PHP, native iOS & Android. Production-grade software, shipped in weeks not months. You own the code, forever.</p>
+          <div className="hero-ctas">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a scoping call →</a>
+            <Link href="/portfolio" className="btn btn-ol btn-lg">See our work</Link>
+          </div>
+          <div className="met-row">
+            <div className="met"><div className="met-b">2–8<span>wk</span></div><div className="met-s">Typical time<br />to first launch</div></div>
+            <div className="met"><div className="met-b">100<span>+</span></div><div className="met-s">Projects shipped<br />to production</div></div>
+            <div className="met"><div className="met-b">10<span>+</span></div><div className="met-s">Years of<br />engineering</div></div>
+            <div className="met"><div className="met-b">0</div><div className="met-s">Lock-in contracts.<br />You own everything.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-dots">
+        <div className="container">
+          <span className="sec-label">What we build</span>
+          <h2 className="sec-title">From MVPs to enterprise<br />platforms — we ship it all.</h2>
+          <p className="sec-sub">Every project is scoped tightly, priced fixed, and delivered iteratively.</p>
+          <div className="services-grid">
+            {[
+              { num: '01', title: 'Web Applications', desc: 'Custom web apps built on React and Next.js. B2B portals, marketplaces, dashboards, internal tools. Server-rendered, fast, SEO-friendly.', tags: ['React','Next.js','TypeScript','REST / GraphQL'] },
+              { num: '02', title: 'Mobile Apps', desc: 'Native iOS and Android apps, or cross-platform with React Native. App Store / Play Store submission included.', tags: ['iOS (Swift)','Android (Kotlin)','React Native','App Store'] },
+              { num: '03', title: 'Backend & APIs', desc: 'Scalable Node.js, Python (FastAPI/Django), or PHP (Laravel) backends. RESTful APIs, webhooks, third-party integrations.', tags: ['Node.js','Python','PHP / Laravel','PostgreSQL','MongoDB'] },
+              { num: '04', title: 'E-commerce & Portals', desc: 'Custom WooCommerce, Shopify, or bespoke e-commerce platforms. Multi-currency, multi-language, custom checkout flows.', tags: ['WooCommerce','Shopify','Custom','Payment gateways'] },
+            ].map(s => (
+              <div key={s.num} className="svc-card">
+                <span className="svc-num">{s.num}</span>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+                <div className="svc-tags">{s.tags.map(t => <span key={t} className="tag">{t}</span>)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-light">
+        <div className="container">
+          <span className="sec-label">Technology stack</span>
+          <h2 className="sec-title">We use the right tools,<br />not the trendy ones.</h2>
+          <p className="sec-sub">Proven, production-battle-tested technologies that your team can maintain and build on.</p>
+          <div className="svc-tags" style={{ gap: 8, maxWidth: 680 }}>
+            {TECH.map(t => <span key={t} className="tag" style={{ fontSize: 13, padding: '6px 16px' }}>{t}</span>)}
+          </div>
+          <div className="mt-cta">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Scope my project →</a>
+            <Link href="/portfolio" className="btn btn-ol">See portfolio</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-section">
+        <div className="container">
+          <h2>Have a product in mind?</h2>
+          <p>Tell us what you&apos;re building. We&apos;ll give you a free technical assessment and fixed-price proposal within 48 hours.</p>
+          <div className="cta-btns">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Book a scoping call →</a>
+            <a href="mailto:hello@tergomedia.com" className="btn btn-ol btn-lg">hello@tergomedia.com</a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

@@ -1,94 +1,111 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CtaBar, ImgPh } from '@/components/Graphics';
+import type { Metadata } from 'next';
+
 export const metadata: Metadata = {
-  title: 'About Tergo Media — Built by Operators, Not Just Advisors',
-  description: 'Tergo Media is an AI automation and custom software agency founded by Francesco and Maria Terragni. Based in Dubai, Bucharest, and Milan.',
-  alternates: { canonical: 'https://www.tergomedia.com/about' },
+  title: 'About — Tergo Media',
+  description: 'Tergo Media is an AI automation and custom software agency founded by Maria and Francesco Terragni. Dubai · Bucharest · Milan.',
 };
-export default function About() { return (<>
-  <div className="hero"><div className="hero-grid-bg" />
-    <div className="hero-inner">
-      <div>
-        <div className="eyebrow y">About</div>
-        <h1>Built by<br/>operators,<br/>for <em className="y">operators</em>.</h1>
-        <p className="hero-desc">We&apos;ve <strong>built and run our own products</strong>, scaled a company to $7M and exited, and worked inside companies like KAYAK. We know what it means to ship under pressure.</p>
-        <div className="btn-row"><Link href="/contact" className="btn btn-y">Work with us →</Link></div>
-      </div>
-      <ImgPh label="IMG-04" desc="Francesco — founder headshot" h={340} src="/Images/IMG-04.png" />
-    </div>
-  </div>
-  <div className="sec">The team</div>
-  <div className="fw fw-grid g3">
-    <div className="cell at-y pad-lg">
-      <ImgPh label="IMG-04" desc="Francesco Terragni" h={280} src="/Images/IMG-04.png" />
-      <div style={{marginTop:16}}>
-        <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Co-founder · CTO</div>
-        <h3 style={{marginBottom:10}}>Francesco Terragni</h3>
-        <p style={{marginBottom:14}}>Builds technology companies from the ground up — product, teams, architecture, and the culture that makes them last. 10+ years spanning CTO roles, co-founded startups (one exited), and hands-on engineering in JavaScript, Node.js, Python &amp; React.</p>
-        <p>Scaled distributed engineering teams across Europe and the GCC. Shipped AI automation pipelines, IoT systems, and SaaS platforms across travel tech, real estate, agriculture, and finance. Previously at KAYAK.</p>
-        <div style={{marginTop:16}}><span className="tag y">Co-founder & CTO</span><span className="tag y">Node.js · Python · React</span><span className="tag y">AI Automation</span><span className="tag y">SaaS</span></div>
-      </div>
-    </div>
-    <div className="cell at-c pad-lg">
-      <ImgPh label="IMG-19" desc="Maria Terragni — CEO" h={280} src="/Images/IMG-19.png" />
-      <div style={{marginTop:16}}>
-        <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>CEO · Operations & Strategy</div>
-        <h3 style={{marginBottom:10}}>Maria Terragni</h3>
-        <p style={{marginBottom:14}}>Operations and business transformation professional with 12+ years in the travel and tour operator industry. Combines a strong B2B marketing background with operational strategy and process optimisation.</p>
-        <p>Experienced in improving organisational structures, implementing reporting systems, coordinating ERP development, and supporting talent acquisition during periods of growth and change. Focused on operational efficiency, cost reduction, and enabling data-driven decisions.</p>
-        <div style={{marginTop:16}}><span className="tag c">CEO</span><span className="tag c">Operations</span><span className="tag c">Business Transformation</span><span className="tag c">Travel industry</span></div>
-      </div>
-    </div>
-    <div className="cell pad-lg">
-      <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:14}}>Development team · Bucharest</div>
-      <h3>Engineering</h3>
-      <p style={{marginBottom:14}}>Our core engineering team is based in Bucharest — senior developers in React, Node.js, Python, PHP, iOS, and Android. Fast, rigorous, battle-tested on real production systems.</p>
-      <ImgPh label="IMG-15" desc="Team photo — Bucharest office" h={160} src="/Images/IMG-15.png" />
-    </div>
-  </div>
-  <div className="sec">Our offices</div>
-  <div className="fw fw-grid g3">
-    {[{tc:"y",role:"Headquarters",city:"Dubai, UAE",desc:"Primary base. Serving the GCC market — real estate, finance, travel, and professional services.",img:"IMG-16",imgDesc:"Dubai skyline"},{tc:"c",role:"Engineering hub",city:"Bucharest, Romania",desc:"Core engineering team. Registered as Tergo Invest S.R.L. — all development operations run from here.",img:"IMG-17",imgDesc:"Bucharest city"},{tc:"p",role:"Partner office",city:"Milan, Italy",desc:"European client base. Partnerships with Future Days and Ennea Capital.",img:"IMG-18",imgDesc:"Milan city"}].map(o=>(<div className={`cell at-${o.tc}`} key={o.city}><ImgPh label={o.img} desc={o.imgDesc} h={180} src={`/Images/${o.img}.png`} /><div style={{marginTop:16}}><div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:"uppercase",color:`var(--${o.tc})`,marginBottom:6}}>{o.role}</div><h4>{o.city}</h4><p>{o.desc}</p></div></div>))}
-  </div>
-  <div className="sec">Track record</div>
-  <div className="fw fw-grid g1">
-    <div className="cell pad-lg">
-      <div style={{display:'flex',flexDirection:'column',gap:0}}>
-        {[
-          {y:'2015',t:'Started as a digital consultant in Europe',c:'m'},
-          {y:'2017',t:'Joined KAYAK as product manager',c:'y'},
-          {y:'2019',t:'Founded Skipodium — ski sports marketplace',c:'c'},
-          {y:'2021',t:'Scaled Skipodium to $7M revenue — exit achieved',c:'y'},
-          {y:'2022',t:'Built HayGuard farm monitoring platform',c:'c'},
-          {y:'2023',t:'Tergo Media established formally — Dubai office opened',c:'y'},
-          {y:'2024',t:'Brokerage Revenue Analyzer launched — 40+ Dubai brokerages using it',c:'c'},
-          {y:'2025',t:'SaaS Stack Auditor launched, Milan and Bucharest offices active',c:'p'},
-        ].map((e,i)=>(
-          <div key={e.y} style={{display:'flex',gap:24,paddingBottom:i<7?24:0,marginBottom:i<7?24:0,borderBottom:i<7?'1px solid var(--b)':'none'}}>
-            <div style={{fontSize:13,fontWeight:900,color:`var(--${e.c})`,minWidth:40,paddingTop:2}}>{e.y}</div>
-            <div style={{fontSize:14,color:'var(--l)',lineHeight:1.65}}>{e.t}</div>
+
+export default function AboutPage() {
+  return (
+    <>
+      <section className="page-hero">
+        <div className="hero-glow-1" /><div className="hero-glow-2" />
+        <div className="container">
+          <div className="page-hero-eyebrow">About us</div>
+          <h1>We build <em>systems.</em><br />Not slides.</h1>
+          <p>Tergo Media is an AI automation and custom software agency. We started in 2015, and we&apos;ve been shipping things that work ever since. No juniors. No outsourcing. You work with us, directly.</p>
+        </div>
+      </section>
+
+      <section className="section section-dots">
+        <div className="container">
+          <span className="sec-label">The founders</span>
+          <h2 className="sec-title">Two people. 20+ years<br />of combined experience.</h2>
+          <div className="team-grid">
+            <div className="team-card">
+              <img src="/Images/IMG-20.png" alt="Maria Terragni" className="team-img" />
+              <div className="team-body">
+                <div className="team-roles"><span className="t-role-tag">CEO</span><span className="t-role-tag">Strategy</span><span className="t-role-tag">Client Partnerships</span></div>
+                <h3>Maria Terragni</h3>
+                <div className="team-sub-text">CEO & Co-Founder</div>
+                <p>10+ years leading digital transformation across real estate, travel, and professional services. Former management consultant turned founder. Maria leads every client relationship and ensures delivery stays on track and on brief.</p>
+                <div className="skill-tags"><span className="sk-tag">Business strategy</span><span className="sk-tag">Digital transformation</span><span className="sk-tag">Client leadership</span><span className="sk-tag">AI implementation</span></div>
+                <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer" className="team-li">LinkedIn →</a>
+              </div>
+            </div>
+            <div className="team-card">
+              <img src="/Images/IMG-26.png" alt="Francesco Terragni" className="team-img" />
+              <div className="team-body">
+                <div className="team-roles"><span className="t-role-tag">CTO</span><span className="t-role-tag">Engineering</span><span className="t-role-tag">AI Architecture</span></div>
+                <h3>Francesco Terragni</h3>
+                <div className="team-sub-text">CTO & Co-Founder</div>
+                <p>Full-stack engineer and AI architect with 10+ years building production systems. Francesco leads all technical work — architecture, code, automation design, and quality. He has shipped over 100 products to production.</p>
+                <div className="skill-tags"><span className="sk-tag">React / Next.js</span><span className="sk-tag">Node.js / Python</span><span className="sk-tag">AI pipelines</span><span className="sk-tag">n8n / Make</span><span className="sk-tag">AWS / Docker</span></div>
+                <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer" className="team-li">LinkedIn →</a>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-  <div className="sec">Referral programme</div>
-  <div className="fw fw-grid g2">
-    <div className="cell at-y pad-lg">
-      <h3>Recommend us. Get paid.</h3>
-      <p style={{marginBottom:14}}>Know someone who needs what we do? Make the introduction and earn a cash commission or discount on your next project.</p>
-      <div className="met"><span className="met-b y">5%</span><span className="met-s">cash commission on every contract secured</span></div>
-      <div className="met"><span className="met-b c">10%</span><span className="met-s">discount on your next project with us</span></div>
-      <div style={{marginTop:20}}><Link href="/contact" className="btn btn-y">Make an introduction →</Link></div>
-    </div>
-    <div className="cell pad-lg">
-      <div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:14}}>Strategic partners</div>
-      <h4>Future Days · Milan</h4>
-      <p style={{marginBottom:18}}>Creative agency partners. We handle the development and automation layer for their client projects.</p>
-      <h4>Ennea Capital Partners</h4>
-      <p>Venture and growth capital. We advise on portfolio company technical due diligence and digital transformation.</p>
-    </div>
-  </div>
-  <CtaBar h="Want to work with us?" sub="Book a free 30-minute call. We'll understand your situation and tell you honestly what we can do for you." />
-</>); }
+        </div>
+      </section>
+
+      <section className="section section-light">
+        <div className="container">
+          <div className="how-grid">
+            <div>
+              <span className="sec-label">How we work</span>
+              <h2 className="sec-title">Direct. Fast.<br />No bullshit.</h2>
+              <div className="how-steps">
+                {[
+                  { n: '01', title: 'You talk to the people who build it', desc: 'No account managers, no handoffs. Maria handles the relationship; Francesco handles the build. You always know who to call.' },
+                  { n: '02', title: 'Fixed prices, clear deliverables', desc: 'No hourly billing surprises. We scope everything upfront and charge a fixed price. Budget certainty from day one.' },
+                  { n: '03', title: 'Weekly progress, always', desc: 'You see what we\'ve built every week. Not at the end of a two-month sprint — every week.' },
+                  { n: '04', title: 'You own everything', desc: 'Code, automations, accounts, documentation — all yours. We hand over with full training and 30-day support.' },
+                ].map(s => (
+                  <div key={s.n} className="how-step">
+                    <div className="how-step-n">{s.n}</div>
+                    <div className="how-step-body"><h4>{s.title}</h4><p>{s.desc}</p></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div className="how-outcome">
+                <div className="hoc-glow" />
+                <div className="hoc-label">By the numbers</div>
+                <div className="hoc-title">What we&apos;ve shipped</div>
+                <div style={{ height: 24 }} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                  {[
+                    { big: '10+', label: 'Years shipping', cls: '' },
+                    { big: '100+', label: 'Projects live', cls: '' },
+                    { big: '40+', label: 'Automations built', cls: '' },
+                    { big: '$7M+', label: 'Revenue impact', cls: '' },
+                    { big: '3', label: 'Office locations', cls: '' },
+                    { big: '4.9★', label: 'Avg client rating', cls: '' },
+                  ].map(m => (
+                    <div key={m.label} className="hom">
+                      <div className="big" style={{ color: 'var(--y)' }}>{m.big}</div>
+                      <div className="desc">{m.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-section">
+        <div className="container">
+          <h2>Let&apos;s build something<br />together.</h2>
+          <p>Book a free 30-minute call. We&apos;ll listen, ask the right questions, and tell you exactly what we&apos;d build.</p>
+          <div className="cta-btns">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Book a free call →</a>
+            <Link href="/contact" className="btn btn-ol btn-lg">Other ways to reach us</Link>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

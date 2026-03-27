@@ -1,31 +1,56 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { BeforeAfter, Stepper, CtaBar, PROCESS_STEPS } from '@/components/Graphics';
+import type { Metadata } from 'next';
+
 export const metadata: Metadata = {
-  title: 'AI & Automation Services | Tergo Media Dubai',
-  description: 'AI automation, custom development, CTO advisory, and digital transformation. Four service lines, one team. Dubai-based.',
-  alternates: { canonical: 'https://tergomedia.com/services' },
+  title: 'Services — Tergo Media',
+  description: 'AI automation, custom software development, CTO advisory, and digital transformation — four ways Tergo Media builds leverage into your business.',
 };
-export default function Services() { return (<>
-  <div className="hero"><div className="hero-grid-bg" />
-    <div className="hero-inner">
-      <div>
-        <div className="eyebrow y">Services</div>
-        <h1>Everything<br/>you need to<br/><em className="y">move faster</em>.</h1>
-        <p className="hero-desc">Four service lines, one team. We scope, build, and own it end-to-end.</p>
-        <div className="btn-row"><Link href="/contact" className="btn btn-y">Book a call →</Link></div>
-      </div>
-      <div><BeforeAfter bads={["Slow response times losing clients","Hours wasted on manual reports","Disconnected systems forcing staff to copy-paste data","Generic agency with no sector knowledge"]} goods={["Instant automated follow-up across WhatsApp, email, CRM","Self-generating reports delivered on schedule","Fully integrated stack — everything talks to everything","Deep sector experience in real estate, travel, agri, finance"]} /></div>
-    </div>
-  </div>
-  <div className="sec">Service lines</div>
-  <div className="fw fw-grid g2">
-    {[{n:"01",t:"AI & Automation",d:"Lead capture, document processing, AI agents, reporting dashboards, approval workflows, system integrations.",tags:["n8n · Make · Zapier","GPT-4o · Claude","WhatsApp · Email"],tc:"y",href:"/services/ai-automation"},{n:"02",t:"Custom Web & Mobile Apps",d:"React, Next.js, Node.js, Python, PHP, iOS, Android. Production-grade code shipped in weeks not months.",tags:["React · Next.js","Python · PHP","Node.js","iOS · Android"],tc:"c",href:"/services/custom-dev"},{n:"03",t:"CTO Advisory",d:"Fractional CTO for companies that need senior technical leadership. Architecture, team, vendor evaluation, product roadmap.",tags:["Tech strategy","Architecture","Team management"],tc:"p",href:"/services/cto-advisory"},{n:"04",t:"Digital Transformation",d:"Full-scope digital audits. We map your operations and implement the systems and workflows to modernise your business.",tags:["Digital audit","Process redesign","Change management"],tc:"r",href:"/services/digital-transformation"}].map(s=>(<Link href={s.href} className={`cell at-${s.tc} pad-lg`} key={s.n} style={{display:"block",textDecoration:"none"}}><div className="num">{s.n}</div><h3>{s.t}</h3><p>{s.d}</p><div style={{marginTop:12}}>{s.tags.map(t=><span key={t} className={`tag ${s.tc}`}>{t}</span>)}</div><div style={{marginTop:18,fontSize:12,fontWeight:800,color:`var(--${s.tc})`,textTransform:"uppercase",letterSpacing:1}}>Full service page →</div></Link>))}
-  </div>
-  <div className="sec">How every project runs</div>
-  <div className="fw fw-grid g2">
-    <div className="cell pad-lg"><h3>The same four-step process — every time</h3><p style={{marginBottom:14}}>Clear phases. Fixed prices. Defined deliverables at each step.</p><p><strong>No retainers by default.</strong> We scope fixed deliverables unless you specifically want ongoing support. All code and systems are handed over at project end. 30-day post-launch support included on every project.</p></div>
-    <div className="cell"><Stepper steps={PROCESS_STEPS} color="y" /></div>
-  </div>
-  <CtaBar h="Not sure which service you need?" sub="Book a free 30-min call. We'll listen, ask the right questions, and tell you exactly what will move the needle." />
-</>); }
+
+const SERVICES = [
+  { num: '01', href: '/services/ai-automation', title: 'AI & Automation', desc: 'Lead capture, document processing, AI agents, CRM integration, reporting — all automated. Your team focuses on growth, not admin.', tags: ['n8n','Make','GPT-4o','Claude','WhatsApp API'] },
+  { num: '02', href: '/services/custom-dev', title: 'Custom Web & Mobile Apps', desc: 'React, Next.js, Node.js, Python, PHP, native iOS & Android. Production-grade, shipped in weeks not months.', tags: ['React','Next.js','Python','PHP','iOS','Android'] },
+  { num: '03', href: '/services/cto-advisory', title: 'CTO Advisory', desc: 'Fractional CTO for companies that need senior technical leadership without a full-time hire. Architecture, team, strategy.', tags: ['Tech strategy','Architecture','Team leadership'] },
+  { num: '04', href: '/services/digital-transformation', title: 'Digital Transformation', desc: 'Full-scope digital audits and transformation programmes. We map inefficiencies and implement the systems to fix them.', tags: ['Digital audit','Process redesign','Change mgmt'] },
+];
+
+export default function ServicesPage() {
+  return (
+    <>
+      <section className="page-hero">
+        <div className="hero-glow-1" /><div className="hero-glow-2" />
+        <div className="container">
+          <div className="page-hero-eyebrow">What we do</div>
+          <h1>Four ways we build<br /><em>leverage</em> into your business.</h1>
+          <p>From a single automation to a full technology transformation — we scope tightly and ship fast. Fixed prices. No lock-in.</p>
+          <div className="hero-ctas">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a discovery call →</a>
+          </div>
+        </div>
+      </section>
+      <section className="section section-dots">
+        <div className="container">
+          <div className="services-grid">
+            {SERVICES.map(s => (
+              <div key={s.href} className="svc-card">
+                <span className="svc-num">{s.num}</span>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+                <div className="svc-tags">{s.tags.map(t => <span key={t} className="tag">{t}</span>)}</div>
+                <Link href={s.href} className="svc-link">EXPLORE SERVICE →</Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="cta-section">
+        <div className="container">
+          <h2>Not sure which service<br />is right for you?</h2>
+          <p>Book a free 30-minute call. We&apos;ll listen, ask the right questions, and tell you exactly what we&apos;d recommend.</p>
+          <div className="cta-btns">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Book a free call →</a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

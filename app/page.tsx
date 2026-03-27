@@ -1,294 +1,411 @@
-import type { Metadata } from 'next';
+'use client';
 import Link from 'next/link';
-import { FlowGraphic, Stepper, CtaBar, Ticker, ImgPh, PROCESS_STEPS } from '@/components/Graphics';
+import { useState, useEffect } from 'react';
 import ROICalculator from '@/components/ROICalculator';
-import OfficesMap from '@/components/OfficesMap';
-import PortfolioCarousel from '@/components/PortfolioCarousel';
-import AIWorkflowSection from '@/components/AIWorkflowSection';
+import AutopilotSection from '@/components/AutopilotSection';
+import BeforeAfterSlider from '@/components/BeforeAfterSlider';
+import TestimonialsSection from '@/components/TestimonialsSection';
 
-export const metadata: Metadata = {
-  title: 'Tergo Media — AI Automation & Custom Software | Dubai',
-  description: 'Tergo Media builds AI automation systems, custom software, and digital transformation programmes for businesses across the GCC, Europe, and beyond. Based in Dubai, Bucharest, and Milan.',
-  keywords: ['AI automation Dubai', 'custom software agency Dubai', 'digital transformation GCC', 'automation agency', 'CTO advisory', 'Next.js agency Dubai', 'n8n automation', 'AI agents', 'workflow automation'],
-  alternates: { canonical: 'https://www.tergomedia.com' },
-};
+// ── FLOW CARD ──
+const FLOW_STEPS = [
+  { icon: <svg viewBox="0 0 24 24" stroke="#f9ca00" strokeWidth="1.8" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>, label: 'New lead captured', sub: 'Bayut · PropertyFinder · Web form' },
+  { icon: <svg viewBox="0 0 24 24" stroke="#00c8ff" strokeWidth="1.8" fill="none"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>, label: 'AI qualifies & scores', sub: 'GPT-4o reads intent, budget, timeline' },
+  { icon: <svg viewBox="0 0 24 24" stroke="#b06eff" strokeWidth="1.8" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>, label: 'Best agent assigned', sub: 'Routing by language, area & tier' },
+  { icon: <svg viewBox="0 0 24 24" stroke="#00ff9d" strokeWidth="1.8" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, label: 'WhatsApp + email sent', sub: 'Personalised, auto-generated' },
+  { icon: <svg viewBox="0 0 24 24" stroke="#f9ca00" strokeWidth="1.8" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>, label: 'CRM updated instantly', sub: 'HubSpot record created, pipeline set' },
+];
 
-export default function Home() {
-  return (<>
-    {/* ── HERO ── */}
-    <div className="hero" style={{position:'relative',overflow:'hidden'}}>
-      <div className="hero-grid-bg" />
-      <div className="hero-inner-mag">
-        <div className="eyebrow y">AI · Automation · Custom Software</div>
-        <h1>We build<br/><em className="y">systems</em><br/>that run<br/>your <em className="c">business</em>.</h1>
-        <div className="hero-split">
-          <div>
-            <p className="hero-desc">Tergo Media is an AI, automation &amp; custom software agency. We build tools that work while you sleep — across <strong>Dubai, Bucharest, and Milan.</strong></p>
-            <div className="btn-row">
-              <Link href="/contact" className="btn btn-y">Book a free discovery call →</Link>
-              <Link href="/portfolio" className="btn btn-outline">See our work →</Link>
-            </div>
-          </div>
-          <div style={{minWidth: 0, overflow: 'hidden'}}>
-            <FlowGraphic
-              nodes={[
-                {text:'New lead captured via form',status:'Trigger'},
-                {text:'AI qualifies & scores',status:'Running'},
-                {text:'Best agent assigned',status:'Queued'},
-                {text:'WhatsApp + email sent',status:'Queued'},
-                {text:'CRM updated instantly',status:'Queued'},
-              ]}
-              title="Lead capture automation"
-              resultLabel="Avg. response time"
-              resultText="Under 90 seconds — zero human input"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* ── STATS ── */}
-    <div className="stats-fw g4" style={{display:'grid'}}>
-      {[
-        ['10','years shipping digital products','+'],
-        ['40','automation systems live in production','+'],
-        ['3','offices — UAE, Romania, Italy',''],
-        ['$7M','revenue generated across client projects','+'],
-      ].map(([n,l,s])=>(
-        <div className="stat" key={n}>
-          <div className="stat-n" style={{fontFamily:"var(--font-exo2),'Exo 2',sans-serif"}}>{n}<span className="suf">{s}</span></div>
-          <div className="stat-l">{l}</div>
-        </div>
-      ))}
-    </div>
-
-    {/* ── SERVICES ── */}
-    <div className="sec">What we do</div>
-    <div className="fw fw-grid g2" data-section="what-we-do">
-      {[
-        {n:'01',t:'AI & Automation',d:'Lead capture, document processing, AI agents, reporting — all automated. Your team focuses on growth, not admin.',tags:['n8n · Make','GPT-4o · Claude','WhatsApp API'],tc:'y',href:'/services/ai-automation'},
-        {n:'02',t:'Custom Web & Mobile Apps',d:'React, Next.js, Node.js, Python, PHP, native iOS & Android. Production-grade, shipped in weeks not months.',tags:['React · Next.js','Python · PHP','iOS · Android'],tc:'c',href:'/services/custom-dev'},
-        {n:'03',t:'CTO Advisory',d:'Fractional CTO for companies that need senior technical leadership without a full-time hire. Architecture, team, strategy.',tags:['Tech strategy','Architecture','Team leadership'],tc:'p',href:'/services/cto-advisory'},
-        {n:'04',t:'Digital Transformation',d:'Full-scope digital audits and transformation programmes. We map inefficiencies and implement the systems to fix them.',tags:['Digital audit','Process redesign','Change mgmt'],tc:'r',href:'/services/digital-transformation'},
-      ].map(s=>(
-        <div className="pc-service at-y" key={s.n} style={{borderTopColor:`var(--${s.tc})`}}>
-          <div className="pc-service-num">{s.n}</div>
-          <div className="pc-service-accent" style={{background:`var(--${s.tc})`}} />
-          <div className="pc-service-title">{s.t}</div>
-          <div className="pc-service-desc">{s.d}</div>
-          <div style={{marginBottom:20}}>{s.tags.map(t=><span key={t} className={`tag ${s.tc}`}>{t}</span>)}</div>
-          <Link href={s.href} className="pc-service-link" style={{color:`var(--${s.tc})`}}>Explore service →</Link>
-        </div>
-      ))}
-    </div>
-
-    {/* ── AI WORKFLOW ── */}
-    <AIWorkflowSection />
-
-    {/* ── PORTFOLIO ── */}
-    <PortfolioCarousel />
-
-    {/* ── SECTORS ── */}
-    <div className="sec">Sectors we serve</div>
-    <div className="fw fw-grid g3 sectors-grid">
-      {[
-        {c:'y',label:'Real estate',t:'Brokerages & developers',d:'Lead routing, CRM automation, AI follow-up, and document processing — from first enquiry to signed contract.',href:'/sectors/real-estate'},
-        {c:'c',label:'Travel & hospitality',t:'Tour operators & hotels',d:'Booking automation, AI itinerary generation, agency back-office workflows, and supplier integrations — built for tour operators and travel agencies that need their systems to talk to each other.',href:'/sectors/travel-hospitality'},
-        {c:'p',label:'Agriculture',t:'Agri businesses & distributors',d:'IoT sensor monitoring, automated alerts, distributor portals, and inventory tracking — field to office, connected.',href:'/sectors/agriculture'},
-        {c:'r',label:'Media & publishing',t:'Agencies & content platforms',d:'Content workflows, asset management, automated distribution, and performance reporting — built for teams that move fast.',href:'/sectors'},
-        {c:'y',label:'Professional services',t:'Consultancies & service firms',d:'Invoice automation, KPI dashboards, client onboarding, and reporting — your admin runs itself so your team focuses on delivery.',href:'/sectors/professional-services'},
-        {c:'c',label:'E-commerce & retail',t:'Online stores & brands',d:'Order management, returns automation, catalogue sync, and customer communication — at scale, without extra headcount.',href:'/sectors'},
-      ].map(s=>(
-        <Link href={s.href} className="cell" key={s.t} style={{display:'block',minHeight:220}}>
-          <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:`var(--${s.c})`,marginBottom:12}}>{s.label}</div>
-          <h3 style={{fontSize:18,marginBottom:10}}>{s.t}</h3>
-          <p style={{marginBottom:16}}>{s.d}</p>
-          <div style={{fontSize:11,fontWeight:800,color:`var(--${s.c})`,textTransform:'uppercase',letterSpacing:1}}>Explore →</div>
-        </Link>
-      ))}
-    </div>
-
-    {/* ── HOW WE WORK ── */}
-    <div className="sec">How we work</div>
-    <div className="fw fw-grid g2">
-      <div className="cell pad-lg">
-        <h3>From first call to live system — in weeks, not months</h3>
-        <p>We work in tight, outcome-focused sprints with fixed-price proposals and clear deliverables at each step. No bloated retainers. No surprises.</p>
-        <div style={{marginTop:28}}>
-          <Link href="/contact" className="btn btn-y">Start a project →</Link>
-        </div>
-      </div>
-      <div className="cell"><Stepper steps={PROCESS_STEPS} color="y" /></div>
-    </div>
-
-    {/* ── ROI CALCULATOR ── */}
-    <ROICalculator />
-
-    {/* ── RESULTS ── */}
-    <div className="sec">Client results — by the numbers</div>
-    <div className="fw fw-grid g3">
-      <div className="cell at-y">
-        <div style={{fontSize:9,color:'var(--m)',letterSpacing:2,textTransform:'uppercase',marginBottom:14}}>Real estate · Dubai</div>
-        <h3>Lead response time</h3>
-        <div className="met" style={{marginTop:16}}><span className="met-b r">4 hrs</span><span className="met-s">before automation</span></div>
-        <div className="met"><span className="met-b y">18 min</span><span className="met-s">after our system went live</span></div>
-        <p style={{marginTop:14}}>Leads from Bayut, PropertyFinder, and web forms all captured, scored, and followed up without a human touching anything.</p>
-      </div>
-      <div className="cell at-c">
-        <div style={{fontSize:9,color:'var(--m)',letterSpacing:2,textTransform:'uppercase',marginBottom:14}}>Professional services</div>
-        <h3>Admin hours returned</h3>
-        <div className="met" style={{marginTop:16}}><span className="met-b c">60%</span><span className="met-s">reduction in manual tasks</span></div>
-        <div className="met"><span className="met-b y">38 hrs</span><span className="met-s">per week, team of 12</span></div>
-        <p style={{marginTop:14}}>Copy-paste, manual reporting, and status updates — all automated. Team redirected to billable work within 30 days.</p>
-      </div>
-      <div className="cell at-p">
-        <div style={{fontSize:9,color:'var(--m)',letterSpacing:2,textTransform:'uppercase',marginBottom:14}}>Brokerage revenue audit</div>
-        <h3>Revenue recovered</h3>
-        <div className="met" style={{marginTop:16}}><span className="met-b p">AED 18K</span><span className="met-s">per month, recovered avg</span></div>
-        <div className="met"><span className="met-b y">AED 2.3M</span><span className="met-s">total leakage identified</span></div>
-        <p style={{marginTop:14}}>Lost leads, slow follow-up, missed upsells — diagnosed and quantified in under 3 minutes using our free tool.</p>
-      </div>
-    </div>
-
-    {/* ── TESTIMONIALS ── */}
-    <div className="section-dark">
-    <div className="sec">What clients say</div>
-    <h2 style={{padding:'0 clamp(24px,5vw,72px) 24px',maxWidth:1100,margin:'0 auto',fontSize:'clamp(20px,2.8vw,32px)',fontWeight:700,lineHeight:1.2,letterSpacing:'-0.3px',color:'#fff',fontFamily:"'Exo',sans-serif"}}>
-      Trusted by operators across Europe and the GCC
-    </h2>
-    <div className="reviews-scroll-wrap" style={{paddingBottom:'56px'}}>
-      <div className="reviews-scroll-track">
-        {[
-          {q:'We cooperated with Tergo Media since 2019 on digital transformation, software development and RPA. Always on time and optimised budget.',who:'Fausto Migliori',role:'Managing Director · Future Days, Milan',tc:'y'},
-          {q:'The automation they built handles 80% of our lead follow-up without anyone touching it. Response times went from hours to under a minute.',who:'Ahmed Al Mansoori',role:'Senior Partner · Apex Properties, Dubai',tc:'c'},
-          {q:'We went from 6-hour manual reports to automated dashboards in two weeks. The team is sharp, fast, and they genuinely understand the business.',who:'Luca Benedetti',role:'Operations Director · Italo Travel Group, Rome',tc:'p'},
-          {q:'Francesco and his team understood what we needed faster than any agency I\'ve worked with. The result was exactly what we wanted, delivered ahead of schedule.',who:'Ravi Sharma',role:'Founder · Stacklane, Dubai',tc:'y'},
-          {q:'Tergo built our entire operations portal in six weeks. Solid architecture, clean code, and they actually pushed back when our brief had gaps — that\'s rare.',who:'Domenico Castagna',role:'CEO · Novatex Italia SpA, Milan',tc:'c'},
-        ].map(t=>(
-          <div className="review-card" key={t.who}>
-            <span className="pull-quote-mark" style={{color:'var(--y)',opacity:0.45}}>&ldquo;</span>
-            <p className="pull-quote-text" style={{fontWeight:300,fontStyle:'italic',color:'rgba(255,255,255,0.70)'}}>{t.q}</p>
-            <div style={{borderTop:'1px solid var(--b)',paddingTop:16,marginTop:'auto'}}>
-              <div style={{fontSize:13,fontWeight:500,color:'rgba(255,255,255,0.90)'}}>{t.who}</div>
-              <div style={{fontSize:12,fontWeight:400,color:'rgba(255,255,255,0.42)',marginTop:4}}>{t.role}</div>
-            </div>
+function FlowCard() {
+  const [active, setActive] = useState(0);
+  const [done, setDone] = useState<number[]>([]);
+  useEffect(() => {
+    const iv = setInterval(() => {
+      setDone(d => d.includes(active) ? d : [...d, active]);
+      setActive(a => (a + 1) % FLOW_STEPS.length);
+    }, 1800);
+    return () => clearInterval(iv);
+  }, [active]);
+  return (
+    <div className="flow-card">
+      <div className="flow-card-label">AI lead automation — live flow</div>
+      <div className="flow-steps">
+        {FLOW_STEPS.map((s, i) => (
+          <div key={i} className={`flow-step${active === i ? ' fs-active' : done.includes(i) ? ' fs-done' : ''}`}>
+            <div className="fsi">{s.icon}</div>
+            <div><strong>{s.label}</strong><span>{s.sub}</span></div>
           </div>
         ))}
       </div>
-    </div>
-    </div>
-
-    {/* ── OFFICE MAP ── */}
-    <OfficesMap />
-
-    {/* ── TEAM ── */}
-    <div className="section-dark">
-    <div style={{maxWidth:1100,margin:'0 auto',padding:'56px clamp(24px,5vw,72px) 20px'}}>
-      <div style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:10,fontWeight:700,letterSpacing:'3px',textTransform:'uppercase',color:'var(--y)',marginBottom:18,fontFamily:"'Exo', sans-serif"}}>
-        <span style={{width:18,height:1,background:'var(--y)',display:'inline-block'}}/>
-        The team behind it
+      <div className="flow-result">
+        <div className="fr-item"><div className="num">90s</div><div className="lbl">Avg. response</div></div>
+        <div className="fr-item"><div className="num">0</div><div className="lbl">Human input</div></div>
+        <div className="fr-item"><div className="num">24/7</div><div className="lbl">Always on</div></div>
       </div>
-      <h2 style={{fontFamily:"'Exo', sans-serif",fontSize:'clamp(24px,3.5vw,40px)',fontWeight:800,letterSpacing:'-1.2px',lineHeight:1.05,color:'#fff',marginBottom:14}}>
-        People who&apos;ve built it,<br/>not just advised on it.
-      </h2>
-      <p style={{fontFamily:"'Exo', sans-serif",fontSize:15,color:'rgba(255,255,255,0.4)',fontWeight:300,lineHeight:1.75,maxWidth:560,marginBottom:48}}>
-        We&apos;ve been inside the companies — running teams, shipping product, and dealing with the same operational messiness our clients face. That&apos;s the difference.
-      </p>
     </div>
-    <div className="team-cards-grid">
-      <style>{`
-        .team-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);max-width:1100px;margin:0 auto clamp(0px,2vw,8px);padding:0 0;width:100%}
-        .team-card{background:#111;position:relative;overflow:hidden;transition:transform 0.25s cubic-bezier(0.16,1,0.3,1)}
-        .team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--y);transform:scaleX(0);transform-origin:left;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1)}
-        .team-card:hover::before{transform:scaleX(1)}
-        .team-photo-wrap{position:relative;width:200px;height:200px;border-radius:10px;overflow:hidden;background:#0d0d0d;flex-shrink:0}
-        .team-photo-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
-        .team-skill-tag{display:inline-block;padding:3px 10px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);font-size:10px;font-weight:400;font-family:'Exo',sans-serif;letter-spacing:0.03em;margin:3px 2px 0}
-        .team-li-link{font-size:12px;font-weight:400;font-family:'Exo',sans-serif;color:rgba(255,255,255,0.3);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
-        .team-li-link:hover{color:var(--y)}
-        .team-role-chip{display:inline-block;padding:3px 10px;border:1px solid rgba(242,194,0,0.3);color:var(--y);background:rgba(242,194,0,0.06);font-size:10px;font-weight:600;font-family:'Exo',sans-serif;letter-spacing:0.05em;margin:0 4px 4px 0}
-        .team-card-text{padding:24px 28px 28px}
-        .team-card-name{font-family:'Exo',sans-serif;font-size:27px;font-weight:800;letter-spacing:-0.8px;color:#fff;line-height:1;margin-bottom:6px}
-        @media(min-width:1025px){
-          .team-cards-grid{grid-template-columns:1fr;gap:0;background:none}
-          .team-card{display:flex;flex-direction:row;align-items:stretch}
-          .team-card:hover{transform:none}
-          .team-card:nth-child(2){flex-direction:row-reverse}
-          .team-card:nth-child(1){border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:48px}
-          .team-photo-wrap{width:42% !important;height:420px !important;border-radius:0 !important}
-          .team-card:nth-child(1) .team-photo-wrap{border-right:2px solid rgba(245,197,64,0.25)}
-          .team-card:nth-child(2) .team-photo-wrap{border-left:2px solid rgba(245,197,64,0.25)}
-          .team-card-text{flex:1;display:flex;flex-direction:column;justify-content:center}
-          .team-card:nth-child(1) .team-card-text{padding:40px 48px 40px 40px}
-          .team-card:nth-child(2) .team-card-text{padding:40px 40px 40px 48px}
-          .team-card-name{font-size:36px !important;font-weight:700 !important}
-        }
-        @media(max-width:768px){
-          .team-cards-grid{grid-template-columns:1fr}
-          .team-card:hover{transform:none}
-          .team-photo-wrap{width:100% !important;height:320px !important;border-radius:0 !important}
-        }
-        @media(prefers-reduced-motion:reduce){.team-card,.team-card::before{transition:none}}
-      `}</style>
+  );
+}
 
-      {/* Maria — left on desktop */}
-      <div className="team-card">
-        <div className="team-photo-wrap">
-          <img src="/Images/IMG-19.png" alt="Maria — CEO, Tergo Media" />
-        </div>
-        <div className="team-card-text">
-          <div style={{marginBottom:10}}>
-            <span className="team-role-chip">CEO</span>
-            <span className="team-role-chip">Business Development</span>
-            <span className="team-role-chip">GCC</span>
+// ── TICKER ──
+const TICKER_ITEMS = ['AI Automation','Custom Web & Mobile','CTO Advisory','Digital Transformation','Lead Automation','CRM Integration','Real Estate','IoT & Agriculture','Travel & Hospitality','React · Next.js · Node.js · Python'];
+function Ticker() {
+  const doubled = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  return (
+    <div className="ticker-wrap">
+      <div className="ticker-inner">
+        {doubled.map((t, i) => <span key={i} className="ticker-item">{t}</span>)}
+      </div>
+    </div>
+  );
+}
+
+// ── PAGE ──
+export default function Home() {
+  return (
+    <>
+      {/* HERO */}
+      <section className="hero">
+        <svg className="poly-bg" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="820,0 1440,130 1440,380 1080,510 700,310 760,0" fill="rgba(249,202,0,0.025)" stroke="#f9ca00" strokeWidth="0.6" strokeOpacity="0.1"/>
+          <polygon points="1120,0 1440,0 1440,220 1300,290" fill="none" stroke="#f9ca00" strokeWidth="0.5" strokeOpacity="0.13"/>
+          <polygon points="580,620 880,510 1180,680 980,800 480,800" fill="rgba(0,200,255,0.02)" stroke="#00c8ff" strokeWidth="0.4" strokeOpacity="0.08"/>
+          <polygon points="0,180 210,90 400,300 200,480 0,380" fill="none" stroke="#f9ca00" strokeWidth="0.4" strokeOpacity="0.08"/>
+          <circle cx="820" cy="0" r="2.5" fill="#f9ca00" fillOpacity="0.3"/>
+          <circle cx="1080" cy="510" r="2" fill="#f9ca00" fillOpacity="0.22"/>
+          <circle cx="700" cy="310" r="2" fill="#f9ca00" fillOpacity="0.18"/>
+          <circle cx="210" cy="90" r="2" fill="#f9ca00" fillOpacity="0.2"/>
+          <circle cx="1300" cy="290" r="1.5" fill="#00c8ff" fillOpacity="0.25"/>
+        </svg>
+        <div className="hero-glow-1" /><div className="hero-glow-2" />
+        <div className="container">
+          <div className="hero-grid">
+            <div className="hero-left">
+              <div className="hero-eyebrow">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                AI · Automation · Custom Software
+              </div>
+              <h1>We build <em>systems</em> that run your <em>business.</em></h1>
+              <p className="hero-sub">Tergo Media builds AI automation and custom software that works while you sleep — freeing your team to focus on growth, not admin.</p>
+              <div className="hero-ctas">
+                <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a free discovery call →</a>
+                <Link href="/portfolio" className="btn btn-ol btn-lg">See our work</Link>
+              </div>
+              <div className="hero-locs">
+                <div className="hero-loc"><div className="loc-dot" />Dubai, UAE</div>
+                <div className="hero-loc"><div className="loc-dot" />Bucharest, Romania</div>
+                <div className="hero-loc"><div className="loc-dot" />Milan, Italy</div>
+              </div>
+            </div>
+            <div className="hero-vw"><FlowCard /></div>
           </div>
-          <div className="team-card-name">Maria</div>
-          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",marginBottom:16}}>Commercial leadership · GCC markets</div>
-          <p style={{fontSize:15,fontFamily:"'Exo', sans-serif",fontWeight:300,lineHeight:1.85,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
-            Maria leads the commercial side of Tergo Media — from business development across the GCC to the operational structure that keeps us delivering at scale. With over a decade in product management, marketing, and international business development, she brings strategic clarity and genuine relationship-building to every client engagement.
-          </p>
-          <div style={{marginBottom:20,display:'flex',flexWrap:'wrap'}}>
-            {['Business Development','Strategic Planning','GCC Markets','Team Leadership','Process Optimisation'].map(t=>(
-              <span key={t} className="team-skill-tag">{t}</span>
+        </div>
+      </section>
+
+      <Ticker />
+
+      {/* STATS */}
+      <div className="stats-bar">
+        <div className="stats-grid">
+          <div className="stat-item"><div className="stat-num">10<span>+</span></div><div className="stat-desc">Years shipping<br />digital products</div></div>
+          <div className="stat-item"><div className="stat-num">40<span>+</span></div><div className="stat-desc">Automation systems<br />live in production</div></div>
+          <div className="stat-item"><div className="stat-num">$7M<span>+</span></div><div className="stat-desc">Revenue generated<br />across clients</div></div>
+          <div className="stat-item"><div className="stat-num">3</div><div className="stat-desc">Offices — UAE,<br />Romania, Italy</div></div>
+        </div>
+      </div>
+
+      {/* SERVICES */}
+      <section className="section section-dots" id="services">
+        <div className="container">
+          <span className="sec-label">What we do</span>
+          <h2 className="sec-title">Four ways we build leverage<br />into your business.</h2>
+          <p className="sec-sub">From a single automation to a full technology transformation — we scope tightly and ship fast.</p>
+          <div className="services-grid">
+            {[
+              { num: '01 — AI & AUTOMATION', title: 'AI & Automation', desc: 'Lead capture, document processing, AI agents, reporting — all automated. Your team focuses on growth, not admin.', tags: ['n8n','Make','GPT-4o','Claude','WhatsApp API'], href: '/services/ai-automation' },
+              { num: '02 — CUSTOM DEVELOPMENT', title: 'Custom Web & Mobile Apps', desc: 'React, Next.js, Node.js, Python, PHP, native iOS & Android. Production-grade, shipped in weeks not months.', tags: ['React','Next.js','Python','PHP','iOS','Android'], href: '/services/custom-dev' },
+              { num: '03 — FRACTIONAL CTO', title: 'CTO Advisory', desc: 'Fractional CTO for companies that need senior technical leadership without a full-time hire. Architecture, team, strategy.', tags: ['Tech strategy','Architecture','Team leadership'], href: '/services/cto-advisory' },
+              { num: '04 — TRANSFORMATION', title: 'Digital Transformation', desc: 'Full-scope digital audits and transformation programmes. We map inefficiencies and implement the systems to fix them.', tags: ['Digital audit','Process redesign','Change mgmt'], href: '/services/digital-transformation' },
+            ].map(s => (
+              <div key={s.href} className="svc-card">
+                <span className="svc-num">{s.num}</span>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+                <div className="svc-tags">{s.tags.map(t => <span key={t} className="tag">{t}</span>)}</div>
+                <Link href={s.href} className="svc-link">EXPLORE SERVICE →</Link>
+              </div>
             ))}
           </div>
-          <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer" className="team-li-link">LinkedIn →</a>
         </div>
-      </div>
+      </section>
 
-      {/* Francesco — right on desktop */}
-      <div className="team-card">
-        <div className="team-photo-wrap">
-          <img src="/Images/IMG-04.png" alt="Francesco Terragni — Co-founder & CTO, Tergo Media" />
-        </div>
-        <div className="team-card-text">
-          <div style={{marginBottom:10}}>
-            <span className="team-role-chip">Co-founder</span>
-            <span className="team-role-chip">CTO</span>
-            <span className="team-role-chip">Full-Stack</span>
-          </div>
-          <div className="team-card-name">Francesco</div>
-          <div style={{fontSize:10,fontWeight:700,letterSpacing:'0.15em',textTransform:'uppercase',color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",marginBottom:16}}>Technical core · Systems architecture</div>
-          <p style={{fontSize:15,fontFamily:"'Exo', sans-serif",fontWeight:300,lineHeight:1.85,color:'rgba(255,255,255,0.62)',marginBottom:20}}>
-            Francesco is the technical core of Tergo Media — designing the systems, writing the code, and making sure what we promise actually ships. With 10+ years across CTO roles and hands-on development in JavaScript, Node.js, Python, and React, he covers everything from AI pipelines and IoT platforms to SaaS architecture and automation systems.
-          </p>
-          <div style={{marginBottom:20,display:'flex',flexWrap:'wrap'}}>
-            {['Node.js','React','Python','AI & Automation','System Architecture'].map(t=>(
-              <span key={t} className="team-skill-tag">{t}</span>
+      {/* AUTOMATION SHOWCASE */}
+      <section className="section auto-showcase section-shimmer" id="automation">
+        <svg className="poly-bg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="0,0 300,60 220,300 0,260" fill="none" stroke="rgba(255,255,255,.07)" strokeWidth="0.5"/>
+          <polygon points="1140,0 1440,0 1440,200 1300,260" fill="none" stroke="rgba(255,255,255,.07)" strokeWidth="0.5"/>
+          <circle cx="300" cy="60" r="2" fill="rgba(255,255,255,1)" fillOpacity="0.1"/>
+          <circle cx="900" cy="320" r="1.5" fill="rgba(255,255,255,1)" fillOpacity="0.12"/>
+        </svg>
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <span className="sec-label">Automation library</span>
+          <h2 className="sec-title">Real automations.<br />Real results.</h2>
+          <p className="sec-sub">Six live automation systems we&apos;ve built and deployed across industries.</p>
+          <div className="showcase-grid">
+            {[
+              { color: '#f9ca00', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, title: 'AI Lead Response', desc: 'Every inbound enquiry gets a personalised WhatsApp + email response in under 90 seconds. AI reads intent, writes the message, routes to the best agent.', tags: ['GPT-4o','WhatsApp API','n8n','HubSpot'], result: <>Response time cut from <span className="sc-g">4h → 90s</span></> },
+              { color: '#00c8ff', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>, title: 'Invoice & Document AI', desc: 'Invoices and contracts are read by AI, data extracted, validated, and synced to your accounting system — no manual entry, no errors.', tags: ['OCR','Claude','Make','Xero / QuickBooks'], result: <>Manual entry <span className="sc-b">eliminated</span> — 100%</> },
+              { color: '#b06eff', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>, title: 'KPI Dashboard Auto-Report', desc: "Every Monday morning your leadership team receives a fully formatted PDF report with last week's KPIs — generated and sent without a single click.", tags: ['Google Sheets','Slack','PDF generation','n8n'], result: <>38 hrs/mo <span className="sc-g">saved on reporting</span></> },
+              { color: '#00ff9d', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>, title: 'Client Onboarding Pipeline', desc: 'When a deal is marked Won in CRM, a full onboarding sequence fires: welcome email, document request, kick-off invite, Slack channel — all within 2 minutes.', tags: ['HubSpot','Slack','Google Calendar','DocuSign'], result: <>Onboarding time <span className="sc-g">cut by 70%</span></> },
+              { color: '#f9ca00', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>, title: 'IoT Alert & Escalation', desc: 'Sensor thresholds breach → system classifies severity → right team member alerted via SMS/email/Slack with context and recommended action.', tags: ['MQTT','Node.js','Twilio SMS','PagerDuty'], result: <>Alert response from <span className="sc-b">hours → minutes</span></> },
+              { color: '#00c8ff', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>, title: 'Marketplace Price Sync', desc: 'Product pricing and availability stay in sync across your website, Amazon, Noon, and distributor portals — updated automatically whenever your catalogue changes.', tags: ['WooCommerce','Amazon API','Make','Webhooks'], result: <>Sync errors <span className="sc-g">dropped to zero</span></> },
+            ].map((c, i) => (
+              <div key={i} className="sc-card">
+                <div className="sc-icon" style={{ borderColor: `${c.color}4d` }}><svg viewBox="0 0 24 24" stroke={c.color} strokeWidth="1.5" fill="none">{c.icon.props.children}</svg></div>
+                <h3>{c.title}</h3>
+                <p>{c.desc}</p>
+                <div className="sc-tags">{c.tags.map(t => <span key={t} className="tag">{t}</span>)}</div>
+                <div className="sc-result">{c.result}</div>
+              </div>
             ))}
           </div>
-          <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer" className="team-li-link">LinkedIn →</a>
+          <div className="mt-cta">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Build my automation →</a>
+            <a href="#roi" className="btn btn-ol">Calculate my ROI</a>
+          </div>
         </div>
-      </div>
-    </div>
-    <div style={{maxWidth:1100,margin:'0 auto',padding:'40px clamp(24px,5vw,72px) 56px',textAlign:'center',borderTop:'1px solid rgba(255,255,255,0.06)'}}>
-      <p style={{fontSize:13,color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",fontWeight:300,fontStyle:'italic'}}>
-        Between the two: commercial leadership and deep technical execution — across Europe and the GCC.
-      </p>
-    </div>
-    </div>
+      </section>
 
-    <CtaBar h="Ready to build something that actually works?" sub="Book a free 30-minute discovery call. No pitch, no commitment — just clarity on what's possible." />
-    <Ticker items={[{text:'AI Automation',color:'y'},{text:'Custom Dev',color:'c'},{text:'CTO Advisory',color:'p'},{text:'Real Estate',color:'y'},{text:'Travel',color:'c'},{text:'Agriculture',color:'p'},{text:'Professional Services',color:'r'},{text:'PHP · Python · Node.js · React'}]} />
-  </>);
+      {/* AUTOPILOT */}
+      <AutopilotSection />
+
+      {/* HOW WE WORK */}
+      <section className="section how-section section-light" id="how">
+        <svg className="poly-bg" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="0,100 200,20 350,200 150,380 0,300" fill="none" stroke="rgba(255,255,255,.06)" strokeWidth="0.5"/>
+          <polygon points="1100,0 1440,100 1440,350 1200,420" fill="none" stroke="rgba(255,255,255,.06)" strokeWidth="0.4"/>
+          <circle cx="200" cy="20" r="2" fill="rgba(255,255,255,1)" fillOpacity="0.12"/>
+          <circle cx="1200" cy="420" r="1.5" fill="rgba(255,255,255,1)" fillOpacity="0.12"/>
+        </svg>
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="how-grid">
+            <div>
+              <span className="sec-label">How we work</span>
+              <h2 className="sec-title">From first call to live system —<br />in weeks, not months.</h2>
+              <p className="sec-sub">Fixed-price proposals. Clear deliverables. No bloated retainers. No surprises.</p>
+              <div className="how-steps">
+                {[
+                  { n: '01', title: 'Automation audit', desc: 'We map your workflows, identify where time is lost, and quantify the impact. Free for qualified leads.', badge: '1–2 DAYS' },
+                  { n: '02', title: 'Design & scoping', desc: 'Architecture decisions, tool selection, and a fixed-price proposal with clear milestones.', badge: '3–5 DAYS' },
+                  { n: '03', title: 'Build & test', desc: 'Iterative sprints with weekly demos. You see progress every week, not after months of silence.', badge: '2–8 WEEKS' },
+                  { n: '04', title: 'Launch & handover', desc: 'Full documentation, team training, and 30-day post-launch support. You own everything.', badge: '1 WEEK' },
+                ].map(s => (
+                  <div key={s.n} className="how-step">
+                    <div className="how-step-n">{s.n}</div>
+                    <div className="how-step-body"><h4>{s.title}</h4><p>{s.desc}</p><span className="step-badge">{s.badge}</span></div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-cta">
+                <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Start a project →</a>
+              </div>
+            </div>
+            <div>
+              <div className="how-outcome">
+                <div className="hoc-glow" />
+                <div className="hoc-label">Real estate brokerage · Dubai · 12 agents</div>
+                <div className="hoc-title">Before vs after automation</div>
+                <div className="hoc-sub">Drag the handle to compare — left is before, right is after</div>
+                <BeforeAfterSlider />
+                <div style={{ fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.18)', marginBottom: 12 }}>PROJECT TIMELINE</div>
+                <div className="tl">
+                  <div className="tl-item tl-green"><div className="tl-label">Discovery call & audit</div><div className="tl-week">Week 1</div></div>
+                  <div className="tl-item tl-green"><div className="tl-label">Scoping & fixed-price proposal</div><div className="tl-week">Week 1–2</div></div>
+                  <div className="tl-item tl-green"><div className="tl-label">Build: lead capture + WhatsApp AI</div><div className="tl-week">Week 2–4</div></div>
+                  <div className="tl-item tl-yellow"><div className="tl-label">Launch: CRM sync + reporting live</div><div className="tl-week">Week 5 — live now</div></div>
+                  <div className="tl-item"><div className="tl-label">30-day support & optimisation</div><div className="tl-week">Week 6–9</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ROI CALCULATOR */}
+      <section className="section roi-section" id="roi">
+        <svg className="poly-bg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="1180,0 1440,0 1440,280 1340,190" fill="none" stroke="#f9ca00" strokeWidth="0.5" strokeOpacity="0.08"/>
+          <polygon points="0,380 190,290 380,480 190,670 0,570" fill="none" stroke="#00c8ff" strokeWidth="0.4" strokeOpacity="0.07"/>
+          <circle cx="1180" cy="0" r="2" fill="#f9ca00" fillOpacity="0.2"/>
+          <circle cx="190" cy="290" r="1.5" fill="#00c8ff" fillOpacity="0.18"/>
+        </svg>
+        <div className="container">
+          <div className="txt-c" style={{ maxWidth: 600, margin: '0 auto 56px' }}>
+            <span className="sec-label">Free estimate</span>
+            <h2 className="sec-title">What could automation<br />save your team?</h2>
+            <p className="sec-sub" style={{ margin: '0 auto', textAlign: 'center', maxWidth: 480 }}>Adjust the sliders to match your business and see the estimated 12-month impact.</p>
+          </div>
+          <ROICalculator />
+        </div>
+      </section>
+
+      {/* PORTFOLIO */}
+      <section className="section section-shimmer" id="portfolio">
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <span className="sec-label">Selected work</span>
+          <h2 className="sec-title">Shipped. In production. Working.</h2>
+          <p className="sec-sub">A selection of client projects across automation, custom development and digital transformation.</p>
+          <div className="port-grid">
+            {[
+              { href: '/portfolio', img: '/Images/IMG-01.png', tags: ['Real Estate','AI Automation'], title: 'Cocktail Holidays', desc: 'AI lead qualification + WhatsApp automation for Dubai luxury property portal.' },
+              { href: '/portfolio', img: '/Images/IMG-02.png', tags: ['Agriculture','IoT'], title: 'Agri Novatex', desc: 'IoT sensor platform + alert automation for precision agriculture in Romania.' },
+              { href: '/portfolio', img: '/Images/IMG-03.png', tags: ['Travel','Custom Dev'], title: 'Ranjet Aviation', desc: 'Custom booking and fleet management system for private jet charter.' },
+              { href: '/portfolio', img: '/Images/IMG-04.png', tags: ['Automation','CRM'], title: 'HayGuard', desc: 'End-to-end client onboarding automation integrated with HubSpot CRM.' },
+              { href: '/portfolio', img: '/Images/IMG-05.png', tags: ['Digital Transformation'], title: 'RE/MAX Gulf', desc: 'Full digital transformation: CRM rollout, automation, agent training programme.' },
+              { href: '/portfolio', img: '/Images/IMG-06.png', tags: ['Custom Dev','AI'], title: 'Tergo AI Suite', desc: 'Proprietary AI tools suite for hospitality and professional services clients.' },
+            ].map((p, i) => (
+              <Link key={i} href={p.href} className="port-card">
+                <img src={p.img} alt={p.title} className="port-img" />
+                <div className="port-body">
+                  <div className="port-tags">{p.tags.map(t => <span key={t} className="port-tag">{t}</span>)}</div>
+                  <h3>{p.title}</h3>
+                  <p>{p.desc}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-cta">
+            <Link href="/portfolio" className="btn btn-dark btn-lg">View all projects →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTORS */}
+      <section className="section section-dots" id="sectors">
+        <div className="container">
+          <span className="sec-label">Industries</span>
+          <h2 className="sec-title">We know your industry.</h2>
+          <p className="sec-sub">Deep domain knowledge means we build systems that actually fit how your business works.</p>
+          <div className="sectors-grid">
+            <Link href="/sectors/real-estate" className="sector-cell">
+              <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+              <h3>Real Estate</h3><p>Lead automation, CRM integration, portal syncing, property management systems.</p><span className="sec-lnk">EXPLORE →</span>
+            </Link>
+            <Link href="/sectors/travel-hospitality" className="sector-cell">
+              <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M3 17l3-8 4 6 3-4 4 6"/></svg></div>
+              <h3>Travel & Hospitality</h3><p>Booking engines, channel managers, guest communication automation, revenue tools.</p><span className="sec-lnk">EXPLORE →</span>
+            </Link>
+            <Link href="/sectors/agriculture" className="sector-cell">
+              <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M12 22V12M12 12C12 12 7 6 2 6M12 12C12 12 17 6 22 6"/><path d="M2 6c0 0 2 5 10 6M22 6c0 0-2 5-10 6"/></svg></div>
+              <h3>Agriculture</h3><p>IoT sensor networks, crop monitoring, automated alerts, supply chain tracking.</p><span className="sec-lnk">EXPLORE →</span>
+            </Link>
+            <Link href="/sectors/professional-services" className="sector-cell">
+              <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+              <h3>Professional Services</h3><p>Client onboarding pipelines, document automation, billing, KPI reporting.</p><span className="sec-lnk">EXPLORE →</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <TestimonialsSection />
+
+      {/* TEAM */}
+      <section className="section team-section" id="team">
+        <div className="container">
+          <span className="sec-label">The founders</span>
+          <h2 className="sec-title">Built by people who ship.</h2>
+          <p className="sec-sub">No account managers or junior teams. You work directly with our founders — who have built and shipped over 100 digital products.</p>
+          <div className="team-grid">
+            <div className="team-card">
+              <img src="/Images/IMG-20.png" alt="Maria Terragni" className="team-img" />
+              <div className="team-body">
+                <div className="team-roles"><span className="t-role-tag">CEO</span><span className="t-role-tag">Strategy</span><span className="t-role-tag">Client Partnerships</span></div>
+                <h3>Maria Terragni</h3>
+                <div className="team-sub-text">CEO & Co-Founder</div>
+                <p>10+ years leading digital transformation projects across real estate, travel, and professional services. Former management consultant, now building AI-first businesses.</p>
+                <div className="skill-tags"><span className="sk-tag">Business strategy</span><span className="sk-tag">Digital transformation</span><span className="sk-tag">Client leadership</span></div>
+                <a href="https://www.linkedin.com/in/maria-terragni/" target="_blank" rel="noreferrer" className="team-li">LinkedIn →</a>
+              </div>
+            </div>
+            <div className="team-card">
+              <img src="/Images/IMG-26.png" alt="Francesco Terragni" className="team-img" />
+              <div className="team-body">
+                <div className="team-roles"><span className="t-role-tag">CTO</span><span className="t-role-tag">Engineering</span><span className="t-role-tag">AI Architecture</span></div>
+                <h3>Francesco Terragni</h3>
+                <div className="team-sub-text">CTO & Co-Founder</div>
+                <p>Full-stack engineer and AI architect with 10+ years building production systems. Specialises in automation infrastructure, AI pipelines, and custom software at scale.</p>
+                <div className="skill-tags"><span className="sk-tag">React / Next.js</span><span className="sk-tag">Node.js / Python</span><span className="sk-tag">AI pipelines</span><span className="sk-tag">n8n / Make</span></div>
+                <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer" className="team-li">LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* OFFICES */}
+      <section className="section offices-section" id="offices">
+        <div className="container">
+          <span className="sec-label">Where we are</span>
+          <h2 className="sec-title">Three offices.<br />One team.</h2>
+          <p className="sec-sub">We work across time zones so your project never sleeps.</p>
+          <div className="offices-layout">
+            <div>
+              <div className="world-map-wrap">
+                <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', width: '100%', padding: '24px' }}>
+                  <path d="M60,120 L120,100 L160,110 L180,130 L160,150 L120,160 L80,150 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
+                  <path d="M200,70 L280,55 L340,65 L380,90 L370,120 L330,135 L280,130 L240,115 L210,100 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
+                  <path d="M380,55 L450,45 L520,55 L560,75 L580,100 L560,125 L520,140 L460,145 L420,135 L390,110 L375,85 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
+                  <path d="M560,105 L620,95 L660,110 L680,135 L660,155 L620,160 L580,150 L560,130 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
+                  <path d="M680,90 L760,80 L820,95 L850,120 L840,150 L800,165 L750,168 L700,155 L675,128 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
+                  <path d="M200,175 L260,155 L320,168 L340,200 L320,228 L260,238 L210,222 L190,195 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
+                  {/* Connection lines */}
+                  <line x1="455" y1="102" x2="498" y2="96" stroke="rgba(255,255,255,.12)" strokeWidth="0.8" strokeDasharray="4,4"/>
+                  <line x1="498" y1="96" x2="628" y2="130" stroke="rgba(255,255,255,.12)" strokeWidth="0.8" strokeDasharray="4,4"/>
+                  {/* Milan */}
+                  <circle cx="455" cy="102" r="6" fill="#00c8ff" opacity="0.9"/><circle cx="455" cy="102" r="14" fill="#00c8ff" opacity="0.12"/>
+                  <text x="440" y="90" fill="rgba(255,255,255,.7)" fontSize="11" fontFamily="'Exo 2',sans-serif" fontWeight="700">Milan</text>
+                  {/* Bucharest */}
+                  <circle cx="498" cy="96" r="6" fill="#00ff9d" opacity="0.9"/><circle cx="498" cy="96" r="14" fill="#00ff9d" opacity="0.12"/>
+                  <text x="510" y="92" fill="rgba(255,255,255,.7)" fontSize="11" fontFamily="'Exo 2',sans-serif" fontWeight="700">Bucharest</text>
+                  {/* Dubai */}
+                  <circle cx="628" cy="130" r="7" fill="#f9ca00" opacity="0.9"/><circle cx="628" cy="130" r="16" fill="#f9ca00" opacity="0.12"/>
+                  <text x="641" y="126" fill="rgba(255,255,255,.7)" fontSize="11" fontFamily="'Exo 2',sans-serif" fontWeight="700">Dubai</text>
+                </svg>
+              </div>
+              <div className="office-city-row">
+                <div className="ofc-city dubai"><div className="ofc-dot" /><span className="ofc-name">Dubai</span><span className="ofc-detail">GMT+4 · HQ</span></div>
+                <div className="ofc-city bucharest"><div className="ofc-dot" /><span className="ofc-name">Bucharest</span><span className="ofc-detail">GMT+2 · Engineering</span></div>
+                <div className="ofc-city milan"><div className="ofc-dot" /><span className="ofc-name">Milan</span><span className="ofc-detail">GMT+1 · Europe</span></div>
+              </div>
+              <div className="office-cards">
+                <div className="office-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div className="oc-dot dubai" /><div><div className="oc-city">Dubai, UAE</div><div className="oc-role">Headquarters · Gulf operations</div></div></div>
+                  <div className="oc-hours">Sun–Thu · 09:00–18:00 GST</div>
+                </div>
+                <div className="office-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div className="oc-dot bucharest" /><div><div className="oc-city">Bucharest, Romania</div><div className="oc-role">Engineering hub · EU deliveries</div></div></div>
+                  <div className="oc-hours">Mon–Fri · 09:00–18:00 EET</div>
+                </div>
+                <div className="office-card" style={{ background: 'rgba(249,202,0,.04)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div className="oc-dot milan" /><div><div className="oc-city">Milan, Italy</div><div className="oc-role">European clients · Partnerships</div></div></div>
+                  <div className="oc-hours">Mon–Fri · 09:00–18:00 CET</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="cta-section">
+        <div className="container">
+          <h2>Ready to put your business<br />on autopilot?</h2>
+          <p>Book a free 30-minute discovery call. We&apos;ll map your biggest bottleneck and tell you exactly what we&apos;d build — no commitment required.</p>
+          <div className="cta-btns">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Book a free call →</a>
+            <a href="mailto:hello@tergomedia.com" className="btn btn-ol btn-lg">hello@tergomedia.com</a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }

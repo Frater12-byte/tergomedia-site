@@ -1,35 +1,93 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Stepper, CtaBar } from '@/components/Graphics';
-import DigiCalc from './DigiCalc';
+import type { Metadata } from 'next';
+
 export const metadata: Metadata = {
-  title: 'Digital Transformation Services — Workflow Audit & Process Redesign | Tergo Media',
-  description: 'Full-scope digital audits and transformation programmes. We map inefficiencies, quantify the impact, and implement the systems to fix them — across GCC and Europe.',
-  alternates: { canonical: 'https://www.tergomedia.com/services/digital-transformation' },
+  title: 'Digital Transformation — Tergo Media',
+  description: 'Full-scope digital transformation: audits, process redesign, technology implementation and change management across all business functions.',
 };
-export default function DigitalTransformation() { return (<>
-  <div className="hero"><div className="hero-grid-bg" />
-    <div className="hero-inner">
-      <div>
-        <div className="eyebrow r">Digital Transformation</div>
-        <h1>Modernise<br/>your business.<br/>From the<br/><em className="r">inside out</em>.</h1>
-        <p className="hero-desc">We audit your operations, map your inefficiencies, and implement the <strong>systems, tools, and workflows</strong> that bring your business into the modern era.</p>
-        <div className="btn-row"><Link href="/contact" className="btn btn-r">Book a discovery call →</Link></div>
-      </div>
-      <div><DigiCalc /></div>
-    </div>
-  </div>
-  <div className="stats-fw fw-grid g4">
-    {[['68%','of business processes can be fully automated','r'],['3.2 hrs','lost per person daily to manual tasks','y'],['6–8×','average ROI on transformation investment','c'],['90 days','typical time to measurable results','p']].map(([n,l,c])=>(<div className="stat" key={n}><div className={`stat-n ${c}`}>{n}</div><div className="stat-l">{l}</div></div>))}
-  </div>
-  <div className="sec">What we audit & transform</div>
-  <div className="fw fw-grid g2">
-    {[{n:"01",t:"Operations & processes",d:"We map every manual process — from lead handling to invoicing — and redesign them with automation and modern tools.",tc:"r"},{n:"02",t:"Revenue model & systems",d:"Identify where revenue leaks. Underused pricing, missed upsells, poor lead conversion — we diagnose and fix each one.",tc:"y"},{n:"03",t:"Tools & tech stack",d:"Audit your current tools for overlap, waste, and gaps. We recommend a leaner stack that costs less and does more.",tc:"c"},{n:"04",t:"Team & culture",d:"Digital transformation only sticks if the team is on board. We run workshops, change management sessions, and training.",tc:"p"}].map(s=>(<div className={`cell at-${s.tc} pad-lg`} key={s.n}><div className="num">{s.n}</div><h3>{s.t}</h3><p>{s.d}</p></div>))}
-  </div>
-  <div className="sec">Our transformation process</div>
-  <div className="fw fw-grid g2">
-    <div className="cell pad-lg"><h3>Structured. Measurable. No disruption to live operations.</h3><p>Every transformation starts with a thorough audit. We build a full picture before recommending anything. Then we implement in phases — each with clear KPIs.</p></div>
-    <div className="cell"><Stepper steps={[{title:"Audit",desc:"Full business audit — processes, tools, team interviews, data review. We map the as-is state comprehensively.",time:"2–3 weeks"},{title:"Diagnose",desc:"We identify the top opportunities, quantify the impact, and prioritise by ease and value.",time:"1 week"},{title:"Roadmap",desc:"We design the to-be state and deliver a phased transformation roadmap with clear KPIs for each phase.",time:"1 week"},{title:"Implement",desc:"We execute phase by phase, measuring against KPIs at each milestone before moving to the next.",time:"Ongoing"}]} color="r" /></div>
-  </div>
-  <CtaBar h="Ready to modernise your business?" sub="Start with a free 30-minute discovery call. We'll identify your biggest opportunity before the end of the call." />
-</>); }
+
+export default function DigitalTransformationPage() {
+  return (
+    <>
+      <section className="page-hero">
+        <svg className="poly-bg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="900,0 1440,80 1440,320 1100,420 800,280 850,0" fill="rgba(0,255,157,0.015)" stroke="#00ff9d" strokeWidth="0.5" strokeOpacity="0.1"/>
+          <circle cx="900" cy="0" r="2" fill="#00ff9d" fillOpacity="0.18"/>
+        </svg>
+        <div className="hero-glow-1" /><div className="hero-glow-2" />
+        <div className="container">
+          <div className="page-hero-eyebrow">Service 04</div>
+          <h1>Digital<br /><em>Transformation</em></h1>
+          <p>We map every workflow, identify what&apos;s broken, and implement the systems to fix it. Full-scope transformation programmes that stick.</p>
+          <div className="hero-ctas">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a discovery call →</a>
+            <Link href="/portfolio" className="btn btn-ol btn-lg">See case studies</Link>
+          </div>
+          <div className="met-row">
+            <div className="met"><div className="met-b">3–6<span>mo</span></div><div className="met-s">Typical programme<br />duration</div></div>
+            <div className="met"><div className="met-b">40<span>%</span></div><div className="met-s">Average efficiency<br />gain</div></div>
+            <div className="met"><div className="met-b">$7M<span>+</span></div><div className="met-s">Revenue impact<br />across clients</div></div>
+            <div className="met"><div className="met-b">100<span>%</span></div><div className="met-s">Knowledge transfer<br />& team ownership</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-dots">
+        <div className="container">
+          <span className="sec-label">Programme phases</span>
+          <h2 className="sec-title">Transformation that lasts —<br />not just a report.</h2>
+          <p className="sec-sub">We implement, not just advise. Every engagement ends with your team owning the new systems.</p>
+          <div className="services-grid">
+            {[
+              { num: '01', title: 'Digital Audit', desc: 'We map every workflow, tool, and integration in your business. You receive a prioritised list of bottlenecks with estimated impact and cost to fix.', tags: ['Process mapping','Tool audit','Bottleneck analysis','ROI estimates'] },
+              { num: '02', title: 'Technology Roadmap', desc: 'Based on the audit, we design a phased transformation roadmap with clear milestones, ownership, and success metrics.', tags: ['Roadmap','Architecture','Change management','Milestones'] },
+              { num: '03', title: 'Implementation', desc: 'We build and roll out the new systems — automation, software, integrations, and processes — with your team involved throughout.', tags: ['Automation','Software build','Integrations','Training'] },
+              { num: '04', title: 'Adoption & Optimisation', desc: 'We measure adoption, collect feedback, and optimise the systems in the first 90 days post-launch. Your team owns everything.', tags: ['Adoption tracking','Optimisation','Documentation','Handover'] },
+            ].map(s => (
+              <div key={s.num} className="svc-card">
+                <span className="svc-num">{s.num}</span>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+                <div className="svc-tags">{s.tags.map(t => <span key={t} className="tag">{t}</span>)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-light">
+        <div className="container">
+          <span className="sec-label">Who it&apos;s for</span>
+          <h2 className="sec-title">Businesses at a<br />technology inflection point.</h2>
+          <div className="how-steps" style={{ maxWidth: 640 }}>
+            {[
+              { n: '→', title: 'Growing faster than your systems', desc: 'Your manual processes are becoming a ceiling on growth. You need systems that can scale with you.' },
+              { n: '→', title: 'Post-acquisition or merger', desc: 'You need to integrate two sets of tools, processes, and teams into a single, efficient operation.' },
+              { n: '→', title: 'Preparing for investment', desc: 'Investors expect clean, scalable systems. We help you get investment-ready from a technology perspective.' },
+              { n: '→', title: 'Replacing legacy software', desc: 'Your current stack is holding you back. We map the migration, rebuild what needs rebuilding, and retire what doesn\'t work.' },
+            ].map(s => (
+              <div key={s.n} className="how-step">
+                <div className="how-step-n" style={{ fontSize: 20 }}>{s.n}</div>
+                <div className="how-step-body"><h4>{s.title}</h4><p>{s.desc}</p></div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-cta">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Start with a free audit →</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-section">
+        <div className="container">
+          <h2>Ready to transform<br />your business?</h2>
+          <p>Book a free discovery call. We&apos;ll map your biggest bottleneck and show you what transformation looks like in practice.</p>
+          <div className="cta-btns">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Book a free call →</a>
+            <a href="mailto:hello@tergomedia.com" className="btn btn-ol btn-lg">hello@tergomedia.com</a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

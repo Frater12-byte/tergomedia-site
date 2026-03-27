@@ -1,39 +1,92 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { BeforeAfter, CtaBar, ImgPh } from '@/components/Graphics';
+import type { Metadata } from 'next';
+
 export const metadata: Metadata = {
-  title: 'Fractional CTO Advisory — Technical Leadership Without the Full-Time Hire | Tergo Media',
-  description: 'Senior technical leadership for companies that need architecture, team building, and technology strategy without a full-time CTO. Based in Dubai, available globally.',
-  alternates: { canonical: 'https://www.tergomedia.com/services/cto-advisory' },
+  title: 'CTO Advisory & Fractional CTO — Tergo Media',
+  description: 'Senior technical leadership without a full-time hire. Architecture, team building, and technology strategy from an experienced CTO.',
 };
-export default function CtoAdvisory() { return (<>
-  <div className="hero"><div className="hero-grid-bg" />
-    <div className="hero-inner">
-      <div>
-        <div className="eyebrow p">CTO Advisory</div>
-        <h1>Senior tech<br/>leadership<br/>without the<br/><em className="p">full-time hire</em>.</h1>
-        <p className="hero-desc">A fractional CTO for companies that need <strong>real technical leadership</strong> — architecture, team management, vendor selection, product roadmap — without a €200K salary.</p>
-        <div className="btn-row"><Link href="/contact" className="btn btn-p">Book a discovery call →</Link></div>
-      </div>
-      <div><BeforeAfter bads={["Making tech decisions without technical expertise","Developers running without clear architecture","No one accountable for technical quality and debt","Wasting budget on wrong tools, wrong vendors, wrong hires"]} goods={["Senior CTO-level input on every important technical decision","Clear architecture and engineering standards your team follows","Full technical accountability without full-time cost","Trusted vendor and tool recommendations from 10+ years experience"]} badLabel="Without a CTO" goodLabel="With Tergo advisory" /></div>
-    </div>
-  </div>
-  <div className="sec">What you get</div>
-  <div className="fw fw-grid g3">
-    {[{n:"01",t:"Architecture & tech strategy",d:"Define your system architecture, choose the right stack, and build a technical roadmap that scales with your business.",tc:"p"},{n:"02",t:"Team leadership & hiring",d:"Lead your dev team, run hiring processes, define engineering standards, and build a culture of delivery.",tc:"y"},{n:"03",t:"Product & roadmap",d:"Translate business goals into a prioritised technical roadmap. Make build vs buy decisions.",tc:"c"},{n:"04",t:"Vendor & tool evaluation",d:"Cut through the noise. Evaluate software vendors, cloud providers, and tech tools — unbiased.",tc:"r"},{n:"05",t:"Technical due diligence",d:"Pre-investment code audits. We assess technical debt, architecture risks, and team capability.",tc:"p"},{n:"06",t:"Crisis & turnaround",d:"Project stalled? Team underperforming? We step in, diagnose fast, and fix what's broken.",tc:"y"}].map(s=>(<div className={`cell at-${s.tc}`} key={s.n}><div className="num">{s.n}</div><h3>{s.t}</h3><p>{s.d}</p></div>))}
-  </div>
-  <div className="sec">Your advisor</div>
-  <div className="fw fw-grid g2">
-    <div className="cell pad-lg"><ImgPh label="IMG-04" desc="Francesco — founder headshot" h={280} src="/Images/IMG-04.png" /></div>
-    <div className="cell pad-lg">
-      <h3>10+ years building and leading digital products</h3>
-      <p style={{marginBottom:14}}>Francesco is a product and operations leader with experience spanning PM, CTO, growth strategy, and full-stack development. Founded Skipodium (scaled to $7M, exited), built HayGuard, authored "The Practical Investor."</p>
-      <p>Previous: KAYAK, Cocktail Holidays, Ryte. Based in Dubai, with teams in Bucharest and Milan.</p>
-      <div style={{marginTop:20}}>
-        <span className="tag p">Product management</span><span className="tag p">CTO · technical leadership</span>
-        <span className="tag y">Full-stack development</span><span className="tag y">GCC market</span>
-      </div>
-    </div>
-  </div>
-  <CtaBar h="Need technical leadership now?" sub="Book a free 30-minute call. We'll understand your situation and tell you honestly if and how we can help." />
-</>); }
+
+export default function CTOAdvisoryPage() {
+  return (
+    <>
+      <section className="page-hero">
+        <svg className="poly-bg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="900,0 1440,80 1440,320 1100,420 800,280 850,0" fill="rgba(176,110,255,0.02)" stroke="#b06eff" strokeWidth="0.5" strokeOpacity="0.1"/>
+          <circle cx="900" cy="0" r="2" fill="#b06eff" fillOpacity="0.2"/>
+        </svg>
+        <div className="hero-glow-1" /><div className="hero-glow-2" />
+        <div className="container">
+          <div className="page-hero-eyebrow">Service 03</div>
+          <h1>Fractional <em>CTO</em><br />Advisory</h1>
+          <p>Senior technical leadership for companies that need an experienced CTO — without the full-time salary. Architecture, team, strategy, and execution.</p>
+          <div className="hero-ctas">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a strategy call →</a>
+            <Link href="/about" className="btn btn-ol btn-lg">Meet Francesco</Link>
+          </div>
+          <div className="met-row">
+            <div className="met"><div className="met-b">10<span>+</span></div><div className="met-s">Years as CTO<br />& tech lead</div></div>
+            <div className="met"><div className="met-b">30<span>+</span></div><div className="met-s">Tech teams<br />built & led</div></div>
+            <div className="met"><div className="met-b">60<span>%</span></div><div className="met-s">Cost saving vs<br />full-time CTO hire</div></div>
+            <div className="met"><div className="met-b">1<span>wk</span></div><div className="met-s">Time to first<br />strategy session</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-dots">
+        <div className="container">
+          <span className="sec-label">What you get</span>
+          <h2 className="sec-title">Everything a CTO does.<br />None of the overhead.</h2>
+          <p className="sec-sub">Ideal for startups, scale-ups, and businesses going through a technology inflection point.</p>
+          <div className="services-grid">
+            {[
+              { num: '01', title: 'Technology Strategy', desc: 'Build-vs-buy decisions, tech stack selection, architecture design, and a roadmap aligned with your business objectives and budget.', tags: ['Architecture','Stack selection','Build vs buy','Roadmap'] },
+              { num: '02', title: 'Team Building & Leadership', desc: 'Hiring criteria, interview processes, team structure, and day-to-day technical leadership. We help you build a team that can scale.', tags: ['Hiring','Team structure','Mentorship','Processes'] },
+              { num: '03', title: 'Vendor & Agency Management', desc: 'Evaluate external partners, manage technical vendors, and ensure code quality across third-party work.', tags: ['Vendor evaluation','Code reviews','Quality gates','SLAs'] },
+              { num: '04', title: 'Fundraising Technical Support', desc: 'Technical due diligence prep, investor Q&A support, architecture documentation, and security reviews for funding rounds.', tags: ['Due diligence','Investor decks','Security audit','Documentation'] },
+            ].map(s => (
+              <div key={s.num} className="svc-card">
+                <span className="svc-num">{s.num}</span>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+                <div className="svc-tags">{s.tags.map(t => <span key={t} className="tag">{t}</span>)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-light">
+        <div className="container">
+          <span className="sec-label">Engagement models</span>
+          <h2 className="sec-title">Flexible. Transparent.<br />No lock-in.</h2>
+          <div className="how-steps" style={{ maxWidth: 640 }}>
+            {[
+              { n: '01', title: 'Strategy Sprint (4 weeks)', desc: 'Deep dive into your tech stack, team, and roadmap. Deliverable: written architecture review and 12-month technology roadmap.', badge: 'FIXED PRICE' },
+              { n: '02', title: 'Part-time CTO (ongoing)', desc: '1–2 days per week embedded with your team. Attend standups, review PRs, mentor engineers, run tech leadership.', badge: 'MONTHLY RETAINER' },
+              { n: '03', title: 'On-demand advisory', desc: 'Access to Francesco for async reviews, key hiring decisions, architecture questions, and investor Q&A.', badge: 'HOURLY' },
+            ].map(s => (
+              <div key={s.n} className="how-step">
+                <div className="how-step-n">{s.n}</div>
+                <div className="how-step-body"><h4>{s.title}</h4><p>{s.desc}</p><span className="step-badge">{s.badge}</span></div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-cta">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a strategy call →</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-section">
+        <div className="container">
+          <h2>Need senior technical<br />leadership?</h2>
+          <p>Book a free 30-minute call with Francesco. No pitch — just an honest conversation about your tech challenges.</p>
+          <div className="cta-btns">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Talk to Francesco →</a>
+            <a href="mailto:hello@tergomedia.com" className="btn btn-ol btn-lg">hello@tergomedia.com</a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

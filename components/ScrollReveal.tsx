@@ -6,7 +6,6 @@ export default function ScrollReveal() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Small delay so new page DOM is painted before we observe
     const timer = setTimeout(() => {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((e) => {
@@ -18,9 +17,8 @@ export default function ScrollReveal() {
       }, { threshold: 0.12 });
 
       document
-        .querySelectorAll('.cell,.pc-service,.review-card,.team-card,.stat,.reveal')
+        .querySelectorAll('.svc-card,.sc-card,.sector-cell,.port-card,.testi-card,.team-card,.stat-item,.how-step,.office-card,.reveal')
         .forEach((el, i) => {
-          // Reset in case we navigated back to a page we've seen
           el.classList.remove('visible');
           el.classList.add('reveal');
           if (i % 3 === 1) el.classList.add('reveal-delay-1');
@@ -29,7 +27,7 @@ export default function ScrollReveal() {
         });
 
       return () => io.disconnect();
-    }, 50);
+    }, 60);
 
     return () => clearTimeout(timer);
   }, [pathname]);

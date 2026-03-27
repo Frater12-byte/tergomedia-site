@@ -1,32 +1,22 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-const DESKTOP_LINKS = [
+const LINKS = [
   { href: '/services', label: 'Services' },
-  { href: '/sectors',  label: 'Sectors' },
-  { href: '/portfolio',label: 'Portfolio' },
-  { href: '/about',    label: 'About' },
-  { href: '/contact',  label: 'Contact' },
-];
-const MOBILE_LINKS = [
-  { href: '/',         label: 'Home' },
-  { href: '/services', label: 'Services' },
-  { href: '/sectors',  label: 'Sectors' },
-  { href: '/tools',    label: 'Tools' },
-  { href: '/portfolio',label: 'Portfolio' },
-  { href: '/about',    label: 'About' },
-  { href: '/contact',  label: 'Contact' },
+  { href: '/sectors', label: 'Sectors' },
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setOpen(false); }, [pathname]);
-
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -37,60 +27,54 @@ export default function Nav() {
 
   return (
     <>
-      <div className="nav-wrap">
-        <div className="nav-inner">
-          <div className="nav-logo">
-            <Link href="/"><Image src="/logo.png" alt="Tergo Media — AI Automation & Custom Software Agency" width={180} height={50} style={{objectFit:'contain',objectPosition:'left center'}} priority /></Link>
-          </div>
-
-          {/* Desktop nav */}
-          <div className="nav-links">
-            {DESKTOP_LINKS.map(l => (
-              <Link key={l.href} href={l.href} className={isActive(l.href) ? 'active' : ''}>
-                {l.label}
-              </Link>
-            ))}
-            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y nav-cta">Book a call</a>
-          </div>
-
-          {/* Hamburger button */}
-          <button
-            className="ham-btn"
-            onClick={() => setOpen(o => !o)}
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open}
-          >
-            <span className={`ham-line ${open ? 'open' : ''}`} />
-            <span className={`ham-line mid ${open ? 'open' : ''}`} />
-            <span className={`ham-line ${open ? 'open' : ''}`} />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile overlay */}
-      <div className={`mob-overlay ${open ? 'open' : ''}`} onClick={() => setOpen(false)} />
-      <nav className={`mob-menu ${open ? 'open' : ''}`}>
-        <div className="mob-menu-inner">
-          {MOBILE_LINKS.map(l => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`mob-link ${isActive(l.href) ? 'mob-active' : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              <span>{l.label}</span>
-              <span className="mob-arrow">→</span>
-            </Link>
+      <nav className="nav-outer">
+        <Link href="/" className="nav-logo">Tergo<span>.</span></Link>
+        <ul className="nav-links">
+          {LINKS.map(l => (
+            <li key={l.href}>
+              <Link href={l.href} className={isActive(l.href) ? 'active' : ''}>{l.label}</Link>
+            </li>
           ))}
-          <div className="mob-cta-wrap">
-            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="mob-cta-btn">
-              Book a free call →
-            </a>
-            <a href="mailto:hello@tergomedia.com" className="mob-cta-email">hello@tergomedia.com</a>
-            <div className="mob-offices">Dubai · Bucharest · Milan</div>
-          </div>
-        </div>
+        </ul>
+        <a
+          href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/"
+          target="_blank"
+          rel="noreferrer"
+          className="btn btn-y nav-cta"
+        >
+          Book a call →
+        </a>
+        <button
+          className={`hamburger${open ? ' open' : ''}`}
+          onClick={() => setOpen(o => !o)}
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+        >
+          <span /><span /><span />
+        </button>
       </nav>
+
+      {open && (
+        <div
+          style={{ position: 'fixed', inset: 0, zIndex: 198 }}
+          onClick={() => setOpen(false)}
+        />
+      )}
+      <div className={`mob-menu${open ? ' open' : ''}`}>
+        <Link href="/" onClick={() => setOpen(false)}>Home</Link>
+        {LINKS.map(l => (
+          <Link key={l.href} href={l.href} onClick={() => setOpen(false)}>{l.label}</Link>
+        ))}
+        <a
+          href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/"
+          target="_blank"
+          rel="noreferrer"
+          className="btn btn-y"
+          onClick={() => setOpen(false)}
+        >
+          Book a free call →
+        </a>
+      </div>
     </>
   );
 }

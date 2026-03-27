@@ -1,71 +1,94 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
-import { FlowGraphic, CtaBar } from '@/components/Graphics';
-import RealEstateCalc from './RealEstateCalc';
+import type { Metadata } from 'next';
+
 export const metadata: Metadata = {
-  title: 'AI Automation for Real Estate Brokerages — Lead Routing & CRM | Tergo Media',
-  description: 'Lead routing, CRM automation, AI follow-up, and document processing for real estate brokerages. Built for the Dubai and GCC property market.',
-  alternates: { canonical: 'https://www.tergomedia.com/sectors/real-estate' },
+  title: 'Real Estate — Tergo Media',
+  description: 'AI automation and custom software for real estate companies. Lead qualification, WhatsApp AI, CRM integration, and property portals across the Gulf and Europe.',
 };
-export default function RealEstate() { return (<>
-  <div className="hero"><div className="hero-grid-bg" />
-    <div className="hero-inner">
-      <div>
-        <div className="eyebrow y">Real estate · Dubai</div>
-        <h1>We build the<br/>tech that<br/><em className="y">closes</em><br/>more deals.</h1>
-        <p className="hero-desc">The brokerages winning in Dubai today are not the biggest — they are the ones <strong>doing more with less.</strong> Automating pipelines, responding in seconds, not hours.</p>
-        <div className="btn-row"><Link href="/contact" className="btn btn-y">Book a free audit →</Link><a href="https://analyzer.tergomedia.com" className="btn btn-outline" target="_blank" rel="noreferrer">Try the Revenue Analyzer</a></div>
-      </div>
-      <div><FlowGraphic nodes={[{text:"Lead from Bayut / web form",status:"Trigger"},{text:"AI qualifies in 10 seconds",status:"Running"},{text:"WhatsApp sent instantly",status:"Queued"},{text:"Agent notified with brief",status:"Queued"},{text:"CRM & pipeline updated",status:"Queued"}]} title="Dubai brokerage lead flow" resultLabel="Avg. response time" resultText="18 minutes → under 90 seconds" /></div>
-    </div>
-  </div>
-  <div className="stats-fw fw-grid g5s">
-    {[["68%","of leads go cold in under 1 hour","y"],["4 hrs","lost daily per agent to manual admin","c"],["1 in 3","deals lost to slow or missed follow-up","y"],["90 sec","avg response time with our systems","p"],["2 wks","average setup time for CRM automation","c"]].map(([n,l,c])=>(<div className="stat" key={n}><div className={`stat-n ${c}`}>{n}</div><div className="stat-l">{l}</div></div>))}
-  </div>
-  <div className="sec">What we build for brokerages</div>
-  <div className="fw fw-grid g4">
-    {[{n:"01",t:"WhatsApp chatbot & listings bot",d:"Answers queries, quotes prices, books viewings 24/7 — directly from your Bayut & PropertyFinder feed.",tag:"Live in 2 weeks"},{n:"02",t:"Automated lead follow-up",d:"Instant WhatsApp the moment a lead comes in. Email sequences at day 1, 3, 7. Agents only step in when someone replies.",tag:"Live in 2 weeks"},{n:"03",t:"AI document generator",d:"Fill one form — get a fully formatted MOU, offer letter, or tenancy contract PDF in 10 seconds.",tag:"Live in 3–4 weeks"},{n:"04",t:"Brokerage performance dashboard",d:"Live pipeline in AED, per-agent conversion, portal ROI — on your phone, real time, no spreadsheets.",tag:"Real-time · Mobile"}].map(s=>(<div className="cell at-y" key={s.n}><div className="num">{s.n}</div><h3>{s.t}</h3><p>{s.d}</p><span className="tag y">{s.tag}</span></div>))}
-  </div>
-  <div className="sec">Free tool — try it now</div>
-  <div className="fw fw-grid g2">
-    <div className="cell at-y pad-lg"><span className="tag y" style={{marginBottom:14,display:"inline-block"}}>Live tool · Free · No sign-up</span><h3>Brokerage Revenue Analyzer</h3><p style={{marginBottom:16}}>Answer 9 questions about your brokerage. Get a precise <strong>AED revenue leakage figure</strong> and an AI-written diagnosis — in under 3 minutes.</p><a className="btn btn-y" href="https://analyzer.tergomedia.com" target="_blank" rel="noreferrer">Launch the analyzer →</a></div>
-    <div className="cell"><RealEstateCalc /></div>
-  </div>
-  <div className="sec">Case studies</div>
-  <div className="fw fw-grid g3">
-    {[{tc:"y",lbl:"Case study · CRM Automation",t:"Lead pipeline in 12 days",mets:[{b:"18 min",bc:"y",s:"avg lead response",was:"was 4+ hours"},{b:"47%",bc:"c",s:"lead-to-viewing rate",was:"was 12%"}],q:"We used to lose leads before we even knew they existed. Now every inquiry gets a response in minutes."},{tc:"c",lbl:"Case study · WhatsApp Bot",t:"Viewings on autopilot",mets:[{b:"60%",bc:"c",s:"bookings without agent input",was:""},{b:"4.8★",bc:"p",s:"client satisfaction from week one",was:""}],q:"The bot handles everything until someone is ready to sign. Our agents only talk to serious buyers now."},{tc:"y",lbl:"Case study · Analytics",t:"22% revenue growth in Q1",mets:[{b:"AED 18K",bc:"y",s:"saved monthly on wasted ad spend",was:""},{b:"+30%",bc:"c",s:"top-agent productivity after dashboards went live",was:""}],q:"We finally know which agents and areas to double down on. This paid for itself in the first month."}].map(cs=>(<div className={`cell at-${cs.tc}`} key={cs.t}><div style={{fontSize:9,color:"var(--m)",letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>{cs.lbl}</div><h3>{cs.t}</h3>{cs.mets.map((m,i)=>(<div key={i} className="met"><span className={`met-b ${m.bc}`}>{m.b}</span><span className="met-s">{m.s}{m.was&&<span className="met-was">{m.was}</span>}</span></div>))}<blockquote>{cs.q}</blockquote></div>))}
-  </div>
-  <div className="sec">What a typical Dubai brokerage gains in 90 days</div>
-  <div className="fw fw-grid g3">
-    {[
-      {tc:'y',m:'Month 1',t:'Zero cold leads',d:'CRM automation live, WhatsApp follow-up running. Every lead gets a response in under 90 seconds. Your team stops chasing and starts closing.'},
-      {tc:'c',m:'Month 2',t:'Full pipeline visibility',d:'Performance dashboard live. Portal ROI tracked per listing. Every agent knows their conversion rate. Management has real numbers, not guesses.'},
-      {tc:'p',m:'Month 3',t:'Admin eliminated',d:'AI document generator deployed. MOUs, offer letters, tenancy contracts generated in 10 seconds. 10+ hours of admin per agent per week — gone.'},
-    ].map(s=>(
-      <div className={`cell at-${s.tc}`} key={s.m}>
-        <div style={{fontSize:9,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:`var(--${s.tc})`,marginBottom:8}}>{s.m}</div>
-        <h3>{s.t}</h3><p style={{marginTop:8}}>{s.d}</p>
-      </div>
-    ))}
-  </div>
-  <div className="sec">Specifically built for the Dubai market</div>
-  <div className="fw fw-grid g1">
-    <div className="cell pad-lg">
-      <div className="fw-grid g2" style={{background:'transparent',gap:16,border:'none'}}>
-        {[
-          {tc:'y',t:'Bayut & PropertyFinder integration',d:'Listings auto-sync. Leads captured directly from both portals into your CRM. No manual export, no missed inquiries.'},
-          {tc:'c',t:'DLD transaction data',d:'Market intelligence pulled from Dubai Land Department data. Price trends, transaction volumes, area comparisons — built into your dashboard.'},
-          {tc:'y',t:'Multilingual AI responses',d:'Arabic, English, Russian, and Chinese. Your chatbot and follow-up sequences respond in the language your lead used. No manual translation.'},
-          {tc:'p',t:'AED-denominated reporting',d:'All dashboards, revenue figures, and KPIs shown in AED. Commission splits, pipeline value, portal ROI — in your currency.'},
-          {tc:'c',t:'RERA compliance documents',d:'MOU templates, Form A/B/F, tenancy contracts — pre-loaded, auto-filled from lead data, RERA-compliant. Ready in seconds.'},
-        ].map(p=>(
-          <div key={p.t} style={{borderTop:`2px solid var(--${p.tc})`,padding:'20px 0'}}>
-            <div style={{fontSize:11,fontWeight:800,color:`var(--${p.tc})`,marginBottom:6}}>{p.t}</div>
-            <p>{p.d}</p>
+
+export default function RealEstatePage() {
+  return (
+    <>
+      <section className="page-hero">
+        <svg className="poly-bg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="200,0 600,0 700,300 400,500 100,400 0,200" fill="rgba(249,202,0,0.015)" stroke="#f9ca00" strokeWidth="0.5" strokeOpacity="0.1"/>
+          <circle cx="200" cy="0" r="2" fill="#f9ca00" fillOpacity="0.18"/>
+        </svg>
+        <div className="hero-glow-1" /><div className="hero-glow-2" />
+        <div className="container">
+          <div className="page-hero-eyebrow">Sector — Real Estate</div>
+          <h1>AI that closes<br /><em>more deals.</em></h1>
+          <p>Every inbound lead responded to in 90 seconds. Every follow-up automated. Every agent focused on selling — not admin.</p>
+          <div className="hero-ctas">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a discovery call →</a>
+            <Link href="/portfolio" className="btn btn-ol btn-lg">See case studies</Link>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-  <CtaBar h="What could your brokerage look like in 90 days?" sub="Book a free 30-minute discovery call. No commitment — just a clear picture of what is possible." />
-</>); }
+          <div className="met-row">
+            <div className="met"><div className="met-b">90<span>s</span></div><div className="met-s">Lead response<br />time</div></div>
+            <div className="met"><div className="met-b">94<span>%</span></div><div className="met-s">Enquiries<br />auto-handled</div></div>
+            <div className="met"><div className="met-b">3x</div><div className="met-s">Lead handling<br />capacity</div></div>
+            <div className="met"><div className="met-b">$2.1<span>M</span></div><div className="met-s">Pipeline added<br />for RE/MAX Gulf</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-dots">
+        <div className="container">
+          <span className="sec-label">What we automate</span>
+          <h2 className="sec-title">Every touchpoint in the<br />real estate sales cycle.</h2>
+          <p className="sec-sub">From the first enquiry to the signed contract — we automate the repeatable work so your agents can focus on relationships.</p>
+          <div className="services-grid">
+            {[
+              { num: '01', title: 'Lead Qualification AI', desc: 'Every inbound enquiry — WhatsApp, web form, portal listing — is instantly scored, categorised, and routed to the right agent with a full brief.', tags: ['GPT-4o', 'WhatsApp API', 'Lead scoring'] },
+              { num: '02', title: 'Automated Follow-Up', desc: 'Prospects who don\'t reply get a carefully timed follow-up sequence. No lead goes cold. No agent needs to chase manually.', tags: ['n8n', 'Email', 'WhatsApp', 'SMS'] },
+              { num: '03', title: 'CRM Integration', desc: 'Every enquiry, conversation, and outcome flows automatically into your CRM. Full pipeline visibility with zero manual data entry.', tags: ['HubSpot', 'Salesforce', 'Pipedrive'] },
+              { num: '04', title: 'Property Portals', desc: 'Custom listing portals with real-time availability, multi-currency pricing, virtual tour integration, and enquiry capture.', tags: ['Next.js', 'React', 'Custom dev'] },
+              { num: '05', title: 'Agent Performance Reporting', desc: 'Automated weekly reports for every agent: calls made, leads converted, pipeline value, and ranking against team benchmarks.', tags: ['Reporting', 'KPI dashboards', 'Automation'] },
+              { num: '06', title: 'Document Automation', desc: 'Generate tenancy agreements, offer letters, and MOU documents automatically when a deal progresses — pre-filled from CRM data.', tags: ['Document generation', 'E-signature', 'Legal'] },
+            ].map(s => (
+              <div key={s.num} className="svc-card">
+                <span className="svc-num">{s.num}</span>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+                <div className="svc-tags">{s.tags.map(t => <span key={t} className="tag">{t}</span>)}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-light">
+        <div className="container">
+          <span className="sec-label">Case study</span>
+          <h2 className="sec-title">Cocktail Holidays — Dubai</h2>
+          <div className="how-steps" style={{ maxWidth: 640 }}>
+            {[
+              { n: '→', title: 'The problem', desc: 'A luxury property portal in Dubai was receiving 200+ enquiries per week. Agents were taking 4+ hours to respond. Hot leads were going cold.' },
+              { n: '→', title: 'What we built', desc: 'An AI qualification engine connected to WhatsApp. Every enquiry is scored in real time, routed to the right agent, and an initial response is sent within 90 seconds — automatically.' },
+              { n: '→', title: 'The result', desc: '94% of enquiries are fully handled by the AI. Agents only see qualified, ready-to-talk leads. Enquiry volume increased 38% within 60 days of launch.' },
+            ].map(s => (
+              <div key={s.n} className="how-step">
+                <div className="how-step-n" style={{ fontSize: 20 }}>{s.n}</div>
+                <div className="how-step-body"><h4>{s.title}</h4><p>{s.desc}</p></div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-cta">
+            <Link href="/portfolio" className="btn btn-y btn-lg">See full portfolio →</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-section">
+        <div className="container">
+          <h2>Ready to automate<br />your real estate pipeline?</h2>
+          <p>Book a free discovery call. We&apos;ll show you exactly what we&apos;d build for your agency — and what results you can expect.</p>
+          <div className="cta-btns">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Book a free call →</a>
+            <a href="mailto:hello@tergomedia.com" className="btn btn-ol btn-lg">hello@tergomedia.com</a>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

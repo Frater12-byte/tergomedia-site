@@ -5,6 +5,7 @@ import './globals.css';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import Chatbot from '@/components/Chatbot';
+import ScrollReveal from '@/components/ScrollReveal';
 
 const exo2 = Exo_2({
   subsets: ['latin'],
@@ -143,6 +144,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main style={{overflowX: 'hidden', width: '100%'}}>{children}</main>
         <Footer />
         <Chatbot />
+        <ScrollReveal />
       </body>
     </html>
   );

@@ -1,1 +1,4 @@
-{"version":1,"functions":{"/about":{},"/sectors/agriculture":{},"/sectors":{},"/sectors/professional-services":{},"/portfolio":{},"/sectors/travel-hospitality":{},"/services/cto-advisory":{},"/sectors/real-estate":{},"/services":{},"/services/ai-automation":{},"/services/custom-dev":{},"/services/digital-transformation":{},"/":{},"/tools":{}}}
+{
+  "version": 1,
+  "functions": {}
+}

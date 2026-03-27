@@ -1,1 +1,18 @@
-{"/_not-found/page":"/_not-found","/contact/page":"/contact","/sitemap.xml/route":"/sitemap.xml","/sectors/agriculture/page":"/sectors/agriculture","/page":"/","/sectors/page":"/sectors","/about/page":"/about","/sectors/professional-services/page":"/sectors/professional-services","/services/cto-advisory/page":"/services/cto-advisory","/sectors/travel-hospitality/page":"/sectors/travel-hospitality","/services/ai-automation/page":"/services/ai-automation","/portfolio/page":"/portfolio","/sectors/real-estate/page":"/sectors/real-estate","/services/page":"/services","/services/digital-transformation/page":"/services/digital-transformation","/tools/page":"/tools","/services/custom-dev/page":"/services/custom-dev"}
+{
+  "/_not-found/page": "/_not-found",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/",
+  "/about/page": "/about",
+  "/contact/page": "/contact",
+  "/sectors/page": "/sectors",
+  "/sectors/agriculture/page": "/sectors/agriculture",
+  "/portfolio/page": "/portfolio",
+  "/sectors/professional-services/page": "/sectors/professional-services",
+  "/sectors/real-estate/page": "/sectors/real-estate",
+  "/sectors/travel-hospitality/page": "/sectors/travel-hospitality",
+  "/services/cto-advisory/page": "/services/cto-advisory",
+  "/services/page": "/services",
+  "/services/custom-dev/page": "/services/custom-dev",
+  "/services/digital-transformation/page": "/services/digital-transformation",
+  "/services/ai-automation/page": "/services/ai-automation"
+}

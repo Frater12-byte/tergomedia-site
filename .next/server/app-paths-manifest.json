@@ -1,19 +1,18 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/contact/page": "app/contact/page.js",
-  "/sitemap.xml/route": "app/sitemap.xml/route.js",
-  "/sectors/agriculture/page": "app/sectors/agriculture/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
-  "/sectors/page": "app/sectors/page.js",
   "/about/page": "app/about/page.js",
-  "/sectors/professional-services/page": "app/sectors/professional-services/page.js",
-  "/services/cto-advisory/page": "app/services/cto-advisory/page.js",
-  "/sectors/travel-hospitality/page": "app/sectors/travel-hospitality/page.js",
-  "/services/ai-automation/page": "app/services/ai-automation/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/sectors/page": "app/sectors/page.js",
+  "/sectors/agriculture/page": "app/sectors/agriculture/page.js",
   "/portfolio/page": "app/portfolio/page.js",
+  "/sectors/professional-services/page": "app/sectors/professional-services/page.js",
   "/sectors/real-estate/page": "app/sectors/real-estate/page.js",
+  "/sectors/travel-hospitality/page": "app/sectors/travel-hospitality/page.js",
+  "/services/cto-advisory/page": "app/services/cto-advisory/page.js",
   "/services/page": "app/services/page.js",
+  "/services/custom-dev/page": "app/services/custom-dev/page.js",
   "/services/digital-transformation/page": "app/services/digital-transformation/page.js",
-  "/tools/page": "app/tools/page.js",
-  "/services/custom-dev/page": "app/services/custom-dev/page.js"
+  "/services/ai-automation/page": "app/services/ai-automation/page.js"
 }

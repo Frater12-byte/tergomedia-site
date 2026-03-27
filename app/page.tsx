@@ -151,6 +151,7 @@ export default function Home() {
     </div>
 
     {/* ── TESTIMONIALS ── */}
+    <div className="section-dark">
     <div className="sec">What clients say</div>
     <h2 style={{padding:'0 clamp(24px,5vw,72px) 24px',maxWidth:1100,margin:'0 auto',fontSize:'clamp(20px,2.8vw,32px)',fontWeight:700,lineHeight:1.2,letterSpacing:'-0.3px',color:'#fff',fontFamily:"'Exo',sans-serif"}}>
       Trusted by operators across Europe and the GCC
@@ -175,11 +176,13 @@ export default function Home() {
         ))}
       </div>
     </div>
+    </div>
 
     {/* ── OFFICE MAP ── */}
     <OfficesMap />
 
     {/* ── TEAM ── */}
+    <div className="section-dark">
     <div style={{maxWidth:1100,margin:'0 auto',padding:'56px clamp(24px,5vw,72px) 20px'}}>
       <div style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:10,fontWeight:700,letterSpacing:'3px',textTransform:'uppercase',color:'var(--y)',marginBottom:18,fontFamily:"'Exo', sans-serif"}}>
         <span style={{width:18,height:1,background:'var(--y)',display:'inline-block'}}/>
@@ -282,6 +285,7 @@ export default function Home() {
       <p style={{fontSize:13,color:'rgba(255,255,255,0.28)',fontFamily:"'Exo', sans-serif",fontWeight:300,fontStyle:'italic'}}>
         Between the two: commercial leadership and deep technical execution — across Europe and the GCC.
       </p>
+    </div>
     </div>
 
     <CtaBar h="Ready to build something that actually works?" sub="Book a free 30-minute discovery call. No pitch, no commitment — just clarity on what's possible." />

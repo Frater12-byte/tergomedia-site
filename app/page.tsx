@@ -6,6 +6,7 @@ import ROICalculator from '@/components/ROICalculator';
 import AutopilotSection from '@/components/AutopilotSection';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import TestimonialsSection from '@/components/TestimonialsSection';
+import AutomationCarousel from '@/components/AutomationCarousel';
 
 // ── FLOW CARD ──
 const FLOW_STEPS = [
@@ -21,17 +22,29 @@ function FlowCard() {
   const [done, setDone] = useState<number[]>([]);
   useEffect(() => {
     const iv = setInterval(() => {
-      setDone(d => d.includes(active) ? d : [...d, active]);
-      setActive(a => (a + 1) % FLOW_STEPS.length);
+      setActive(a => {
+        const next = (a + 1) % FLOW_STEPS.length;
+        // When looping back to 0, reset done
+        if (next === 0) {
+          setDone([]);
+        } else {
+          setDone(d => d.includes(a) ? d : [...d, a]);
+        }
+        return next;
+      });
     }, 1800);
     return () => clearInterval(iv);
-  }, [active]);
+  }, []);
   return (
     <div className="flow-card">
       <div className="flow-card-label">AI lead automation — live flow</div>
       <div className="flow-steps">
         {FLOW_STEPS.map((s, i) => (
           <div key={i} className={`flow-step${active === i ? ' fs-active' : done.includes(i) ? ' fs-done' : ''}`}>
+            {/* Connector segment — turns green when step i is done */}
+            {i < FLOW_STEPS.length - 1 && (
+              <div className={`flow-connector${done.includes(i) ? ' fc-done' : active === i ? ' fc-active' : ''}`} />
+            )}
             <div className="fsi">{s.icon}</div>
             <div><strong>{s.label}</strong><span>{s.sub}</span></div>
           </div>
@@ -108,7 +121,7 @@ export default function Home() {
         <div className="stats-grid">
           <div className="stat-item"><div className="stat-num">10<span>+</span></div><div className="stat-desc">Years shipping<br />digital products</div></div>
           <div className="stat-item"><div className="stat-num">40<span>+</span></div><div className="stat-desc">Automation systems<br />live in production</div></div>
-          <div className="stat-item"><div className="stat-num">$7M<span>+</span></div><div className="stat-desc">Revenue generated<br />across clients</div></div>
+          <div className="stat-item"><div className="stat-num">$28M<span>+</span></div><div className="stat-desc">Revenue unlocked<br />across clients</div></div>
           <div className="stat-item"><div className="stat-num">3</div><div className="stat-desc">Offices — UAE,<br />Romania, Italy</div></div>
         </div>
       </div>
@@ -123,7 +136,7 @@ export default function Home() {
             {[
               { num: '01 — AI & AUTOMATION', title: 'AI & Automation', desc: 'Lead capture, document processing, AI agents, reporting — all automated. Your team focuses on growth, not admin.', tags: ['n8n','Make','GPT-4o','Claude','WhatsApp API'], href: '/services/ai-automation' },
               { num: '02 — CUSTOM DEVELOPMENT', title: 'Custom Web & Mobile Apps', desc: 'React, Next.js, Node.js, Python, PHP, native iOS & Android. Production-grade, shipped in weeks not months.', tags: ['React','Next.js','Python','PHP','iOS','Android'], href: '/services/custom-dev' },
-              { num: '03 — FRACTIONAL CTO', title: 'CTO Advisory', desc: 'Fractional CTO for companies that need senior technical leadership without a full-time hire. Architecture, team, strategy.', tags: ['Tech strategy','Architecture','Team leadership'], href: '/services/cto-advisory' },
+              { num: '03 — FRACTIONAL CTO', title: 'CTO Advisory', desc: 'Fractional CTO for companies that need senior technical leadership without a full-time hire. Architecture, team, vendor selection, M&A tech advisory, and engineering hiring.', tags: ['Tech strategy','Architecture','Team leadership','UiPath','Microsoft Power Platform','M&A Tech Advisory','Vendor Selection','Engineering Hiring'], href: '/services/cto-advisory' },
               { num: '04 — TRANSFORMATION', title: 'Digital Transformation', desc: 'Full-scope digital audits and transformation programmes. We map inefficiencies and implement the systems to fix them.', tags: ['Digital audit','Process redesign','Change mgmt'], href: '/services/digital-transformation' },
             ].map(s => (
               <div key={s.href} className="svc-card">
@@ -138,36 +151,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AUTOMATION SHOWCASE */}
+      {/* AUTOMATION SHOWCASE — 18-card scrolling carousel */}
       <section className="section auto-showcase section-shimmer" id="automation">
-        <svg className="poly-bg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="0,0 300,60 220,300 0,260" fill="none" stroke="rgba(255,255,255,.07)" strokeWidth="0.5"/>
-          <polygon points="1140,0 1440,0 1440,200 1300,260" fill="none" stroke="rgba(255,255,255,.07)" strokeWidth="0.5"/>
-          <circle cx="300" cy="60" r="2" fill="rgba(255,255,255,1)" fillOpacity="0.1"/>
-          <circle cx="900" cy="320" r="1.5" fill="rgba(255,255,255,1)" fillOpacity="0.12"/>
-        </svg>
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <span className="sec-label">Automation library</span>
-          <h2 className="sec-title">Real automations.<br />Real results.</h2>
-          <p className="sec-sub">Six live automation systems we&apos;ve built and deployed across industries.</p>
-          <div className="showcase-grid">
-            {[
-              { color: '#f9ca00', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, title: 'AI Lead Response', desc: 'Every inbound enquiry gets a personalised WhatsApp + email response in under 90 seconds. AI reads intent, writes the message, routes to the best agent.', tags: ['GPT-4o','WhatsApp API','n8n','HubSpot'], result: <>Response time cut from <span className="sc-g">4h → 90s</span></> },
-              { color: '#00c8ff', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>, title: 'Invoice & Document AI', desc: 'Invoices and contracts are read by AI, data extracted, validated, and synced to your accounting system — no manual entry, no errors.', tags: ['OCR','Claude','Make','Xero / QuickBooks'], result: <>Manual entry <span className="sc-b">eliminated</span> — 100%</> },
-              { color: '#b06eff', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>, title: 'KPI Dashboard Auto-Report', desc: "Every Monday morning your leadership team receives a fully formatted PDF report with last week's KPIs — generated and sent without a single click.", tags: ['Google Sheets','Slack','PDF generation','n8n'], result: <>38 hrs/mo <span className="sc-g">saved on reporting</span></> },
-              { color: '#00ff9d', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>, title: 'Client Onboarding Pipeline', desc: 'When a deal is marked Won in CRM, a full onboarding sequence fires: welcome email, document request, kick-off invite, Slack channel — all within 2 minutes.', tags: ['HubSpot','Slack','Google Calendar','DocuSign'], result: <>Onboarding time <span className="sc-g">cut by 70%</span></> },
-              { color: '#f9ca00', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>, title: 'IoT Alert & Escalation', desc: 'Sensor thresholds breach → system classifies severity → right team member alerted via SMS/email/Slack with context and recommended action.', tags: ['MQTT','Node.js','Twilio SMS','PagerDuty'], result: <>Alert response from <span className="sc-b">hours → minutes</span></> },
-              { color: '#00c8ff', icon: <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>, title: 'Marketplace Price Sync', desc: 'Product pricing and availability stay in sync across your website, Amazon, Noon, and distributor portals — updated automatically whenever your catalogue changes.', tags: ['WooCommerce','Amazon API','Make','Webhooks'], result: <>Sync errors <span className="sc-g">dropped to zero</span></> },
-            ].map((c, i) => (
-              <div key={i} className="sc-card">
-                <div className="sc-icon" style={{ borderColor: `${c.color}4d` }}><svg viewBox="0 0 24 24" stroke={c.color} strokeWidth="1.5" fill="none">{c.icon.props.children}</svg></div>
-                <h3>{c.title}</h3>
-                <p>{c.desc}</p>
-                <div className="sc-tags">{c.tags.map(t => <span key={t} className="tag">{t}</span>)}</div>
-                <div className="sc-result">{c.result}</div>
-              </div>
-            ))}
-          </div>
+          <h2 className="sec-title">18+ automations.<br />Real results.</h2>
+          <p className="sec-sub">Live automation systems we&apos;ve built and deployed across industries. Hover to pause.</p>
+        </div>
+        <AutomationCarousel />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div className="mt-cta">
             <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Build my automation →</a>
             <a href="#roi" className="btn btn-ol">Calculate my ROI</a>
@@ -279,28 +271,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTORS */}
+      {/* SECTORS — 8 industries */}
       <section className="section section-dots" id="sectors">
         <div className="container">
           <span className="sec-label">Industries</span>
           <h2 className="sec-title">We know your industry.</h2>
           <p className="sec-sub">Deep domain knowledge means we build systems that actually fit how your business works.</p>
-          <div className="sectors-grid">
+          <div className="sectors-grid sectors-grid-8">
             <Link href="/sectors/real-estate" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-              <h3>Real Estate</h3><p>Lead automation, CRM integration, portal syncing, property management systems.</p><span className="sec-lnk">EXPLORE →</span>
+              <h3>Real Estate</h3><p>Lead automation, CRM integration, portal syncing, property management.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
             <Link href="/sectors/travel-hospitality" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M3 17l3-8 4 6 3-4 4 6"/></svg></div>
-              <h3>Travel & Hospitality</h3><p>Booking engines, channel managers, guest communication automation, revenue tools.</p><span className="sec-lnk">EXPLORE →</span>
+              <h3>Travel & Hospitality</h3><p>Booking engines, channel managers, guest comms, revenue tools.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
             <Link href="/sectors/agriculture" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M12 22V12M12 12C12 12 7 6 2 6M12 12C12 12 17 6 22 6"/><path d="M2 6c0 0 2 5 10 6M22 6c0 0-2 5-10 6"/></svg></div>
-              <h3>Agriculture</h3><p>IoT sensor networks, crop monitoring, automated alerts, supply chain tracking.</p><span className="sec-lnk">EXPLORE →</span>
+              <h3>Agriculture</h3><p>IoT sensor networks, crop monitoring, automated alerts, supply chain.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
             <Link href="/sectors/professional-services" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
               <h3>Professional Services</h3><p>Client onboarding pipelines, document automation, billing, KPI reporting.</p><span className="sec-lnk">EXPLORE →</span>
+            </Link>
+            <Link href="/sectors" className="sector-cell">
+              <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
+              <h3>E-commerce</h3><p>Price sync, inventory management, order automation, marketplace integration.</p><span className="sec-lnk">EXPLORE →</span>
+            </Link>
+            <Link href="/sectors" className="sector-cell">
+              <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+              <h3>Finance & Legal</h3><p>Document AI, contract management, compliance monitoring, reporting.</p><span className="sec-lnk">EXPLORE →</span>
+            </Link>
+            <Link href="/sectors" className="sector-cell">
+              <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+              <h3>Healthcare</h3><p>Patient onboarding, document routing, appointment automation, compliance.</p><span className="sec-lnk">EXPLORE →</span>
+            </Link>
+            <Link href="/sectors" className="sector-cell">
+              <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+              <h3>Logistics & Supply Chain</h3><p>Fleet tracking, customs docs, supplier management, automated alerts.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
           </div>
         </div>
@@ -336,6 +344,17 @@ export default function Home() {
                 <p>Full-stack engineer and AI architect with 10+ years building production systems. Specialises in automation infrastructure, AI pipelines, and custom software at scale.</p>
                 <div className="skill-tags"><span className="sk-tag">React / Next.js</span><span className="sk-tag">Node.js / Python</span><span className="sk-tag">AI pipelines</span><span className="sk-tag">n8n / Make</span></div>
                 <a href="https://www.linkedin.com/in/francescoterragni/" target="_blank" rel="noreferrer" className="team-li">LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+
+          {/* +13 Engineers block */}
+          <div className="engineers-block">
+            <div className="engineers-block-inner">
+              <div className="eng-num">+13</div>
+              <div className="eng-text">
+                <div className="eng-title">Engineers based in Romania</div>
+                <p>Our engineering team is distributed across Bucharest, Cluj-Napoca, and Timișoara — senior developers specialising in React, Node.js, Python, AI pipelines, and IoT systems. No juniors. No outsourcing.</p>
               </div>
             </div>
           </div>

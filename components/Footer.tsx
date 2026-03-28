@@ -1,4 +1,6 @@
+/* eslint-disable */
 import Link from 'next/link';
+import Image from 'next/image';
 
 const SERVICES = [
   { href: '/services/ai-automation', label: 'AI & Automation' },
@@ -24,7 +26,15 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <Link href="/" className="footer-logo">Tergo<span>.</span></Link>
+            <Link href="/" className="footer-logo-img">
+              <Image
+                src="/logo.png"
+                alt="Tergo Media"
+                height={28}
+                width={100}
+                style={{ height: 28, width: 'auto', display: 'block', filter: 'brightness(0) invert(1)', marginBottom: 10 }}
+              />
+            </Link>
             <p>AI · Automation · Custom Software<br />Dubai · Bucharest · Milan</p>
             <div className="footer-social">
               <a href="https://www.linkedin.com/company/tergomedia" target="_blank" rel="noreferrer" title="LinkedIn">in</a>
@@ -56,6 +66,16 @@ export default function Footer() {
               <div className="f-off"><div className="f-dot" /><div><strong>Bucharest, Romania</strong><span>Engineering hub</span></div></div>
               <div className="f-off"><div className="f-dot" /><div><strong>Milan, Italy</strong><span>European clients</span></div></div>
             </div>
+          </div>
+        </div>
+
+        {/* EU Funding logos */}
+        <div className="footer-eu">
+          <div className="footer-eu-label">Co-financed by the European Union</div>
+          <div className="footer-eu-logos">
+            <img src="/Funds1.svg" alt="EU Fund 1" className="footer-eu-logo" />
+            <img src="/Funds2.svg" alt="EU Fund 2" className="footer-eu-logo" />
+            <img src="/Funds3.svg" alt="EU Fund 3" className="footer-eu-logo" />
           </div>
         </div>
 

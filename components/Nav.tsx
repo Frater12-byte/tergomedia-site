@@ -1,5 +1,7 @@
+/* eslint-disable */
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -28,7 +30,9 @@ export default function Nav() {
   return (
     <>
       <nav className="nav-outer">
-        <Link href="/" className="nav-logo">Tergo<span>.</span></Link>
+        <Link href="/" className="nav-logo-img">
+          <Image src="/logo.png" alt="Tergo Media" height={36} width={120} style={{ height: 36, width: 'auto', display: 'block' }} priority />
+        </Link>
         <ul className="nav-links">
           {LINKS.map(l => (
             <li key={l.href}>

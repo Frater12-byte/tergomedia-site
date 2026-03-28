@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="48" viewBox="0 0 120 48">
+  <rect width="120" height="48" fill="#003399"/>
+  <circle cx="60" cy="24" r="14" fill="none" stroke="#FFD700" stroke-width="1"/>
+  <text x="60" y="28" text-anchor="middle" fill="#FFD700" font-size="8" font-family="Arial">EU FUND</text>
+</svg>

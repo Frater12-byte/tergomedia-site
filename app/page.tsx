@@ -7,6 +7,8 @@ import AutopilotSection from '@/components/AutopilotSection';
 import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import AutomationCarousel from '@/components/AutomationCarousel';
+import CountUp from '@/components/CountUp';
+import WorldMap from '@/components/WorldMap';
 
 // ── FLOW CARD ──
 const FLOW_STEPS = [
@@ -119,10 +121,10 @@ export default function Home() {
       {/* STATS */}
       <div className="stats-bar">
         <div className="stats-grid">
-          <div className="stat-item"><div className="stat-num">10<span>+</span></div><div className="stat-desc">Years shipping<br />digital products</div></div>
-          <div className="stat-item"><div className="stat-num">40<span>+</span></div><div className="stat-desc">Automation systems<br />live in production</div></div>
-          <div className="stat-item"><div className="stat-num">$28M<span>+</span></div><div className="stat-desc">Revenue unlocked<br />across clients</div></div>
-          <div className="stat-item"><div className="stat-num">3</div><div className="stat-desc">Offices — UAE,<br />Romania, Italy</div></div>
+          <div className="stat-item"><div className="stat-num"><CountUp end={10} suffix="+" /></div><div className="stat-desc">Years shipping<br />digital products</div></div>
+          <div className="stat-item"><div className="stat-num"><CountUp end={40} suffix="+" /></div><div className="stat-desc">Automation systems<br />live in production</div></div>
+          <div className="stat-item"><div className="stat-num"><CountUp end={28} prefix="$" suffix="M+" /></div><div className="stat-desc">Revenue unlocked<br />across clients</div></div>
+          <div className="stat-item"><div className="stat-num"><CountUp end={3} /></div><div className="stat-desc">Offices — UAE,<br />Romania, Italy</div></div>
         </div>
       </div>
 
@@ -369,28 +371,7 @@ export default function Home() {
           <p className="sec-sub">We work across time zones so your project never sleeps.</p>
           <div className="offices-layout">
             <div>
-              <div className="world-map-wrap">
-                <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', width: '100%', padding: '24px' }}>
-                  <path d="M60,120 L120,100 L160,110 L180,130 L160,150 L120,160 L80,150 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
-                  <path d="M200,70 L280,55 L340,65 L380,90 L370,120 L330,135 L280,130 L240,115 L210,100 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
-                  <path d="M380,55 L450,45 L520,55 L560,75 L580,100 L560,125 L520,140 L460,145 L420,135 L390,110 L375,85 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
-                  <path d="M560,105 L620,95 L660,110 L680,135 L660,155 L620,160 L580,150 L560,130 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
-                  <path d="M680,90 L760,80 L820,95 L850,120 L840,150 L800,165 L750,168 L700,155 L675,128 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
-                  <path d="M200,175 L260,155 L320,168 L340,200 L320,228 L260,238 L210,222 L190,195 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" strokeWidth="0.5"/>
-                  {/* Connection lines */}
-                  <line x1="455" y1="102" x2="498" y2="96" stroke="rgba(255,255,255,.12)" strokeWidth="0.8" strokeDasharray="4,4"/>
-                  <line x1="498" y1="96" x2="628" y2="130" stroke="rgba(255,255,255,.12)" strokeWidth="0.8" strokeDasharray="4,4"/>
-                  {/* Milan */}
-                  <circle cx="455" cy="102" r="6" fill="#00c8ff" opacity="0.9"/><circle cx="455" cy="102" r="14" fill="#00c8ff" opacity="0.12"/>
-                  <text x="440" y="90" fill="rgba(255,255,255,.7)" fontSize="11" fontFamily="'Exo 2',sans-serif" fontWeight="700">Milan</text>
-                  {/* Bucharest */}
-                  <circle cx="498" cy="96" r="6" fill="#00ff9d" opacity="0.9"/><circle cx="498" cy="96" r="14" fill="#00ff9d" opacity="0.12"/>
-                  <text x="510" y="92" fill="rgba(255,255,255,.7)" fontSize="11" fontFamily="'Exo 2',sans-serif" fontWeight="700">Bucharest</text>
-                  {/* Dubai */}
-                  <circle cx="628" cy="130" r="7" fill="#f9ca00" opacity="0.9"/><circle cx="628" cy="130" r="16" fill="#f9ca00" opacity="0.12"/>
-                  <text x="641" y="126" fill="rgba(255,255,255,.7)" fontSize="11" fontFamily="'Exo 2',sans-serif" fontWeight="700">Dubai</text>
-                </svg>
-              </div>
+              <WorldMap />
               <div className="office-city-row">
                 <div className="ofc-city dubai"><div className="ofc-dot" /><span className="ofc-name">Dubai</span><span className="ofc-detail">GMT+4 · HQ</span></div>
                 <div className="ofc-city bucharest"><div className="ofc-dot" /><span className="ofc-name">Bucharest</span><span className="ofc-detail">GMT+2 · Engineering</span></div>

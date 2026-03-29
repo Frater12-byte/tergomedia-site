@@ -44,11 +44,11 @@ export default function AIAutomationPage() {
           <div className="showcase-grid">
             {[
               { color: '#f9ca00', title: 'AI Lead Response', desc: 'Every inbound enquiry — regardless of source or time — gets a personalised response in under 90 seconds. AI reads intent, writes the message, routes to the best agent.', tags: ['GPT-4o','WhatsApp API','n8n','HubSpot'] },
-              { color: '#00c8ff', title: 'Invoice & Document AI', desc: 'Invoices, contracts, and supplier documents are read by AI, data extracted, validated, and synced to your accounting system — no manual entry, no errors.', tags: ['OCR','Claude','Make','Xero / QuickBooks'] },
-              { color: '#b06eff', title: 'KPI Dashboard Auto-Report', desc: 'Your leadership team receives a fully formatted PDF report every Monday morning with last week\'s KPIs — generated and sent without a single click.', tags: ['Google Sheets','Slack','PDF generation','n8n'] },
-              { color: '#00ff9d', title: 'Client Onboarding Pipeline', desc: 'When a deal is marked Won in CRM, a full onboarding sequence fires: welcome email, document request, kick-off invite, Slack channel — all within 2 minutes.', tags: ['HubSpot','Slack','Google Calendar','DocuSign'] },
+              { color: '#f9ca00', title: 'Invoice & Document AI', desc: 'Invoices, contracts, and supplier documents are read by AI, data extracted, validated, and synced to your accounting system — no manual entry, no errors.', tags: ['OCR','Claude','Make','Xero / QuickBooks'] },
+              { color: '#f9ca00', title: 'KPI Dashboard Auto-Report', desc: 'Your leadership team receives a fully formatted PDF report every Monday morning with last week\'s KPIs — generated and sent without a single click.', tags: ['Google Sheets','Slack','PDF generation','n8n'] },
+              { color: '#f9ca00', title: 'Client Onboarding Pipeline', desc: 'When a deal is marked Won in CRM, a full onboarding sequence fires: welcome email, document request, kick-off invite, Slack channel — all within 2 minutes.', tags: ['HubSpot','Slack','Google Calendar','DocuSign'] },
               { color: '#f9ca00', title: 'IoT Alert & Escalation', desc: 'Sensor thresholds breach → system classifies severity → right team member alerted via SMS/email/Slack with context and recommended action.', tags: ['MQTT','Node.js','Twilio SMS','PagerDuty'] },
-              { color: '#00c8ff', title: 'Marketplace Price Sync', desc: 'Product pricing and availability stay in sync across your website, Amazon, Noon, and distributor portals — updated automatically whenever your master catalogue changes.', tags: ['WooCommerce','Amazon API','Make','Webhooks'] },
+              { color: '#f9ca00', title: 'Marketplace Price Sync', desc: 'Product pricing and availability stay in sync across your website, Amazon, Noon, and distributor portals — updated automatically whenever your master catalogue changes.', tags: ['WooCommerce','Amazon API','Make','Webhooks'] },
             ].map((c, i) => (
               <div key={i} className="sc-card">
                 <div className="sc-icon" style={{ borderColor: `${c.color}4d` }}>

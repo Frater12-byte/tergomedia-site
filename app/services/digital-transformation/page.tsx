@@ -11,8 +11,8 @@ export default function DigitalTransformationPage() {
     <>
       <section className="page-hero">
         <svg className="poly-bg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="900,0 1440,80 1440,320 1100,420 800,280 850,0" fill="rgba(0,255,157,0.015)" stroke="#00ff9d" strokeWidth="0.5" strokeOpacity="0.1"/>
-          <circle cx="900" cy="0" r="2" fill="#00ff9d" fillOpacity="0.18"/>
+          <polygon points="900,0 1440,80 1440,320 1100,420 800,280 850,0" fill="rgba(249,202,0,0.02)" stroke="#f9ca00" strokeWidth="0.5" strokeOpacity="0.12"/>
+          <circle cx="900" cy="0" r="2" fill="#f9ca00" fillOpacity="0.25"/>
         </svg>
         <div className="hero-glow-1" /><div className="hero-glow-2" />
         <div className="container">

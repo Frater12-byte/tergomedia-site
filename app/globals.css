@@ -436,6 +436,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 
 /* PORTFOLIO */
 .port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.06)}
+.port-page-card{padding:32px 28px}
+@media(max-width:560px){.port-page-card{padding:20px 16px}}
 .port-card{background:var(--surface);display:block;transition:background .18s;text-decoration:none;color:var(--ink);overflow:hidden}
 .port-card:hover{background:var(--dark3)}
 .port-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;filter:grayscale(20%);transition:filter .3s}
@@ -782,7 +784,8 @@ footer{background:#111111;color:rgba(255,255,255,.3);padding:56px 0 28px}
 @media(max-width:768px){
   .roi-grid{grid-template-columns:1fr!important;gap:24px!important}
   .roi-results{position:static!important;top:auto!important}
-  .roi-panel,.roi-results{padding:0!important}
+  .roi-panel{padding:20px!important}
+  .roi-results{padding:0!important}
 }
 
 /* ── HOW WE WORK — "FROM FIRST CALL TO LIVE SYSTEM" ── */

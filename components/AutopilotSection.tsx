@@ -262,6 +262,14 @@ const INITIAL_CARDS = [
 function DispatchVisual() {
   const [cards, setCards] = useState(INITIAL_CARDS.map(c => ({ ...c })));
   const [movingId, setMovingId] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 600);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     const iv = setInterval(() => {
@@ -277,6 +285,54 @@ function DispatchVisual() {
     return () => clearInterval(iv);
   }, [cards]);
 
+  // Mobile: vertical stage list
+  if (isMobile) {
+    return (
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {COLUMNS.map((col, ci) => {
+          const colCards = cards.filter(c => c.col === ci);
+          return (
+            <div key={col}>
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '4px 8px', marginBottom: 5,
+                borderLeft: `3px solid ${COL_COLORS[ci]}88`,
+                background: 'rgba(255,255,255,0.02)',
+              }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: COL_COLORS[ci], letterSpacing: '0.06em' }}>{col.toUpperCase()}</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)' }}>{colCards.length}</span>
+              </div>
+              {colCards.length > 0 && (
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', paddingLeft: 8 }}>
+                  {colCards.map(card => {
+                    const isMoving = movingId === card.id;
+                    return (
+                      <div key={card.id} style={{
+                        padding: '6px 10px',
+                        background: isMoving ? 'rgba(249,202,0,0.12)' : 'rgba(255,255,255,0.04)',
+                        border: `1px solid ${isMoving ? 'rgba(249,202,0,0.5)' : 'rgba(255,255,255,0.08)'}`,
+                        boxShadow: isMoving ? '0 0 10px rgba(249,202,0,0.2)' : 'none',
+                        transition: 'all 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+                        transform: isMoving ? 'scale(1.03)' : 'scale(1)',
+                        display: 'flex', alignItems: 'center', gap: 8,
+                      }}>
+                        <div>
+                          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>{card.name}</div>
+                          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>{card.budget}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Desktop: horizontal kanban
   return (
     <div style={{ width: '100%', overflowX: 'auto' }}>
       <div style={{ display: 'flex', gap: 8, minWidth: 480 }}>

@@ -83,22 +83,15 @@ export default function PortfolioPage() {
           </div>
 
           {/* Project grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 2,
-              background: 'rgba(255,255,255,.06)',
-            }}
-          >
+          <div className="port-grid">
             {filtered.map((p) => (
               <div
                 key={p.slug}
+                className="port-page-card"
                 style={{
                   background: 'var(--surface)',
                   display: 'flex',
                   flexDirection: 'column',
-                  padding: '32px 28px',
                   gap: 14,
                   transition: 'background .18s',
                 }}

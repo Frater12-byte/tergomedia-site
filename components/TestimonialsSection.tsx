@@ -2,7 +2,7 @@
 'use client';
 import { useState, useRef } from 'react';
 
-const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/8b37425b-b3b4-4cf9-aa3f-2e42bd888b3b/chat';
+const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/contact-form';
 
 type Testimonial =
   | { isForm?: false; quote: string; name: string; role: string; initials: string }
@@ -33,8 +33,9 @@ function ContactFormCard() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chatInput: `Contact form: ${name} from ${company}: ${message}`,
-          sessionId: 'contact-form',
+          name,
+          company,
+          message,
         }),
       });
       setSuccess(true);

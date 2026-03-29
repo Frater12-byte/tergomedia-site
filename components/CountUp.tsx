@@ -34,5 +34,11 @@ export default function CountUp({ end, prefix = '', suffix = '', duration = 1600
     return () => io.disconnect();
   }, [end, duration]);
 
-  return <span ref={ref}>{prefix}{count}{suffix}</span>;
+  return (
+    <span ref={ref}>
+      {prefix && <span style={{ color: 'var(--y)' }}>{prefix}</span>}
+      <span style={{ color: '#ffffff' }}>{count}</span>
+      {suffix && <span style={{ color: 'var(--y)' }}>{suffix}</span>}
+    </span>
+  );
 }

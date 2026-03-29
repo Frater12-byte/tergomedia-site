@@ -64,9 +64,9 @@ function FlowDiagram({
       <div
         style={{
           padding: '10px 16px',
-          background: 'rgba(0,200,255,.06)',
-          border: '1px solid rgba(0,200,255,.25)',
-          color: 'var(--nb)',
+          background: 'rgba(249,202,0,.06)',
+          border: '1px solid rgba(249,202,0,.25)',
+          color: 'var(--y)',
           fontWeight: 700,
           textAlign: 'center',
           fontSize: 12,
@@ -81,9 +81,9 @@ function FlowDiagram({
             key={o}
             style={{
               padding: '6px 12px',
-              background: 'rgba(0,255,157,.04)',
-              border: '1px solid rgba(0,255,157,.2)',
-              color: 'var(--ng)',
+              background: 'rgba(255,255,255,.04)',
+              border: '1px solid rgba(255,255,255,.12)',
+              color: 'rgba(255,255,255,.6)',
               fontSize: 11,
             }}
           >
@@ -319,7 +319,7 @@ function AccordionItem({
                     }}
                   >
                     <span>After</span>
-                    <span style={{ color: 'var(--ng)' }}>{bar.after}</span>
+                    <span style={{ color: 'var(--y)' }}>{bar.after}</span>
                   </div>
                   <div
                     style={{
@@ -336,7 +336,7 @@ function AccordionItem({
                         left: 0,
                         height: '100%',
                         width: `${afterWidths[bi] ?? 0}%`,
-                        background: 'var(--ng)',
+                        background: 'var(--y)',
                         transition: 'width .6s ease .1s',
                       }}
                     />
@@ -665,6 +665,154 @@ const RE_TESTIMONIALS = [
   },
 ];
 
+// ─── Testimonials Slider ──────────────────────────────────────────────────────
+
+const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/contact-form';
+
+type RETestimonial =
+  | { isForm?: false; quote: string; name: string; role: string; initials: string; tag: string }
+  | { isForm: true };
+
+const RE_TESTI_SLIDES: RETestimonial[] = [
+  { quote: "Within 6 weeks, 94% of our leads are being handled without our agents lifting a finger. The AI qualifies, responds, and routes better than any junior hire we've ever made.", name: 'Mohammed Al-Farsi', role: 'Managing Director, Pinnacle Properties Dubai', initials: 'MA', tag: 'Dubai · Luxury Real Estate' },
+  { quote: "We went from 4-hour response times to 90 seconds overnight. Our conversion rate tripled. I wish we'd done this two years ago.", name: 'Elena Popescu', role: 'CEO, Urban Property Group Bucharest', initials: 'EP', tag: 'Bucharest · Residential' },
+  { quote: "The automated follow-up sequence recovered 37% of leads we would have written off. It paid for itself in the first month.", name: 'Ravi Menon', role: 'Sales Director, Gulf Realty Group', initials: 'RM', tag: 'Abu Dhabi · Commercial' },
+  { isForm: true },
+];
+
+function REContactFormCard() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !message.trim()) return;
+    setSubmitting(true);
+    try {
+      await fetch(WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message, source: 'real-estate' }),
+      });
+      setSuccess(true);
+    } catch {
+      setSuccess(true);
+    }
+    setSubmitting(false);
+  };
+
+  const inputStyle: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    padding: '9px 12px',
+    color: '#fff',
+    fontSize: 13,
+    outline: 'none',
+    width: '100%',
+    boxSizing: 'border-box',
+    borderRadius: 0,
+    fontFamily: 'inherit',
+  };
+
+  return (
+    <div className="testi-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      {success ? (
+        <div style={{ textAlign: 'center', padding: '24px 0' }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--y)" strokeWidth="2" strokeLinecap="round" style={{ marginBottom: 10 }}><polyline points="20 6 9 17 4 12"/></svg>
+          <p style={{ color: 'var(--y)', fontWeight: 700, fontSize: 16, margin: 0 }}>
+            We&apos;ll be in touch within 24 hours.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div>
+            <h3 style={{ color: '#fff', fontWeight: 800, fontSize: 20, margin: '0 0 4px 0', fontFamily: "'Exo 2',sans-serif" }}>Ready to talk?</h3>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, margin: 0 }}>Tell us about your agency.</p>
+          </div>
+          <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} required style={inputStyle} />
+          <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle} />
+          <textarea placeholder="What do you need?" value={message} onChange={e => setMessage(e.target.value)} rows={3} required style={{ ...inputStyle, resize: 'none' }} />
+          <button type="submit" disabled={submitting} style={{ background: 'var(--y)', color: '#0a0a0a', border: 'none', padding: '10px 16px', fontWeight: 700, fontSize: 13, cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, transition: 'opacity 0.2s', borderRadius: 0 }}>
+            {submitting ? 'Sending…' : 'Send message →'}
+          </button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+function RETestimonialsSlider() {
+  const [idx, setIdx] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+  const count = RE_TESTI_SLIDES.length;
+
+  useEffect(() => {
+    const update = () => setVisibleCount(window.innerWidth <= 560 ? 1 : window.innerWidth <= 860 ? 2 : 3);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  useEffect(() => { setIdx(i => Math.min(i, Math.max(0, count - visibleCount))); }, [visibleCount, count]);
+
+  const prev = () => setIdx(i => Math.max(0, i - 1));
+  const next = () => setIdx(i => Math.min(count - visibleCount, i + 1));
+
+  return (
+    <section className="section testi-section" id="testimonials">
+      <div className="container">
+        <span className="sec-label">What clients say</span>
+        <h2 className="sec-title">Results that speak for themselves.</h2>
+        <div
+          className="testi-track-wrap"
+          onMouseDown={e => { isDragging.current = true; startX.current = e.clientX; }}
+          onMouseMove={e => { if (!isDragging.current) return; if (e.clientX - startX.current < -50) { next(); isDragging.current = false; } if (e.clientX - startX.current > 50) { prev(); isDragging.current = false; } }}
+          onMouseUp={() => { isDragging.current = false; }}
+          onTouchStart={e => { startX.current = e.touches[0].clientX; }}
+          onTouchEnd={e => { const diff = e.changedTouches[0].clientX - startX.current; if (diff < -40) next(); if (diff > 40) prev(); }}
+        >
+          <div className="testi-track" style={{ transform: `translateX(calc(-${idx * (100 / visibleCount)}% - ${idx * 20 / visibleCount}px))` }}>
+            {RE_TESTI_SLIDES.map((t, i) => {
+              if (t.isForm) return <REContactFormCard key={i} />;
+              return (
+                <div key={i} className="testi-card">
+                  <span className="testi-quote-mark">&ldquo;</span>
+                  <p>{t.quote}</p>
+                  <div className="testi-author">
+                    <div className="t-av">{t.initials}</div>
+                    <div>
+                      <div className="t-name">{t.name}</div>
+                      <div className="t-role">{t.role}</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="testi-nav">
+          <button className="testi-arrow" onClick={prev} disabled={idx === 0} aria-label="Previous">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button className="testi-arrow" onClick={next} disabled={idx >= count - visibleCount} aria-label="Next">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+        <div className="testi-dots">
+          {Array.from({ length: count - visibleCount + 1 }).map((_, i) => (
+            <div key={i} className={`t-dot${idx === i ? ' active' : ''}`} onClick={() => setIdx(i)} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Main Client Component ────────────────────────────────────────────────────
 
 export default function RealEstateClient() {
@@ -700,7 +848,7 @@ export default function RealEstateClient() {
             position: 'absolute',
             inset: 0,
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80)',
+              'url(https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'brightness(0.22)',
@@ -815,8 +963,7 @@ export default function RealEstateClient() {
                   border: '1px solid rgba(255,255,255,0.1)',
                   padding: 28,
                   backdropFilter: 'blur(10px)',
-                  borderTop: '2px solid',
-                  borderImage: 'linear-gradient(90deg, #00c8ff, #00ff9d) 1',
+                  borderTop: '2px solid var(--y)',
                 }}
               >
                 <div
@@ -843,9 +990,9 @@ export default function RealEstateClient() {
                   {(
                     [
                       ['90s', 'Lead response', 'var(--y)'],
-                      ['94%', 'Auto-handled', 'var(--nb)'],
-                      ['3×', 'Capacity gain', 'var(--ng)'],
-                      ['$2.1M', 'Pipeline added', '#fff'],
+                      ['94%', 'Auto-handled', 'var(--y)'],
+                      ['3×', 'Capacity gain', 'var(--y)'],
+                      ['$2.1M', 'Pipeline added', 'var(--y)'],
                     ] as [string, string, string][]
                   ).map(([val, lbl, col]) => (
                     <div
@@ -916,7 +1063,7 @@ export default function RealEstateClient() {
           <span className="sec-label">What we build</span>
           <h2 className="sec-title" style={{ marginBottom: 36 }}>
             Six systems that{' '}
-            <em style={{ fontStyle: 'normal', color: 'var(--nb)' }}>automate your pipeline.</em>
+            <em style={{ fontStyle: 'normal', color: 'var(--y)' }}>automate your pipeline.</em>
           </h2>
 
           {/* Tab bar */}
@@ -957,7 +1104,7 @@ export default function RealEstateClient() {
                       left: 0,
                       right: 0,
                       height: 2,
-                      background: 'var(--nb)',
+                      background: 'var(--y)',
                     }}
                   />
                 )}
@@ -1006,7 +1153,7 @@ export default function RealEstateClient() {
                         style={{
                           width: 6,
                           height: 6,
-                          background: 'var(--nb)',
+                          background: 'var(--y)',
                           flexShrink: 0,
                           marginTop: 5,
                         }}
@@ -1076,14 +1223,14 @@ export default function RealEstateClient() {
             <StatItem
               val="94%"
               label="Enquiries auto-handled"
-              color="var(--nb)"
-              borderColor="var(--nb)"
+              color="var(--y)"
+              borderColor="var(--y)"
             />
             <StatItem
               val="3×"
               label="Lead capacity increase"
-              color="var(--ng)"
-              borderColor="var(--ng)"
+              color="var(--y)"
+              borderColor="var(--y)"
             />
             <StatItem
               val="$2.1M"
@@ -1167,8 +1314,8 @@ export default function RealEstateClient() {
                 desc: 'Enquiry volume increased 38% in 60 days — and 94% of those enquiries are now fully handled by the AI without agent input.',
                 stats: [
                   { val: '94%', label: 'Auto-handled', color: 'var(--y)' },
-                  { val: '90s', label: 'Response time', color: 'var(--nb)' },
-                  { val: '+38%', label: 'Lead volume', color: 'var(--ng)' },
+                  { val: '90s', label: 'Response time', color: 'var(--y)' },
+                  { val: '+38%', label: 'Lead volume', color: 'var(--y)' },
                 ] as { val: string; label: string; color: string }[],
               },
             ].map((c, i) => (
@@ -1247,91 +1394,8 @@ export default function RealEstateClient() {
         </div>
       </section>
 
-      {/* ── SECTION 7: TESTIMONIALS ──────────────────────────────────────── */}
-      <section className="section">
-        <div className="container">
-          <span className="sec-label">What clients say</span>
-          <h2 className="sec-title" style={{ marginBottom: 40 }}>
-            Results that speak for themselves.
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-              gap: 2,
-              background: 'rgba(255,255,255,.04)',
-            }}
-          >
-            {RE_TESTIMONIALS.map((t, i) => (
-              <div
-                key={i}
-                style={{
-                  background: '#1f1f1f',
-                  padding: 32,
-                  borderLeft: `3px solid ${t.accent}`,
-                }}
-              >
-                {/* Stars */}
-                <div
-                  style={{ color: 'var(--y)', fontSize: 14, marginBottom: 16, letterSpacing: 2 }}
-                >
-                  {'★★★★★'}
-                </div>
-                {/* Tag */}
-                <div
-                  style={{
-                    fontSize: 10,
-                    color: 'rgba(255,255,255,.25)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '.08em',
-                    marginBottom: 14,
-                    fontWeight: 600,
-                  }}
-                >
-                  {t.tag}
-                </div>
-                {/* Quote */}
-                <p
-                  style={{
-                    fontStyle: 'italic',
-                    fontSize: 14,
-                    color: 'rgba(255,255,255,.55)',
-                    lineHeight: 1.8,
-                    marginBottom: 20,
-                  }}
-                >
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                {/* Author */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div
-                    style={{
-                      width: 38,
-                      height: 38,
-                      borderRadius: '50%',
-                      background: `${t.accent}22`,
-                      border: `1px solid ${t.accent}55`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: t.accent,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {t.initials}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{t.name}</div>
-                    <div style={{ fontSize: 11, color: 'rgba(255,255,255,.35)' }}>{t.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ── SECTION 7: TESTIMONIALS (slider) ─────────────────────────────── */}
+      <RETestimonialsSlider />
 
       {/* ── SECTION 8: CTA ───────────────────────────────────────────────── */}
       <section className="cta-section">

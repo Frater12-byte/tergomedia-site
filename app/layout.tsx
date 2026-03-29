@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description: 'We build systems that run your business.',
     images: ['/og-image.png'],
   },
-  icons: { icon: '/favicon.png', shortcut: '/favicon.png', apple: '/favicon.png' },
+  icons: { icon: '/favicon.ico', shortcut: '/favicon.ico', apple: '/favicon.ico' },
   robots: { index: true, follow: true },
   alternates: { canonical: 'https://tergomedia.com' },
 };
@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${exo2.variable} ${dmSans.variable}`}>
       <head>
-        <link rel="icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <style>{`
           body { font-family: var(--font-dm-sans), 'DM Sans', sans-serif; }
           h1,h2,h3,h4 { font-family: var(--font-exo2), 'Exo 2', sans-serif; }

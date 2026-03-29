@@ -52,7 +52,7 @@ export default function RealEstatePage() {
       <link
         rel="preload"
         as="image"
-        href="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80"
+        href="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80"
       />
       <Script
         id="re-jsonld"

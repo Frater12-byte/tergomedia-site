@@ -17,55 +17,30 @@ function now() {
 }
 
 function LaylaAvatar({ size }: { size: 34 | 52 }) {
-  const s = size / 52; // scale factor
   return (
     <svg width={size} height={size} viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Glow ring */}
       <circle cx="26" cy="26" r="24" fill="rgba(249,202,0,0.08)" stroke="rgba(249,202,0,0.25)" strokeWidth="1"/>
-
-      {/* Neck */}
       <rect x="22" y="37" width="8" height="7" rx="3" fill="#2a2010"/>
-
-      {/* Face shape */}
       <ellipse cx="26" cy="27" rx="14" ry="16" fill="#2e2416"/>
-
-      {/* Hair / head top */}
       <path d="M12,24 Q12,11 26,10 Q40,11 40,24 Q38,15 26,14 Q14,15 12,24 Z" fill="#1a1205"/>
       <path d="M12,24 Q10,18 12,13 Q16,8 26,8 Q36,8 40,13 Q42,18 40,24" fill="#1a1205" stroke="none"/>
-
-      {/* Side hair strands */}
       <path d="M12,22 Q9,28 11,34 Q13,38 14,36 Q12,32 13,26" fill="#1a1205"/>
       <path d="M40,22 Q43,28 41,34 Q39,38 38,36 Q40,32 39,26" fill="#1a1205"/>
-
-      {/* Eyebrows */}
       <path d="M17,21 Q20,19.5 23,20.5" stroke="#c8a060" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
       <path d="M29,20.5 Q32,19.5 35,21" stroke="#c8a060" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
-
-      {/* Eyes — almond shaped, cyan glow */}
       <path d="M17,24 Q20,21.5 23,24 Q20,26.5 17,24 Z" fill="#00c8ff" opacity="0.9"/>
       <path d="M29,24 Q32,21.5 35,24 Q32,26.5 29,24 Z" fill="#00c8ff" opacity="0.9"/>
-      {/* Eye pupils */}
       <circle cx="20" cy="24" r="1.8" fill="#001a22"/>
       <circle cx="32" cy="24" r="1.8" fill="#001a22"/>
-      {/* Eye highlights */}
       <circle cx="20.6" cy="23.3" r="0.6" fill="rgba(255,255,255,0.9)"/>
       <circle cx="32.6" cy="23.3" r="0.6" fill="rgba(255,255,255,0.9)"/>
-      {/* Eye glow */}
       <path d="M17,24 Q20,21.5 23,24 Q20,26.5 17,24 Z" fill="#00c8ff" opacity="0.25"/>
       <path d="M29,24 Q32,21.5 35,24 Q32,26.5 29,24 Z" fill="#00c8ff" opacity="0.25"/>
-
-      {/* Nose */}
       <path d="M24.5,28 Q26,31 27.5,28" stroke="rgba(255,255,255,0.2)" strokeWidth="0.9" strokeLinecap="round" fill="none"/>
-
-      {/* Lips */}
       <path d="M21,33 Q26,36 31,33" stroke="rgba(249,202,0,0.7)" strokeWidth="1.3" strokeLinecap="round" fill="none"/>
       <path d="M21,33 Q26,31 31,33" stroke="rgba(249,202,0,0.35)" strokeWidth="0.8" strokeLinecap="round" fill="none"/>
-
-      {/* Small ear dots (earrings) */}
       <circle cx="12.5" cy="28" r="1.8" fill="#f9ca00" opacity="0.7"/>
       <circle cx="39.5" cy="28" r="1.8" fill="#f9ca00" opacity="0.7"/>
-
-      {/* Subtle tech detail — small circuit line on temple */}
       <line x1="13" y1="23" x2="15" y2="23" stroke="rgba(249,202,0,0.3)" strokeWidth="0.7"/>
       <line x1="39" y1="23" x2="37" y2="23" stroke="rgba(249,202,0,0.3)" strokeWidth="0.7"/>
     </svg>
@@ -82,11 +57,9 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false);
   const [showSuggs, setShowSuggs] = useState(true);
   const sessionId = useRef(`s_${Math.random().toString(36).slice(2)}`);
-  const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const windowRef = useRef<HTMLDivElement>(null);
 
-  // Detect mobile
+  // Detect mobile (for header button style only)
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 768);
     check();
@@ -94,52 +67,39 @@ export default function Chatbot() {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Lock body scroll on mobile when open
-  useEffect(() => {
-    if (isMobile && open) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [isMobile, open]);
-
-  useEffect(() => {
-    if (open) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    }
-  }, [msgs, loading, open]);
-
-  // Keyboard / viewport compensation — works on both mobile and desktop
+  // Auto-scroll to bottom whenever messages change or chat opens
   useEffect(() => {
     if (!open) return;
-    const vv = window.visualViewport;
-    if (!vv) return;
+    setTimeout(() => {
+      const msgEl = document.getElementById('chatMessages');
+      if (msgEl) msgEl.scrollTop = msgEl.scrollHeight;
+    }, 50);
+  }, [msgs, loading, open]);
 
-    const update = () => {
-      if (isMobile && windowRef.current) {
-        // On mobile: resize the fullscreen chat to the visual viewport height
-        windowRef.current.style.height = `${vv.height}px`;
-        windowRef.current.style.top = `${vv.offsetTop}px`;
-        // Re-scroll after keyboard resize so last message stays visible
-        setTimeout(() => {
-          bottomRef.current?.scrollIntoView({ behavior: 'instant', block: 'end' });
-        }, 80);
-      } else if (!isMobile && windowRef.current) {
-        // On desktop: shift window up if keyboard opens
-        const offset = window.innerHeight - (vv.height + vv.offsetTop);
-        windowRef.current.style.bottom = `${Math.max(86, offset + 16)}px`;
-      }
+  // Visual viewport — push chat window up when software keyboard opens
+  useEffect(() => {
+    if (!open || typeof window === 'undefined' || !window.visualViewport) return;
+    const vv = window.visualViewport!;
+
+    const handleViewport = () => {
+      const chatWin = document.getElementById('chatWindow');
+      if (!chatWin) return;
+      const offsetFromBottom = window.innerHeight - vv.height - vv.offsetTop;
+      chatWin.style.bottom = (offsetFromBottom + 86) + 'px';
     };
 
-    vv.addEventListener('resize', update);
-    vv.addEventListener('scroll', update);
-    update();
+    vv.addEventListener('resize', handleViewport);
+    vv.addEventListener('scroll', handleViewport);
+    handleViewport();
+
     return () => {
-      vv.removeEventListener('resize', update);
-      vv.removeEventListener('scroll', update);
+      vv.removeEventListener('resize', handleViewport);
+      vv.removeEventListener('scroll', handleViewport);
+      // Reset bottom when chat closes
+      const chatWin = document.getElementById('chatWindow');
+      if (chatWin) chatWin.style.bottom = '';
     };
-  }, [open, isMobile]);
+  }, [open]);
 
   const send = useCallback(async (text: string) => {
     if (!text.trim() || loading) return;
@@ -148,7 +108,8 @@ export default function Chatbot() {
     setInput('');
     setLoading(true);
     setTimeout(() => {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      const msgEl = document.getElementById('chatMessages');
+      if (msgEl) msgEl.scrollTop = msgEl.scrollHeight;
     }, 50);
     try {
       const res = await fetch(WEBHOOK, {
@@ -165,24 +126,11 @@ export default function Chatbot() {
     setLoading(false);
   }, [loading]);
 
-  const mobileWindowStyle: React.CSSProperties = isMobile ? {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    width: '100%',
-    height: '100dvh',  // JS will override this
-    borderRadius: 0,
-    bottom: 'unset',
-    maxHeight: 'unset',
-  } : {};
-
   return (
     <div className="chat-launcher">
       <div
-        ref={windowRef}
+        id="chatWindow"
         className={`chat-window${open ? ' open' : ''}`}
-        style={open && isMobile ? mobileWindowStyle : undefined}
       >
         <div className="chat-header">
           <div className="chat-header-l">
@@ -213,6 +161,7 @@ export default function Chatbot() {
         </div>
 
         <div
+          id="chatMessages"
           className="chat-messages"
           style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}
         >
@@ -227,7 +176,6 @@ export default function Chatbot() {
               <span /><span /><span />
             </div>
           )}
-          <div ref={bottomRef} />
         </div>
 
         {showSuggs && (
@@ -238,7 +186,7 @@ export default function Chatbot() {
           </div>
         )}
 
-        <div className="chat-input-row" style={{ position: 'sticky', bottom: 0 }}>
+        <div className="chat-input-row">
           <input
             ref={inputRef}
             className="chat-input"
@@ -246,6 +194,15 @@ export default function Chatbot() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send(input)}
+            onFocus={() => {
+              setTimeout(() => {
+                const msgEl = document.getElementById('chatMessages');
+                if (msgEl) msgEl.scrollTop = msgEl.scrollHeight;
+              }, 300);
+            }}
+            inputMode="text"
+            autoComplete="off"
+            autoCorrect="off"
             style={{ fontSize: 16 }}
           />
           <button className="chat-send" onClick={() => send(input)} aria-label="Send">

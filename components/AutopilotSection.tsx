@@ -177,15 +177,30 @@ function QualificationVisual({ stageKey }: { stageKey: number }) {
         border: '1px solid rgba(255,255,255,0.08)',
       }}>
         <div style={{
-          background: '#075e54', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8,
+          background: 'linear-gradient(135deg, #075e54 0%, #128c7e 100%)',
+          padding: '10px 12px',
+          display: 'flex', alignItems: 'center', gap: 10,
         }}>
-          <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#25d366', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700 }}>A</div>
-          <div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>Ahmed · Dubai Hills Enquiry</div>
-            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)' }}>via WhatsApp</div>
+          <div style={{
+            width: 34, height: 34, borderRadius: '50%',
+            background: 'linear-gradient(135deg, #25d366, #128c7e)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 14, fontWeight: 700, color: '#fff',
+            flexShrink: 0,
+          }}>A</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>Ahmed · Dubai Hills</div>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#25d366', display: 'inline-block' }}/>
+              via WhatsApp · AI responding
+            </div>
+          </div>
+          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.5)', textAlign: 'right' }}>
+            <div>92/100</div>
+            <div style={{ color: '#f9ca00', fontWeight: 700 }}>HOT</div>
           </div>
         </div>
-        <div style={{ padding: '10px 10px', maxHeight: 180, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ padding: '10px 10px', maxHeight: 220, overflowY: 'auto', scrollBehavior: 'smooth', display: 'flex', flexDirection: 'column', gap: 6 }}>
           {WA_MESSAGES.slice(0, visibleMsgs).map((msg, i) => (
             <div key={i} style={{
               display: 'flex',
@@ -196,7 +211,7 @@ function QualificationVisual({ stageKey }: { stageKey: number }) {
                 maxWidth: '80%',
                 padding: '7px 10px',
                 borderRadius: msg.dir === 'out' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
-                background: msg.dir === 'out' ? '#005c4b' : '#2a2a2a',
+                background: msg.dir === 'out' ? 'linear-gradient(135deg, #005c4b 0%, #075e54 100%)' : '#1e293b',
                 fontSize: 11,
                 color: '#fff',
                 lineHeight: 1.5,
@@ -372,6 +387,111 @@ function OutreachVisual({ stageKey }: { stageKey: number }) {
 
 // ─── Stage 05: CRM & Reports ──────────────────────────────────────────────────
 
+function CRMChart({ stageKey }: { stageKey: number }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const W = canvas.offsetWidth || 300;
+    const H = 100;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.height = `${H}px`;
+    const ctx = canvas.getContext('2d')!;
+    ctx.scale(dpr, dpr);
+
+    const leads = [28, 34, 41, 38, 52, 47, 61, 68];
+    const qualified = [16, 21, 28, 25, 38, 34, 48, 55];
+    const maxV = 75;
+    const padX = 8, padY = 8;
+
+    const px = (i: number) => padX + (i / (leads.length - 1)) * (W - 2 * padX);
+    const py = (v: number) => H - padY - (v / maxV) * (H - 2 * padY);
+
+    // Background
+    ctx.fillStyle = 'rgba(255,255,255,0.02)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Grid lines
+    for (let i = 0; i <= 3; i++) {
+      const y = padY + (i / 3) * (H - 2 * padY);
+      ctx.beginPath();
+      ctx.moveTo(padX, y);
+      ctx.lineTo(W - padX, y);
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    const drawArea = (data: number[], color: string, alpha: number) => {
+      // Area fill
+      ctx.beginPath();
+      ctx.moveTo(px(0), H - padY);
+      data.forEach((v, i) => ctx.lineTo(px(i), py(v)));
+      ctx.lineTo(px(data.length - 1), H - padY);
+      ctx.closePath();
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      const rgb = color === '#00c8ff' ? '0,200,255' : '74,222,128';
+      grad.addColorStop(0, `rgba(${rgb},${alpha})`);
+      grad.addColorStop(1, `rgba(${rgb},0)`);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Line
+      ctx.beginPath();
+      data.forEach((v, i) => {
+        if (i === 0) ctx.moveTo(px(i), py(v));
+        else {
+          const cpx = (px(i - 1) + px(i)) / 2;
+          ctx.bezierCurveTo(cpx, py(data[i - 1]), cpx, py(v), px(i), py(v));
+        }
+      });
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Dots
+      data.forEach((v, i) => {
+        ctx.beginPath();
+        ctx.arc(px(i), py(v), 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(px(i), py(v), 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+      });
+    };
+
+    drawArea(leads, '#00c8ff', 0.15);
+    drawArea(qualified, '#4ade80', 0.12);
+  }, [stageKey]);
+
+  return (
+    <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 8, border: '1px solid rgba(255,255,255,0.07)', padding: '8px 8px 4px' }}>
+      <div style={{ display: 'flex', gap: 14, marginBottom: 6 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <div style={{ width: 12, height: 2, background: '#00c8ff', borderRadius: 1 }} />
+          <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>Leads In</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <div style={{ width: 12, height: 2, background: '#4ade80', borderRadius: 1 }} />
+          <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>Qualified</span>
+        </div>
+      </div>
+      <canvas ref={canvasRef} style={{ display: 'block', width: '100%', borderRadius: 4 }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 8px 0' }}>
+        {['W1','W2','W3','W4','W5','W6','W7','W8'].map(w => (
+          <span key={w} style={{ fontSize: 8, color: 'rgba(255,255,255,0.25)' }}>{w}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const KPI_TARGETS = [
   { label: 'Leads this week', value: 142, prefix: '', suffix: '', color: '#f9ca00' },
   { label: 'Qualification rate', value: 68, prefix: '', suffix: '%', color: '#00c8ff' },
@@ -379,19 +499,6 @@ const KPI_TARGETS = [
   { label: 'Deals in negotiation', value: 14, prefix: '', suffix: '', color: '#ff6b35' },
 ];
 
-const CHART_DATA = {
-  leadsIn: [28, 34, 41, 38, 52, 47, 61, 68],
-  qualified: [16, 21, 28, 25, 38, 34, 48, 55],
-};
-
-function buildPolyline(data: number[], maxVal: number, width: number, height: number, padX: number, padY: number) {
-  const points = data.map((v, i) => {
-    const x = padX + (i / (data.length - 1)) * (width - 2 * padX);
-    const y = height - padY - ((v / maxVal) * (height - 2 * padY));
-    return `${x},${y}`;
-  });
-  return points.join(' ');
-}
 
 function CRMVisual({ stageKey }: { stageKey: number }) {
   const [counts, setCounts] = useState([0, 0, 0, 0]);
@@ -410,9 +517,6 @@ function CRMVisual({ stageKey }: { stageKey: number }) {
     }, 30);
     return () => clearInterval(iv);
   }, [stageKey]);
-
-  const maxVal = Math.max(...CHART_DATA.leadsIn, ...CHART_DATA.qualified);
-  const W = 300, H = 120, PX = 10, PY = 10;
 
   return (
     <div style={{ width: '100%' }}>
@@ -441,53 +545,7 @@ function CRMVisual({ stageKey }: { stageKey: number }) {
         <span style={{ marginLeft: 'auto', fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>Monday 7:00am · PDF sent to 4 recipients ✓</span>
       </div>
 
-      <div style={{
-        background: 'rgba(255,255,255,0.02)', borderRadius: 8,
-        border: '1px solid rgba(255,255,255,0.07)', padding: '8px',
-      }}>
-        <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <div style={{ width: 10, height: 2, background: '#00c8ff', borderRadius: 1 }} />
-            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>Leads In</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <div style={{ width: 10, height: 2, background: '#4ade80', borderRadius: 1 }} />
-            <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>Qualified</span>
-          </div>
-        </div>
-        <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto' }}>
-          {/* Grid lines */}
-          {[0, 1, 2, 3].map(j => {
-            const y = PY + (j / 3) * (H - 2 * PY);
-            return <line key={j} x1={PX} y1={y} x2={W - PX} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />;
-          })}
-          {/* Area fills */}
-          <polyline
-            points={buildPolyline(CHART_DATA.leadsIn, maxVal, W, H, PX, PY)}
-            fill="none" stroke="#00c8ff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-          />
-          <polyline
-            points={buildPolyline(CHART_DATA.qualified, maxVal, W, H, PX, PY)}
-            fill="none" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-          />
-          {/* Data points */}
-          {CHART_DATA.leadsIn.map((v, i) => {
-            const x = PX + (i / (CHART_DATA.leadsIn.length - 1)) * (W - 2 * PX);
-            const y = H - PY - ((v / maxVal) * (H - 2 * PY));
-            return <circle key={i} cx={x} cy={y} r="2.5" fill="#00c8ff" />;
-          })}
-          {CHART_DATA.qualified.map((v, i) => {
-            const x = PX + (i / (CHART_DATA.qualified.length - 1)) * (W - 2 * PX);
-            const y = H - PY - ((v / maxVal) * (H - 2 * PY));
-            return <circle key={i} cx={x} cy={y} r="2.5" fill="#4ade80" />;
-          })}
-        </svg>
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 10px' }}>
-          {['W1','W2','W3','W4','W5','W6','W7','W8'].map(w => (
-            <span key={w} style={{ fontSize: 8, color: 'rgba(255,255,255,0.25)' }}>{w}</span>
-          ))}
-        </div>
-      </div>
+      <CRMChart stageKey={stageKey} />
     </div>
   );
 }
@@ -700,7 +758,7 @@ export default function AutopilotSection() {
         </div>
 
         <div className="auto-master">
-          <div className="auto-pipeline">
+          <div className="auto-pipeline" style={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
             {/* Stage indicator */}
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '.08em', marginBottom: 8 }}>
               STAGE {stage + 1} / 5

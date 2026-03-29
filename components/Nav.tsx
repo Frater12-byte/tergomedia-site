@@ -31,7 +31,7 @@ export default function Nav() {
     <>
       <nav className="nav-outer">
         <Link href="/" className="nav-logo-img">
-          <Image src="/logo.png" alt="Tergo Media" height={36} width={120} style={{ height: 36, width: 'auto', display: 'block' }} priority />
+          <Image src="/logo.png" alt="Tergo Media" height={44} width={148} style={{ height: 44, width: 'auto', display: 'block' }} priority />
         </Link>
         <ul className="nav-links">
           {LINKS.map(l => (

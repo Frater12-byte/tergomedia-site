@@ -30,9 +30,9 @@ export default function Footer() {
               <Image
                 src="/logo.png"
                 alt="Tergo Media"
-                height={28}
-                width={100}
-                style={{ height: 28, width: 'auto', display: 'block', filter: 'brightness(0) invert(1)', marginBottom: 10 }}
+                height={36}
+                width={120}
+                style={{ height: 36, width: 'auto', display: 'block', filter: 'brightness(0) invert(1)', marginBottom: 12 }}
               />
             </Link>
             <p>AI · Automation · Custom Software<br />Dubai · Bucharest · Milan</p>

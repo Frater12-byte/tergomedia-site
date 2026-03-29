@@ -17,28 +17,57 @@ function now() {
 }
 
 function LaylaAvatar({ size }: { size: 34 | 52 }) {
-  const scale = size / 34;
+  const s = size / 52; // scale factor
   return (
-    <svg width={size} height={size} viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Head circle */}
-      <circle cx="17" cy="17" r="16" fill="#1a1a1a" stroke="rgba(249,202,0,0.3)" strokeWidth="1"/>
-      {/* Antenna */}
-      <line x1="17" y1="1" x2="17" y2="6" stroke="#f9ca00" strokeWidth="1.5"/>
-      <circle cx="17" cy="1" r="1.5" fill="#f9ca00"/>
-      {/* Eyes - glowing cyan */}
-      <rect x="9" y="11" width="5" height="4" rx="1" fill="#00c8ff" opacity="0.9"/>
-      <rect x="20" y="11" width="5" height="4" rx="1" fill="#00c8ff" opacity="0.9"/>
+    <svg width={size} height={size} viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Glow ring */}
+      <circle cx="26" cy="26" r="24" fill="rgba(249,202,0,0.08)" stroke="rgba(249,202,0,0.25)" strokeWidth="1"/>
+
+      {/* Neck */}
+      <rect x="22" y="37" width="8" height="7" rx="3" fill="#2a2010"/>
+
+      {/* Face shape */}
+      <ellipse cx="26" cy="27" rx="14" ry="16" fill="#2e2416"/>
+
+      {/* Hair / head top */}
+      <path d="M12,24 Q12,11 26,10 Q40,11 40,24 Q38,15 26,14 Q14,15 12,24 Z" fill="#1a1205"/>
+      <path d="M12,24 Q10,18 12,13 Q16,8 26,8 Q36,8 40,13 Q42,18 40,24" fill="#1a1205" stroke="none"/>
+
+      {/* Side hair strands */}
+      <path d="M12,22 Q9,28 11,34 Q13,38 14,36 Q12,32 13,26" fill="#1a1205"/>
+      <path d="M40,22 Q43,28 41,34 Q39,38 38,36 Q40,32 39,26" fill="#1a1205"/>
+
+      {/* Eyebrows */}
+      <path d="M17,21 Q20,19.5 23,20.5" stroke="#c8a060" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+      <path d="M29,20.5 Q32,19.5 35,21" stroke="#c8a060" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+
+      {/* Eyes — almond shaped, cyan glow */}
+      <path d="M17,24 Q20,21.5 23,24 Q20,26.5 17,24 Z" fill="#00c8ff" opacity="0.9"/>
+      <path d="M29,24 Q32,21.5 35,24 Q32,26.5 29,24 Z" fill="#00c8ff" opacity="0.9"/>
+      {/* Eye pupils */}
+      <circle cx="20" cy="24" r="1.8" fill="#001a22"/>
+      <circle cx="32" cy="24" r="1.8" fill="#001a22"/>
+      {/* Eye highlights */}
+      <circle cx="20.6" cy="23.3" r="0.6" fill="rgba(255,255,255,0.9)"/>
+      <circle cx="32.6" cy="23.3" r="0.6" fill="rgba(255,255,255,0.9)"/>
       {/* Eye glow */}
-      <rect x="9" y="11" width="5" height="4" rx="1" fill="#00c8ff" opacity="0.4"/>
-      <rect x="20" y="11" width="5" height="4" rx="1" fill="#00c8ff" opacity="0.4"/>
-      {/* Nose dot */}
-      <circle cx="17" cy="17" r="1" fill="rgba(255,255,255,0.3)"/>
-      {/* Mouth / speaker grille */}
-      <rect x="11" y="21" width="12" height="2" rx="1" fill="rgba(255,255,255,0.15)"/>
-      <rect x="13" y="24" width="8" height="1" rx="0.5" fill="rgba(255,255,255,0.1)"/>
-      {/* Side panels */}
-      <rect x="1" y="14" width="3" height="6" rx="1" fill="rgba(249,202,0,0.2)" stroke="rgba(249,202,0,0.3)" strokeWidth="0.5"/>
-      <rect x="30" y="14" width="3" height="6" rx="1" fill="rgba(249,202,0,0.2)" stroke="rgba(249,202,0,0.3)" strokeWidth="0.5"/>
+      <path d="M17,24 Q20,21.5 23,24 Q20,26.5 17,24 Z" fill="#00c8ff" opacity="0.25"/>
+      <path d="M29,24 Q32,21.5 35,24 Q32,26.5 29,24 Z" fill="#00c8ff" opacity="0.25"/>
+
+      {/* Nose */}
+      <path d="M24.5,28 Q26,31 27.5,28" stroke="rgba(255,255,255,0.2)" strokeWidth="0.9" strokeLinecap="round" fill="none"/>
+
+      {/* Lips */}
+      <path d="M21,33 Q26,36 31,33" stroke="rgba(249,202,0,0.7)" strokeWidth="1.3" strokeLinecap="round" fill="none"/>
+      <path d="M21,33 Q26,31 31,33" stroke="rgba(249,202,0,0.35)" strokeWidth="0.8" strokeLinecap="round" fill="none"/>
+
+      {/* Small ear dots (earrings) */}
+      <circle cx="12.5" cy="28" r="1.8" fill="#f9ca00" opacity="0.7"/>
+      <circle cx="39.5" cy="28" r="1.8" fill="#f9ca00" opacity="0.7"/>
+
+      {/* Subtle tech detail — small circuit line on temple */}
+      <line x1="13" y1="23" x2="15" y2="23" stroke="rgba(249,202,0,0.3)" strokeWidth="0.7"/>
+      <line x1="39" y1="23" x2="37" y2="23" stroke="rgba(249,202,0,0.3)" strokeWidth="0.7"/>
     </svg>
   );
 }
@@ -81,21 +110,31 @@ export default function Chatbot() {
     }
   }, [msgs, loading, open]);
 
-  // iOS keyboard compensation (desktop/non-fullscreen only)
+  // Keyboard / viewport compensation — works on both mobile and desktop
   useEffect(() => {
-    if (!open || isMobile) return;
+    if (!open) return;
     const vv = window.visualViewport;
-    if (!vv || !windowRef.current) return;
+    if (!vv) return;
+
     const update = () => {
-      const offset = window.innerHeight - (vv.height + vv.offsetTop);
-      if (windowRef.current) {
+      if (isMobile && windowRef.current) {
+        // On mobile: resize the fullscreen chat to the visual viewport height
+        windowRef.current.style.height = `${vv.height}px`;
+        windowRef.current.style.top = `${vv.offsetTop}px`;
+      } else if (!isMobile && windowRef.current) {
+        // On desktop: shift window up if keyboard opens
+        const offset = window.innerHeight - (vv.height + vv.offsetTop);
         windowRef.current.style.bottom = `${Math.max(86, offset + 16)}px`;
       }
     };
+
     vv.addEventListener('resize', update);
     vv.addEventListener('scroll', update);
     update();
-    return () => { vv.removeEventListener('resize', update); vv.removeEventListener('scroll', update); };
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+    };
   }, [open, isMobile]);
 
   const send = useCallback(async (text: string) => {
@@ -124,12 +163,13 @@ export default function Chatbot() {
 
   const mobileWindowStyle: React.CSSProperties = isMobile ? {
     position: 'fixed',
-    inset: 0,
+    top: 0,
+    left: 0,
+    right: 0,
     width: '100%',
-    height: '100dvh',
+    height: '100dvh',  // JS will override this
     borderRadius: 0,
     bottom: 'unset',
-    right: 'unset',
     maxHeight: 'unset',
   } : {};
 

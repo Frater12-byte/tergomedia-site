@@ -159,7 +159,7 @@ export default function Home() {
       <section className="section auto-showcase section-shimmer" id="automation">
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <span className="sec-label">Automation library — sample only</span>
-          <h2 className="sec-title">18+ automations.<br />Real results.</h2>
+          <h2 className="sec-title">Hundreds of automations.<br />Real results.</h2>
           <p className="sec-sub">A sample of what&apos;s live in production. We&apos;ve built hundreds of automations across every industry — the only limit is what your business needs.</p>
         </div>
         <AutomationCarousel />

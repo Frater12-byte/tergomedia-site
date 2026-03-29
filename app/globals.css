@@ -337,7 +337,7 @@ img{max-width:100%;display:block}
 
 /* Before/after slider */
 .ba-hint{font-size:10px;color:rgba(255,255,255,.2);text-align:center;margin-bottom:10px;letter-spacing:.04em}
-.ba-wrap{position:relative;overflow:hidden;margin-bottom:24px;cursor:ew-resize;user-select:none;touch-action:pan-y}
+.ba-wrap{position:relative;overflow:hidden;margin-bottom:24px;cursor:ew-resize;user-select:none;touch-action:none}
 .ba-inner{display:flex;height:100%}
 .ba-panel-before{flex:0 0 auto;overflow:hidden;background:rgba(26,26,24,.95);border:1px solid rgba(255,255,255,.1);border-right:none;padding:16px 18px;display:flex;flex-direction:column;transition:flex-basis 0s}
 .ba-panel-after{flex:1 1 auto;overflow:hidden;background:rgba(249,202,0,.07);border:1px solid rgba(249,202,0,.18);border-left:none;padding:16px 18px;display:flex;flex-direction:column}
@@ -633,10 +633,10 @@ footer{background:#111111;color:rgba(255,255,255,.3);padding:56px 0 28px}
 /* FOOTER EU FUNDING */
 .footer-eu{padding:28px 0 20px;border-top:1px solid rgba(255,255,255,.06);margin-bottom:20px}
 .footer-eu-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:14px;font-weight:600}
-.footer-eu-logos{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-.footer-eu-logo{height:48px;width:auto;opacity:.75;transition:opacity .2s}
+.footer-eu-logos{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.footer-eu-logo{height:72px;width:auto;opacity:.85;transition:opacity .2s}
 .footer-eu-logo:hover{opacity:1}
-@media(max-width:560px){.footer-eu-logos{flex-direction:column;align-items:flex-start;gap:12px}.footer-eu-logo{height:40px}}
+@media(max-width:560px){.footer-eu-logos{flex-direction:row;flex-wrap:wrap;gap:8px}.footer-eu-logo{height:56px}}
 
 /* FOOTER LOGO IMAGE */
 .footer-logo-img{display:inline-block;text-decoration:none}
@@ -772,4 +772,42 @@ footer{background:#111111;color:rgba(255,255,255,.3);padding:56px 0 28px}
 @media(max-width:560px){
   .footer-bottom{flex-direction:column;gap:6px;text-align:center}
   .footer-bottom div{flex-direction:column;gap:4px;display:flex;align-items:center}
+}
+
+/* ── AUTOPILOT SECTION — "ON AUTOPILOT" ── */
+@media(max-width:768px){
+  .auto-pipeline{overflow-x:auto!important;display:flex!important;flex-wrap:nowrap!important;grid-template-columns:unset!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .pipeline-stage{min-width:150px!important;flex-shrink:0;scroll-snap-align:start}
+  .auto-content{grid-template-columns:1fr!important}
+  .auto-visual{border-right:none!important;border-bottom:1px solid rgba(255,255,255,.06);padding:20px!important;min-height:unset!important}
+  .auto-meta{padding:20px!important}
+  .am-metrics{grid-template-columns:1fr 1fr!important}
+  .am-metric .big{font-size:20px!important}
+}
+
+/* ── ROI CALCULATOR — "WHAT COULD AUTOMATION SAVE" ── */
+@media(max-width:768px){
+  .roi-grid{grid-template-columns:1fr!important;gap:24px}
+  .roi-results{position:static!important;top:auto!important}
+  .roi-panel{padding:20px!important}
+  .roi-metrics{grid-template-columns:1fr 1fr!important}
+  .roi-metric{padding:14px!important}
+  .roi-cta-row{flex-direction:column}
+  .roi-cta-row .btn{justify-content:center;text-align:center}
+  .s-btn{min-height:44px;font-size:13px}
+  .r-btn{min-height:40px;font-size:12px}
+}
+
+/* ── HOW WE WORK — "FROM FIRST CALL TO LIVE SYSTEM" ── */
+@media(max-width:768px){
+  .how-grid{grid-template-columns:1fr!important;gap:24px}
+  .how-outcome{padding:20px 16px!important}
+  .how-step{padding:20px 0;grid-template-columns:40px 1fr;gap:14px}
+  .how-step-n{width:40px;height:40px;font-size:12px}
+  .ba-wrap{height:auto}
+  .ba-inner{height:auto}
+  .ba-panel-before,.ba-panel-after{padding:12px 10px}
+  .ba-row{padding:6px 0}
+  .ba-val{font-size:13px}
+  .tl{padding-left:16px}
 }

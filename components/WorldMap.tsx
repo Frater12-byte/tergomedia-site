@@ -155,7 +155,8 @@ export default function WorldMap() {
     if (!canvas) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const containerW = canvas.parentElement?.offsetWidth || W;
-    const scale = Math.min(containerW / W, 1);
+    // Allow scaling up to fill large containers (up to 1.6×) or down to any mobile width
+    const scale = Math.min(containerW / W, 1.6);
     const cW = Math.round(W * scale);
     const cH = Math.round(H * scale);
     canvas.width = cW * dpr;

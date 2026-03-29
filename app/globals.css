@@ -137,7 +137,7 @@ img{max-width:100%;display:block}
 .flow-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);padding:32px;position:relative}
 .flow-card-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:24px;font-weight:600}
 .flow-steps{display:flex;flex-direction:column;position:relative}
-.flow-steps::before{content:'';position:absolute;left:18px;top:24px;bottom:24px;width:1px;background:linear-gradient(to bottom,rgba(249,202,0,.3),rgba(0,200,255,.15));z-index:0}
+.flow-steps::before{display:none}
 .flow-step{display:flex;align-items:center;gap:14px;padding:11px 0;position:relative;z-index:1;transition:all .35s ease;border-left:2px solid transparent;padding-left:10px;margin-left:-10px}
 .flow-step.fs-active{background:rgba(255,255,255,.04);border-left-color:var(--y)}
 .flow-step.fs-done{border-left-color:rgba(0,255,157,.25)}
@@ -660,7 +660,7 @@ footer{background:#111111;color:rgba(255,255,255,.3);padding:56px 0 28px}
 @media(max-width:560px){.engineers-block-inner{flex-direction:column;gap:16px}.eng-num{font-size:48px}.engineers-block{padding:24px 20px}}
 
 /* FLOW CONNECTOR — green segments */
-.flow-connector{position:absolute;left:18px;width:1px;height:calc(100% + 2px);top:50%;background:rgba(255,255,255,.1);z-index:0;transition:background .5s ease}
+.flow-connector{display:none}
 .flow-step{position:relative}
 .flow-connector.fc-done{background:var(--ng);box-shadow:0 0 6px rgba(0,255,157,.4)}
 .flow-connector.fc-active{background:linear-gradient(to bottom,var(--y),rgba(255,255,255,.1))}
@@ -739,3 +739,37 @@ footer{background:#111111;color:rgba(255,255,255,.3);padding:56px 0 28px}
 .met-b span{color:var(--y)}
 .met-s{font-size:11px;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.05em;line-height:1.5}
 @media(max-width:660px){.met-row{flex-wrap:wrap}.met{flex:0 0 50%}}
+
+/* CONTACT PAGE */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+@media(max-width:760px){.contact-grid{grid-template-columns:1fr;gap:36px}}
+
+/* CHAT MOBILE — ensure messages scroll correctly above input */
+@media(max-width:768px){
+  .chat-window.open{display:flex;flex-direction:column}
+  .chat-messages{flex:1!important;overflow-y:auto;min-height:0!important;-webkit-overflow-scrolling:touch;padding-bottom:8px!important}
+  .chat-input-row{flex-shrink:0;position:relative!important;bottom:auto!important}
+}
+
+/* AUTOPILOT SECTION MOBILE */
+@media(max-width:560px){
+  .auto-pipeline{overflow-x:auto;display:flex!important;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;gap:0}
+  .pipeline-stage{min-width:140px;scroll-snap-align:start;flex-shrink:0}
+  .auto-visual{min-height:unset!important;padding:16px!important}
+  .auto-meta{padding:16px!important}
+  .am-metrics{grid-template-columns:1fr 1fr!important}
+}
+
+/* HERO MOBILE */
+@media(max-width:560px){
+  .hero-locs{flex-direction:column;gap:8px}
+}
+
+/* SERVICES GRID MOBILE */
+@media(max-width:400px){.services-grid{grid-template-columns:1fr}}
+
+/* FOOTER BOTTOM MOBILE */
+@media(max-width:560px){
+  .footer-bottom{flex-direction:column;gap:6px;text-align:center}
+  .footer-bottom div{flex-direction:column;gap:4px;display:flex;align-items:center}
+}

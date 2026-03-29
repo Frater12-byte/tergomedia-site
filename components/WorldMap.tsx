@@ -154,12 +154,16 @@ export default function WorldMap() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width = `${W}px`;
-    canvas.style.height = `${H}px`;
+    const containerW = canvas.parentElement?.offsetWidth || W;
+    const scale = Math.min(containerW / W, 1);
+    const cW = Math.round(W * scale);
+    const cH = Math.round(H * scale);
+    canvas.width = cW * dpr;
+    canvas.height = cH * dpr;
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
     const ctx = canvas.getContext('2d')!;
-    ctx.scale(dpr, dpr);
+    ctx.scale(dpr * scale, dpr * scale);
 
     // Bezier evaluation helper
     const bezier = (

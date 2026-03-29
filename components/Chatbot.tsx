@@ -121,6 +121,10 @@ export default function Chatbot() {
         // On mobile: resize the fullscreen chat to the visual viewport height
         windowRef.current.style.height = `${vv.height}px`;
         windowRef.current.style.top = `${vv.offsetTop}px`;
+        // Re-scroll after keyboard resize so last message stays visible
+        setTimeout(() => {
+          bottomRef.current?.scrollIntoView({ behavior: 'instant', block: 'end' });
+        }, 80);
       } else if (!isMobile && windowRef.current) {
         // On desktop: shift window up if keyboard opens
         const offset = window.innerHeight - (vv.height + vv.offsetTop);

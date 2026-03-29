@@ -73,9 +73,9 @@ export default function Footer() {
         <div className="footer-eu">
           <div className="footer-eu-label">Co-financed by the European Union</div>
           <div className="footer-eu-logos">
-            <img src="/Funds1.svg" alt="EU Fund 1" className="footer-eu-logo" />
-            <img src="/Funds2.svg" alt="EU Fund 2" className="footer-eu-logo" />
-            <img src="/Funds3.svg" alt="EU Fund 3" className="footer-eu-logo" />
+            <img src="/Funds1.png" alt="EU Fund 1" className="footer-eu-logo" />
+            <img src="/Funds2.png" alt="EU Fund 2" className="footer-eu-logo" />
+            <img src="/Funds3.png" alt="EU Fund 3" className="footer-eu-logo" />
           </div>
         </div>
 

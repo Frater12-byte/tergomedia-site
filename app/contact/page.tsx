@@ -19,7 +19,7 @@ export default function ContactPage() {
 
       <section className="section section-dots">
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+          <div className="contact-grid">
             <div>
               <span className="sec-label">Talk to us</span>
               <h2 className="sec-title" style={{ marginBottom: 32 }}>The fastest way<br />to get started.</h2>

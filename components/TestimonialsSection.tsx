@@ -1,6 +1,6 @@
 /* eslint-disable */
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/contact-form';
 
@@ -142,11 +142,23 @@ function ContactFormCard() {
 
 export default function TestimonialsSection() {
   const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(3);
   const trackRef = useRef<HTMLDivElement>(null);
   const startX = useRef(0);
   const isDragging = useRef(false);
-  const count = TESTIMONIALS.length; // 6
-  const visible = 3;
+  const count = TESTIMONIALS.length;
+
+  useEffect(() => {
+    const update = () => setVisible(window.innerWidth <= 560 ? 1 : window.innerWidth <= 860 ? 2 : 3);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  // Reset idx if it exceeds new bounds
+  useEffect(() => {
+    setIdx(i => Math.min(i, Math.max(0, count - visible)));
+  }, [visible, count]);
 
   const prev = () => setIdx(i => Math.max(0, i - 1));
   const next = () => setIdx(i => Math.min(count - visible, i + 1));

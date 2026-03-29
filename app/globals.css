@@ -408,32 +408,30 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 .roi-metric .big{font-family:'Exo 2',sans-serif;font-size:24px;font-weight:800;line-height:1;margin-bottom:4px;color:var(--y)}
 .roi-metric .big.g{color:var(--ng)}
 .roi-metric .lbl{font-size:9px;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.08em}
-.roi-chart-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:20px;margin-bottom:14px}
-.roi-chart-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.roi-chart-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);padding:20px;margin-bottom:14px;overflow:hidden}
+.roi-chart-hd{margin-bottom:8px}
 .roi-chart-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600}
+.roi-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px}
 .rcl{display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,255,.3)}
-.rcl-dot{width:6px;height:6px}
+.rcl-dot{width:6px;height:6px;flex-shrink:0;display:inline-block}
 .rcl-dot.y{background:var(--y)}.rcl-dot.g{background:var(--ng)}
-canvas#roiChart{width:100%!important;height:160px!important}
+.roi-chart-box canvas{width:100%!important;display:block}
 .roi-disclaimer{font-size:10px;color:rgba(255,255,255,.2);line-height:1.65;margin-bottom:18px}
 .roi-cta-row{display:flex;gap:8px;flex-wrap:wrap}
-@media(max-width:860px){.roi-grid{grid-template-columns:1fr;gap:32px}.roi-grid{gap:32px}}
+@media(max-width:860px){.roi-grid{grid-template-columns:1fr;gap:32px}}
 @media(max-width:560px){
-  .roi-panel{padding:24px}
+  .roi-panel{padding:20px}
   .roi-panel-title{font-size:11px}
-  .s-btn{padding:8px 16px;font-size:12px;min-height:38px}
-  .r-btn{padding:8px 14px;font-size:11px;min-height:36px}
   .slider-label{font-size:13px}
   .slider-val{font-size:18px}
   .roi-metric .big{font-size:20px}
-  .sector-btns{display:flex;flex-wrap:wrap;gap:6px}
-  .s-btn{min-width:calc(50% - 3px);font-size:13px;padding:10px 8px;text-align:center}
-  .roi-resp-btns{display:flex;flex-wrap:wrap;gap:6px}
-  .roi-resp-btn{min-width:calc(50% - 3px);font-size:13px;padding:10px 8px;text-align:center}
+  .sector-btns{gap:4px}
+  .s-btn{min-width:calc(50% - 2px);font-size:12px;padding:10px 6px;text-align:center;min-height:40px}
+  .r-btn{min-width:calc(50% - 2px);font-size:12px;padding:9px 6px;text-align:center;min-height:38px}
   .roi-metrics{grid-template-columns:1fr 1fr}
-  .rm-big{font-size:20px}
-  .roi-chart-box{height:180px}
-  .roi-chart-box canvas{height:180px!important}
+  .roi-metric{padding:12px}
+  .roi-cta-row{flex-direction:column}
+  .roi-cta-row .btn{text-align:center;justify-content:center}
 }
 
 /* PORTFOLIO */
@@ -785,17 +783,11 @@ footer{background:#111111;color:rgba(255,255,255,.3);padding:56px 0 28px}
   .am-metric .big{font-size:20px!important}
 }
 
-/* ── ROI CALCULATOR — "WHAT COULD AUTOMATION SAVE" ── */
+/* ── ROI CALCULATOR mobile ── */
 @media(max-width:768px){
-  .roi-grid{grid-template-columns:1fr!important;gap:24px}
+  .roi-grid{grid-template-columns:1fr!important;gap:24px!important}
   .roi-results{position:static!important;top:auto!important}
-  .roi-panel{padding:20px!important}
-  .roi-metrics{grid-template-columns:1fr 1fr!important}
-  .roi-metric{padding:14px!important}
-  .roi-cta-row{flex-direction:column}
-  .roi-cta-row .btn{justify-content:center;text-align:center}
-  .s-btn{min-height:44px;font-size:13px}
-  .r-btn{min-height:40px;font-size:12px}
+  .roi-panel,.roi-results{padding:0!important}
 }
 
 /* ── HOW WE WORK — "FROM FIRST CALL TO LIVE SYSTEM" ── */

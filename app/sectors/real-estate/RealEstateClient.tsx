@@ -26,8 +26,8 @@ function SparkLine({ data }: { data: number[] }) {
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 48, display: 'block' }}>
       <defs>
         <linearGradient id="spk-re" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#00c8ff" />
-          <stop offset="100%" stopColor="#00ff9d" />
+          <stop offset="0%" stopColor="#f9ca00" />
+          <stop offset="100%" stopColor="rgba(249,202,0,.3)" />
         </linearGradient>
       </defs>
       <path d={d} fill="none" stroke="url(#spk-re)" strokeWidth="1.5" strokeLinecap="round" />
@@ -454,7 +454,7 @@ const RE_PROBLEMS: ProblemItem[] = [
     n: '02',
     title: 'Leads going cold',
     pill: '37% of cold leads recovered',
-    pillColor: 'var(--nb)',
+    pillColor: 'var(--y)',
     icon: (
       <svg
         width="16"
@@ -478,7 +478,7 @@ const RE_PROBLEMS: ProblemItem[] = [
     n: '03',
     title: 'No pipeline visibility',
     pill: '6h/week saved on reporting',
-    pillColor: 'var(--ng)',
+    pillColor: 'var(--y)',
     icon: (
       <svg
         width="16"
@@ -504,7 +504,7 @@ const RE_PROBLEMS: ProblemItem[] = [
     n: '04',
     title: 'CRM chaos',
     pill: '100% CRM data accuracy',
-    pillColor: 'var(--nb)',
+    pillColor: 'var(--y)',
     icon: (
       <svg
         width="16"
@@ -661,7 +661,7 @@ const RE_TESTIMONIALS = [
     role: 'CEO, Urban Property Group Bucharest',
     initials: 'EP',
     tag: 'Bucharest · Residential',
-    accent: 'var(--nb)',
+    accent: 'var(--y)',
   },
 ];
 

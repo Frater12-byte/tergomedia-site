@@ -305,9 +305,9 @@ const AGRI_SOLUTIONS: Solution[] = [
 
 const AGRI_STATS = [
   { val: '400ha', label: 'Under continuous monitoring', color: 'var(--y)', borderColor: 'var(--y)' },
-  { val: '3min', label: 'Alert response time', color: 'var(--nb)', borderColor: 'var(--nb)' },
-  { val: '0', label: 'Missed critical events', color: 'var(--ng)', borderColor: 'var(--ng)' },
-  { val: '34%', label: 'Water waste reduction', color: '#fff', borderColor: 'rgba(255,255,255,.2)' },
+  { val: '3min', label: 'Alert response time', color: 'var(--y)', borderColor: 'rgba(249,202,0,.4)' },
+  { val: '0', label: 'Missed critical events', color: 'var(--y)', borderColor: 'rgba(249,202,0,.4)' },
+  { val: '34%', label: 'Water waste reduction', color: 'var(--y)', borderColor: 'rgba(249,202,0,.4)' },
 ];
 
 const AGRI_TESTIMONIALS = [
@@ -317,7 +317,7 @@ const AGRI_TESTIMONIALS = [
     role: 'Operations Director, Agri Novatex Romania',
     initials: 'AC',
     tag: 'Romania · 400ha Precision Farming',
-    accent: 'var(--ng)',
+    accent: 'var(--y)',
   },
   {
     quote: 'The predictive irrigation model alone saved us 34% on water costs in the first season. The dashboard is what I always wanted but never thought a company our size could afford.',
@@ -325,7 +325,7 @@ const AGRI_TESTIMONIALS = [
     role: 'Head of Agronomy, GreenValley Farms',
     initials: 'MI',
     tag: 'Romania · Mixed Crops',
-    accent: 'var(--nb)',
+    accent: 'var(--y)',
   },
 ];
 
@@ -356,7 +356,7 @@ export default function AgricultureClient() {
             <div>
               <div className="page-hero-eyebrow">Sector — Agriculture</div>
               <h1 style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(32px,4.5vw,60px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '16px 0 24px' }}>
-                Precision farming.<br /><em style={{ color: 'var(--ng)', fontStyle: 'italic' }}>Real-time intelligence.</em>
+                Precision farming.<br /><em style={{ color: 'var(--y)', fontStyle: 'normal' }}>Real-time intelligence.</em>
               </h1>
               <p style={{ fontSize: 'clamp(15px,1.5vw,18px)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, marginBottom: 36 }}>
                 IoT sensor networks, live monitoring dashboards, and automated alert escalation. Know what&apos;s happening across every hectare — before it becomes a problem.
@@ -438,7 +438,7 @@ export default function AgricultureClient() {
               <button
                 key={i}
                 onClick={() => setActiveTab(i)}
-                style={{ padding: '12px 20px', fontSize: 12, fontWeight: 600, color: activeTab === i ? 'var(--ng)' : 'rgba(255,255,255,.35)', background: 'transparent', border: 'none', borderBottom: activeTab === i ? '2px solid var(--ng)' : '2px solid transparent', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'color .2s', marginBottom: -1 }}
+                style={{ padding: '12px 20px', fontSize: 12, fontWeight: 600, color: activeTab === i ? 'var(--y)' : 'rgba(255,255,255,.35)', background: 'transparent', border: 'none', borderBottom: activeTab === i ? '2px solid var(--y)' : '2px solid transparent', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'color .2s', marginBottom: -1 }}
               >
                 {sol.n} {sol.title}
               </button>
@@ -454,7 +454,7 @@ export default function AgricultureClient() {
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {AGRI_SOLUTIONS[activeTab].bullets.map((b, bi) => (
                     <li key={bi} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, color: 'rgba(255,255,255,.6)', lineHeight: 1.5 }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ng)" strokeWidth="2.5" style={{ marginTop: 3, flexShrink: 0 }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--y)" strokeWidth="2.5" style={{ marginTop: 3, flexShrink: 0 }}>
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
                       {b}
@@ -510,7 +510,7 @@ export default function AgricultureClient() {
             <span className="sec-label">Case study</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', marginTop: 8 }}>
               <h2 className="sec-title" style={{ margin: 0 }}>Agri Novatex · Bucharest, Romania</h2>
-              <span className="tag" style={{ background: 'rgba(0,255,157,.08)', border: '1px solid rgba(0,255,157,.25)', color: 'var(--ng)' }}>Precision Agriculture</span>
+              <span style={{ display: 'inline-block', padding: '4px 10px', background: 'rgba(249,202,0,.08)', border: '1px solid rgba(249,202,0,.2)', color: 'var(--y)', fontSize: 11, fontWeight: 700, letterSpacing: '.04em' }}>Precision Agriculture</span>
             </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 24 }}>
@@ -523,22 +523,22 @@ export default function AgricultureClient() {
             </div>
             {/* Col 2 */}
             <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.08)', padding: 32 }}>
-              <div style={{ fontSize: 10, color: 'var(--nb)', textTransform: 'uppercase', letterSpacing: '.1em', fontWeight: 700, marginBottom: 16 }}>What We Built</div>
+              <div style={{ fontSize: 10, color: 'var(--y)', textTransform: 'uppercase', letterSpacing: '.1em', fontWeight: 700, marginBottom: 16 }}>What We Built</div>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,.5)', lineHeight: 1.8, margin: 0 }}>
                 A full IoT monitoring platform integrating soil moisture, temperature, and humidity sensors across all 400 hectares. A live dashboard showing every zone in real time. Automated escalation chains — WhatsApp, SMS, and email — triggered the moment any reading crossed a configured threshold.
               </p>
             </div>
             {/* Col 3 */}
             <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.08)', padding: 32 }}>
-              <div style={{ fontSize: 10, color: 'var(--ng)', textTransform: 'uppercase', letterSpacing: '.1em', fontWeight: 700, marginBottom: 16 }}>The Result</div>
+              <div style={{ fontSize: 10, color: 'var(--y)', textTransform: 'uppercase', letterSpacing: '.1em', fontWeight: 700, marginBottom: 16 }}>The Result</div>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,.5)', lineHeight: 1.8, margin: '0 0 24px' }}>
                 Three critical failures prevented in the first six months. Zero missed events since launch. The operations team now monitors the entire farm from a single screen — in the office or from the field.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
                   { val: '< 3min', label: 'Alert response', color: 'var(--y)' },
-                  { val: '0', label: 'Missed events', color: 'var(--nb)' },
-                  { val: '400ha', label: 'Live monitoring', color: 'var(--ng)' },
+                  { val: '0', label: 'Missed events', color: 'var(--y)' },
+                  { val: '400ha', label: 'Live monitoring', color: 'var(--y)' },
                 ].map((s, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <span style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 22, fontWeight: 900, color: s.color, minWidth: 64 }}>{s.val}</span>

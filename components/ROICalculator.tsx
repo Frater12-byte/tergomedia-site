@@ -41,8 +41,19 @@ export default function ROICalculator() {
   const [hrs, setHrs]       = useState(15);
   const [salary, setSalary] = useState(60000);
   const [resp, setResp]     = useState('>24 hrs');
+  const [resizeKey, setResizeKey] = useState(0);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const chartBoxRef = useRef<HTMLDivElement>(null);
+
+  // Redraw canvas on container resize (fixes mobile / orientation change)
+  useEffect(() => {
+    const el = chartBoxRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setResizeKey(k => k + 1));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const s            = SECTORS[sector];
   const respMult     = RESP_OPTIONS.find(o => o.label === resp)?.mult ?? 1.0;
@@ -224,7 +235,7 @@ export default function ROICalculator() {
       ctx.fillText(`M${i + 1}`, toX(i), h - pad.bottom + 14);
     });
 
-  }, [moneySaved, revenueAdd, implementation]);
+  }, [moneySaved, revenueAdd, implementation, resizeKey]);
 
   return (
     <div className="roi-grid">
@@ -332,31 +343,19 @@ export default function ROICalculator() {
         </div>
 
         {/* Canvas chart */}
-        <div className="roi-chart-box">
+        <div className="roi-chart-box" ref={chartBoxRef}>
           <div className="roi-chart-hd">
             <span className="roi-chart-title">12-MONTH PROJECTION</span>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <span className="rcl">
-                <span className="rcl-dot" style={{ background: 'rgba(255,100,80,0.9)', display: 'inline-block', width: 6, height: 6 }} />
-                Investment Cost
-              </span>
-              <span className="rcl">
-                <span className="rcl-dot y" />
-                Cost Savings
-              </span>
-              <span className="rcl">
-                <span className="rcl-dot g" />
-                Revenue Impact
-              </span>
-              <span className="rcl">
-                <span className="rcl-dot" style={{ background: '#00c8ff', display: 'inline-block', width: 6, height: 6 }} />
-                Cumulative ROI
-              </span>
-            </div>
+          </div>
+          <div className="roi-legend">
+            <span className="rcl"><span className="rcl-dot" style={{ background: 'rgba(255,100,80,0.9)' }} />Investment</span>
+            <span className="rcl"><span className="rcl-dot y" />Savings</span>
+            <span className="rcl"><span className="rcl-dot g" />Revenue</span>
+            <span className="rcl"><span className="rcl-dot" style={{ background: '#00c8ff' }} />ROI</span>
           </div>
           <canvas
             ref={canvasRef}
-            style={{ width: '100%', height: '220px', display: 'block' }}
+            style={{ width: '100%', display: 'block' }}
           />
         </div>
 

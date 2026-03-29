@@ -579,21 +579,119 @@ function makeStages(stage: number) {
   ];
 }
 
+// ─── Stage Durations ──────────────────────────────────────────────────────────
+
+const STAGE_DURATIONS = [4000, 8000, 6000, 9000, 4000]; // ms per stage (01→05)
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function AutopilotSection() {
   const [stage, setStage] = useState(0);
+  const [started, setStarted] = useState(false);
+  const [done, setDone] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startedRef = useRef(false);
 
+  // IntersectionObserver — fires once when section enters viewport
   useEffect(() => {
-    const iv = setInterval(() => setStage(s => (s + 1) % 5), 4000);
-    return () => clearInterval(iv);
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !startedRef.current) {
+          startedRef.current = true;
+          setStarted(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
+
+  // Stage auto-advance sequence — triggered when started becomes true
+  useEffect(() => {
+    if (!started) return;
+
+    const advance = (stageIndex: number) => {
+      if (stageIndex >= STAGE_DURATIONS.length) return;
+      timeoutRef.current = setTimeout(() => {
+        const nextStage = stageIndex + 1;
+        if (nextStage < 5) {
+          setStage(nextStage);
+          advance(nextStage);
+        } else {
+          setDone(true);
+        }
+      }, STAGE_DURATIONS[stageIndex]);
+    };
+
+    setStage(0);
+    advance(0);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [started]);
 
   const STAGES = makeStages(stage);
   const s = STAGES[stage];
 
+  const sectionStyle: React.CSSProperties = !done
+    ? { position: 'sticky', top: 0, minHeight: '100vh', zIndex: 50, overflow: 'hidden' }
+    : {};
+
   return (
-    <section className="section auto-section" id="autopilot">
+    <section
+      ref={sectionRef}
+      className="section auto-section"
+      id="autopilot"
+      style={{ ...sectionStyle, position: 'relative' }}
+    >
+      {/* Progress bar */}
+      <div style={{
+        position: 'absolute',
+        top: 0, left: 0, right: 0,
+        height: 3,
+        background: 'rgba(255,255,255,0.08)',
+        zIndex: 10,
+      }}>
+        <div style={{
+          height: '100%',
+          background: 'var(--y)',
+          width: `${((stage + 1) / 5) * 100}%`,
+          transition: 'width 0.6s ease',
+        }} />
+      </div>
+
+      {/* Skip button */}
+      {!done && (
+        <button
+          onClick={() => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            setStage(4);
+            setDone(true);
+          }}
+          style={{
+            position: 'absolute',
+            top: 20,
+            right: 24,
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            color: 'rgba(255,255,255,0.45)',
+            padding: '6px 14px',
+            fontSize: 12,
+            cursor: 'pointer',
+            fontFamily: "'DM Sans', sans-serif",
+            letterSpacing: '.04em',
+            zIndex: 20,
+          }}
+        >
+          Skip →
+        </button>
+      )}
+
       <div className="container">
         <div className="auto-intro">
           <span className="sec-label">See it in action</span>
@@ -603,6 +701,10 @@ export default function AutopilotSection() {
 
         <div className="auto-master">
           <div className="auto-pipeline">
+            {/* Stage indicator */}
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '.08em', marginBottom: 8 }}>
+              STAGE {stage + 1} / 5
+            </div>
             {STAGES.map((st, i) => (
               <div
                 key={i}

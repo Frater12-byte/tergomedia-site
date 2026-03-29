@@ -9,6 +9,8 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import AutomationCarousel from '@/components/AutomationCarousel';
 import CountUp from '@/components/CountUp';
 import WorldMap from '@/components/WorldMap';
+import Image from 'next/image';
+import ProjectTimeline from '@/components/ProjectTimeline';
 
 // ── FLOW CARD ──
 const FLOW_STEPS = [
@@ -156,9 +158,9 @@ export default function Home() {
       {/* AUTOMATION SHOWCASE — 18-card scrolling carousel */}
       <section className="section auto-showcase section-shimmer" id="automation">
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <span className="sec-label">Automation library</span>
+          <span className="sec-label">Automation library — sample only</span>
           <h2 className="sec-title">18+ automations.<br />Real results.</h2>
-          <p className="sec-sub">Live automation systems we&apos;ve built and deployed across industries. Hover to pause.</p>
+          <p className="sec-sub">A sample of what&apos;s live in production. We&apos;ve built hundreds of automations across every industry — the only limit is what your business needs.</p>
         </div>
         <AutomationCarousel />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
@@ -210,14 +212,7 @@ export default function Home() {
                 <div className="hoc-title">Before vs after automation</div>
                 <div className="hoc-sub">Drag the handle to compare — left is before, right is after</div>
                 <BeforeAfterSlider />
-                <div style={{ fontSize: 9, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,.18)', marginBottom: 12 }}>PROJECT TIMELINE</div>
-                <div className="tl">
-                  <div className="tl-item tl-green"><div className="tl-label">Discovery call & audit</div><div className="tl-week">Week 1</div></div>
-                  <div className="tl-item tl-green"><div className="tl-label">Scoping & fixed-price proposal</div><div className="tl-week">Week 1–2</div></div>
-                  <div className="tl-item tl-green"><div className="tl-label">Build: lead capture + WhatsApp AI</div><div className="tl-week">Week 2–4</div></div>
-                  <div className="tl-item tl-yellow"><div className="tl-label">Launch: CRM sync + reporting live</div><div className="tl-week">Week 5 — live now</div></div>
-                  <div className="tl-item"><div className="tl-label">30-day support & optimisation</div><div className="tl-week">Week 6–9</div></div>
-                </div>
+                <ProjectTimeline />
               </div>
             </div>
           </div>
@@ -280,35 +275,35 @@ export default function Home() {
           <h2 className="sec-title">We know your industry.</h2>
           <p className="sec-sub">Deep domain knowledge means we build systems that actually fit how your business works.</p>
           <div className="sectors-grid sectors-grid-8">
-            <Link href="/sectors/real-estate" className="sector-cell">
+            <Link href="/industries/real-estate" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
               <h3>Real Estate</h3><p>Lead automation, CRM integration, portal syncing, property management.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
-            <Link href="/sectors/travel-hospitality" className="sector-cell">
+            <Link href="/industries/travel-hospitality" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M3 17l3-8 4 6 3-4 4 6"/></svg></div>
               <h3>Travel & Hospitality</h3><p>Booking engines, channel managers, guest comms, revenue tools.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
-            <Link href="/sectors/agriculture" className="sector-cell">
+            <Link href="/industries/agriculture" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M12 22V12M12 12C12 12 7 6 2 6M12 12C12 12 17 6 22 6"/><path d="M2 6c0 0 2 5 10 6M22 6c0 0-2 5-10 6"/></svg></div>
               <h3>Agriculture</h3><p>IoT sensor networks, crop monitoring, automated alerts, supply chain.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
-            <Link href="/sectors/professional-services" className="sector-cell">
+            <Link href="/industries/professional-services" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
               <h3>Professional Services</h3><p>Client onboarding pipelines, document automation, billing, KPI reporting.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
-            <Link href="/sectors" className="sector-cell">
+            <Link href="/industries/ecommerce" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
               <h3>E-commerce</h3><p>Price sync, inventory management, order automation, marketplace integration.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
-            <Link href="/sectors" className="sector-cell">
+            <Link href="/industries/finance-legal" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
               <h3>Finance & Legal</h3><p>Document AI, contract management, compliance monitoring, reporting.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
-            <Link href="/sectors" className="sector-cell">
+            <Link href="/industries/healthcare" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
               <h3>Healthcare</h3><p>Patient onboarding, document routing, appointment automation, compliance.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
-            <Link href="/sectors" className="sector-cell">
+            <Link href="/industries/logistics" className="sector-cell">
               <div className="sec-icon"><svg viewBox="0 0 24 24" fill="none" strokeWidth="1.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
               <h3>Logistics & Supply Chain</h3><p>Fleet tracking, customs docs, supplier management, automated alerts.</p><span className="sec-lnk">EXPLORE →</span>
             </Link>
@@ -327,7 +322,7 @@ export default function Home() {
           <p className="sec-sub">No account managers or junior teams. You work directly with our founders — who have built and shipped over 100 digital products.</p>
           <div className="team-grid">
             <div className="team-card">
-              <img src="/Images/IMG-20.png" alt="Maria Terragni" className="team-img" />
+              <Image src="/Images/IMG-19.png" alt="Maria Terragni" className="team-img" width={400} height={400} style={{ aspectRatio: '1/1', objectFit: 'cover', objectPosition: 'top center', filter: 'grayscale(15%)' }} />
               <div className="team-body">
                 <div className="team-roles"><span className="t-role-tag">CEO</span><span className="t-role-tag">Strategy</span><span className="t-role-tag">Client Partnerships</span></div>
                 <h3>Maria Terragni</h3>
@@ -338,7 +333,7 @@ export default function Home() {
               </div>
             </div>
             <div className="team-card">
-              <img src="/Images/IMG-26.png" alt="Francesco Terragni" className="team-img" />
+              <Image src="/Images/IMG-04.png" alt="Francesco Terragni" className="team-img" width={400} height={400} style={{ aspectRatio: '1/1', objectFit: 'cover', objectPosition: 'top center', filter: 'grayscale(15%)' }} />
               <div className="team-body">
                 <div className="team-roles"><span className="t-role-tag">CTO</span><span className="t-role-tag">Engineering</span><span className="t-role-tag">AI Architecture</span></div>
                 <h3>Francesco Terragni</h3>

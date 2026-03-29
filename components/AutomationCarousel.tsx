@@ -1,26 +1,27 @@
 /* eslint-disable */
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const AUTOMATIONS = [
-  { n: 1,  title: 'AI Lead Response',             industry: 'Real Estate',          stack: 'GPT-4o · WhatsApp API · n8n · HubSpot',          result: 'Response time: 4h → 90s',                color: '#f9ca00' },
-  { n: 2,  title: 'Invoice & Document AI',         industry: 'Finance / Legal',      stack: 'Claude · OCR · Make · Xero',                     result: 'Manual entry eliminated 100%',           color: '#00c8ff' },
-  { n: 3,  title: 'KPI Dashboard Auto-Report',     industry: 'All sectors',          stack: 'Google Sheets · Slack · PDF gen · n8n',           result: '38 hrs/mo saved',                        color: '#b06eff' },
-  { n: 4,  title: 'Client Onboarding Pipeline',    industry: 'Professional Services',stack: 'HubSpot · Slack · Google Cal · DocuSign',         result: 'Onboarding time cut 70%',                color: '#00ff9d' },
-  { n: 5,  title: 'IoT Alert & Escalation',        industry: 'Agriculture / Industrial', stack: 'MQTT · Node.js · Twilio · PagerDuty',         result: 'Alert response: hours → minutes',        color: '#f9ca00' },
-  { n: 6,  title: 'Marketplace Price Sync',        industry: 'E-commerce',           stack: 'WooCommerce · Amazon API · Make',                 result: 'Sync errors dropped to zero',            color: '#00c8ff' },
-  { n: 7,  title: 'Tenant Screening Automation',   industry: 'Real Estate',          stack: 'GPT-4o · DocuSign · Stripe · n8n',               result: 'Screening: 3 days → 4 hrs',              color: '#b06eff' },
-  { n: 8,  title: 'Booking Confirmation Flow',     industry: 'Travel',               stack: 'Zapier · Twilio · Google Cal · SendGrid',         result: 'No-shows reduced by 34%',                color: '#00ff9d' },
-  { n: 9,  title: 'Supplier Quote Aggregator',     industry: 'Manufacturing',        stack: 'Python · Google Sheets · Gmail API',              result: 'Quote turnaround: 5 days → 6 hrs',       color: '#f9ca00' },
-  { n: 10, title: 'HR Onboarding Bot',             industry: 'HR / People Ops',      stack: 'Slack · Notion · BambooHR · n8n',                result: 'New hire setup: 2 days → 45 min',        color: '#00c8ff' },
-  { n: 11, title: 'Social Media Content Pipeline', industry: 'Marketing',            stack: 'GPT-4o · Buffer · Airtable · Make',               result: '20 hrs/wk reclaimed',                    color: '#b06eff' },
-  { n: 12, title: 'Contract Renewal Alerts',       industry: 'Legal / SaaS',         stack: 'Claude · Google Drive · HubSpot · Gmail',         result: 'Zero missed renewals',                   color: '#00ff9d' },
-  { n: 13, title: 'Crop Monitoring & Alert',       industry: 'Agriculture',          stack: 'IoT sensors · MQTT · Twilio · Power BI',          result: '3 critical failures prevented (6mo)',    color: '#f9ca00' },
-  { n: 14, title: 'Support Ticket Triage AI',      industry: 'SaaS / Tech',          stack: 'GPT-4o · Zendesk · Slack · n8n',                 result: 'First response: 4h → 8 min',             color: '#00c8ff' },
-  { n: 15, title: 'Revenue Leakage Detector',      industry: 'Finance',              stack: 'Python · Google Sheets · Stripe · Slack',         result: 'AED 180K recovered in Q1',               color: '#b06eff' },
-  { n: 16, title: 'Regulatory Compliance Monitor', industry: 'Finance / Legal',      stack: 'Claude · web scraping · email · n8n',             result: '100% compliance, zero manual review',    color: '#00ff9d' },
-  { n: 17, title: 'Property Listing Sync',         industry: 'Real Estate',          stack: 'WooCommerce · Bayut API · Zapier',                result: 'Listing errors dropped to zero',          color: '#f9ca00' },
-  { n: 18, title: 'Guest Review Response AI',      industry: 'Hospitality',          stack: 'GPT-4o · Airbnb API · Booking.com API',           result: 'Review response: 40% → 98%',             color: '#00c8ff' },
+  { n: 1,  slug: 'ai-lead-response',              title: 'AI Lead Response',             industry: 'Real Estate',          stack: 'GPT-4o · WhatsApp API · n8n · HubSpot',          result: 'Response time: 4h → 90s',                color: '#f9ca00' },
+  { n: 2,  slug: 'invoice-document-ai',           title: 'Invoice & Document AI',         industry: 'Finance / Legal',      stack: 'Claude · OCR · Make · Xero',                     result: 'Manual entry eliminated 100%',           color: '#00c8ff' },
+  { n: 3,  slug: 'kpi-dashboard-report',          title: 'KPI Dashboard Auto-Report',     industry: 'All sectors',          stack: 'Google Sheets · Slack · PDF gen · n8n',           result: '38 hrs/mo saved',                        color: '#b06eff' },
+  { n: 4,  slug: 'client-onboarding-pipeline',   title: 'Client Onboarding Pipeline',    industry: 'Professional Services',stack: 'HubSpot · Slack · Google Cal · DocuSign',         result: 'Onboarding time cut 70%',                color: '#00ff9d' },
+  { n: 5,  slug: 'iot-alert-escalation',         title: 'IoT Alert & Escalation',        industry: 'Agriculture / Industrial', stack: 'MQTT · Node.js · Twilio · PagerDuty',         result: 'Alert response: hours → minutes',        color: '#f9ca00' },
+  { n: 6,  slug: 'marketplace-price-sync',       title: 'Marketplace Price Sync',        industry: 'E-commerce',           stack: 'WooCommerce · Amazon API · Make',                 result: 'Sync errors dropped to zero',            color: '#00c8ff' },
+  { n: 7,  slug: 'tenant-screening',             title: 'Tenant Screening Automation',   industry: 'Real Estate',          stack: 'GPT-4o · DocuSign · Stripe · n8n',               result: 'Screening: 3 days → 4 hrs',              color: '#b06eff' },
+  { n: 8,  slug: 'booking-confirmation-flow',    title: 'Booking Confirmation Flow',     industry: 'Travel',               stack: 'Zapier · Twilio · Google Cal · SendGrid',         result: 'No-shows reduced by 34%',                color: '#00ff9d' },
+  { n: 9,  slug: 'supplier-quote-aggregator',    title: 'Supplier Quote Aggregator',     industry: 'Manufacturing',        stack: 'Python · Google Sheets · Gmail API',              result: 'Quote turnaround: 5 days → 6 hrs',       color: '#f9ca00' },
+  { n: 10, slug: 'hr-onboarding-bot',            title: 'HR Onboarding Bot',             industry: 'HR / People Ops',      stack: 'Slack · Notion · BambooHR · n8n',                result: 'New hire setup: 2 days → 45 min',        color: '#00c8ff' },
+  { n: 11, slug: 'social-media-pipeline',        title: 'Social Media Content Pipeline', industry: 'Marketing',            stack: 'GPT-4o · Buffer · Airtable · Make',               result: '20 hrs/wk reclaimed',                    color: '#b06eff' },
+  { n: 12, slug: 'contract-renewal-alerts',      title: 'Contract Renewal Alerts',       industry: 'Legal / SaaS',         stack: 'Claude · Google Drive · HubSpot · Gmail',         result: 'Zero missed renewals',                   color: '#00ff9d' },
+  { n: 13, slug: 'crop-monitoring-alert',        title: 'Crop Monitoring & Alert',       industry: 'Agriculture',          stack: 'IoT sensors · MQTT · Twilio · Power BI',          result: '3 critical failures prevented (6mo)',    color: '#f9ca00' },
+  { n: 14, slug: 'support-ticket-triage',        title: 'Support Ticket Triage AI',      industry: 'SaaS / Tech',          stack: 'GPT-4o · Zendesk · Slack · n8n',                 result: 'First response: 4h → 8 min',             color: '#00c8ff' },
+  { n: 15, slug: 'revenue-leakage-detector',     title: 'Revenue Leakage Detector',      industry: 'Finance',              stack: 'Python · Google Sheets · Stripe · Slack',         result: 'AED 180K recovered in Q1',               color: '#b06eff' },
+  { n: 16, slug: 'regulatory-compliance-monitor',title: 'Regulatory Compliance Monitor', industry: 'Finance / Legal',      stack: 'Claude · web scraping · email · n8n',             result: '100% compliance, zero manual review',    color: '#00ff9d' },
+  { n: 17, slug: 'property-listing-sync',        title: 'Property Listing Sync',         industry: 'Real Estate',          stack: 'WooCommerce · Bayut API · Zapier',                result: 'Listing errors dropped to zero',          color: '#f9ca00' },
+  { n: 18, slug: 'guest-review-response',        title: 'Guest Review Response AI',      industry: 'Hospitality',          stack: 'GPT-4o · Airbnb API · Booking.com API',           result: 'Review response: 40% → 98%',             color: '#00c8ff' },
 ];
 
 const items = [...AUTOMATIONS, ...AUTOMATIONS];
@@ -52,8 +53,9 @@ export default function AutomationCarousel() {
         style={{ animationPlayState: paused ? 'paused' : 'running' }}
       >
         {items.map((item, idx) => (
-          <div
+          <Link
             key={idx}
+            href={`/automations/${item.slug}`}
             style={{
               width: 280,
               flexShrink: 0,
@@ -63,6 +65,7 @@ export default function AutomationCarousel() {
               display: 'flex',
               flexDirection: 'column',
               gap: 12,
+              textDecoration: 'none',
             }}
           >
             {/* Top: colored circle + industry tag */}
@@ -132,7 +135,7 @@ export default function AutomationCarousel() {
             >
               {item.result}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

@@ -62,7 +62,7 @@ export default function ROICalculator() {
 
     const dpr = window.devicePixelRatio || 1;
     const cssW = canvas.offsetWidth;
-    const cssH = 200;
+    const cssH = 220;
     canvas.width  = cssW * dpr;
     canvas.height = cssH * dpr;
     canvas.style.width  = `${cssW}px`;
@@ -74,52 +74,63 @@ export default function ROICalculator() {
 
     ctx.clearRect(0, 0, w, h);
 
-    const months = 12;
+    const monthCount = 12;
+    const months = Array.from({ length: monthCount }, (_, i) => i);
 
-    // Build data arrays (monthly cumulative values)
-    const investData: number[] = [];
-    const savingsData: number[] = [];
-    const revenueData: number[] = [];
+    const implCost  = implementation;   // 24000, paid in month 1
+    const maintCost = 800;              // ~$800/mo from month 2+
 
-    for (let i = 0; i < months; i++) {
-      const t = (i + 1) / months;
-      // Investment: starts at -implementation, recovers linearly to 0 by month 12
-      investData.push(-implementation + implementation * t);
-      savingsData.push(moneySaved * t);
-      revenueData.push(revenueAdd * t);
+    // Investment Cost line — always positive (shown as a cost magnitude)
+    const investmentData = months.map((_, i) => i === 0 ? implCost : maintCost);
+
+    // Cost Savings — cumulative, grows from month 2
+    const monthlySavings = moneySaved / 12;
+    const costSavingsData = months.map((_, i) => i === 0 ? 0 : monthlySavings * i);
+
+    // Revenue Impact — cumulative, grows from month 2
+    const monthlyRevenue = revenueAdd / 12;
+    const revenueImpactData = months.map((_, i) => i === 0 ? 0 : monthlyRevenue * i);
+
+    // Cumulative ROI = (savings + revenue) - cumulative investment
+    const cumulativeInvestment = months.map((_, i) => implCost + maintCost * i);
+    const cumulativeROIData = months.map(
+      (_, i) => costSavingsData[i] + revenueImpactData[i] - cumulativeInvestment[i]
+    );
+
+    // Find first month where cumulative ROI turns positive
+    let roiPositiveIdx = -1;
+    for (let i = 0; i < monthCount; i++) {
+      if (cumulativeROIData[i] >= 0) { roiPositiveIdx = i; break; }
     }
 
-    // Find breakeven month index: first month where investData >= 0
-    // (investment line crosses zero — it's linear so it hits 0 at month 12 by design,
-    // but we also want to flag when total cumulative ROI turns positive)
-    const totalData = savingsData.map((sv, i) => sv + revenueData[i] - implementation);
-    let breakevenIdx = -1;
-    for (let i = 0; i < months; i++) {
-      if (totalData[i] >= 0) { breakevenIdx = i; break; }
-    }
-
-    // Determine Y range
-    const allVals = [...investData, ...savingsData, ...revenueData];
-    const minVal  = Math.min(...allVals);
-    const maxVal  = Math.max(...allVals);
-    const range   = maxVal - minVal || 1;
+    // Determine Y range across all four datasets
+    const allVals = [
+      ...investmentData,
+      ...costSavingsData,
+      ...revenueImpactData,
+      ...cumulativeROIData,
+    ];
+    const minVal = Math.min(0, ...allVals);
+    const maxVal = Math.max(...allVals);
+    const range  = maxVal - minVal || 1;
 
     const pad = { top: 20, bottom: 30, left: 56, right: 12 };
     const chartH = h - pad.top - pad.bottom;
     const chartW = w - pad.left - pad.right;
 
     const toY = (v: number) => pad.top + chartH - ((v - minVal) / range) * chartH;
-    const toX = (i: number) => pad.left + (i / (months - 1)) * chartW;
+    const toX = (i: number) => pad.left + (i / (monthCount - 1)) * chartW;
 
     // Grid lines + Y-axis labels
     const ySteps = 5;
     ctx.font = `9px 'DM Sans', sans-serif`;
     ctx.textAlign = 'right';
-    for (let s = 0; s <= ySteps; s++) {
-      const val = minVal + (range / ySteps) * s;
+    for (let step = 0; step <= ySteps; step++) {
+      const val = minVal + (range / ySteps) * step;
       const y   = toY(val);
       ctx.strokeStyle = 'rgba(255,255,255,0.05)';
       ctx.lineWidth   = 1;
+      ctx.setLineDash([]);
       ctx.beginPath();
       ctx.moveTo(pad.left, y);
       ctx.lineTo(w - pad.right, y);
@@ -129,8 +140,8 @@ export default function ROICalculator() {
       ctx.fillText(fmtDollar(Math.round(val)), pad.left - 4, y + 3);
     }
 
-    // Zero line
-    if (minVal < 0 && maxVal > 0) {
+    // Zero line (only needed when range dips below zero)
+    if (minVal < 0) {
       const zeroY = toY(0);
       ctx.strokeStyle = 'rgba(255,255,255,0.15)';
       ctx.lineWidth   = 1;
@@ -142,9 +153,9 @@ export default function ROICalculator() {
       ctx.setLineDash([]);
     }
 
-    // Breakeven vertical line
-    if (breakevenIdx >= 0) {
-      const bx = toX(breakevenIdx);
+    // "ROI Positive" vertical dashed line
+    if (roiPositiveIdx >= 0) {
+      const bx = toX(roiPositiveIdx);
       ctx.strokeStyle = 'rgba(255,255,255,0.25)';
       ctx.lineWidth   = 1;
       ctx.setLineDash([3, 3]);
@@ -154,50 +165,61 @@ export default function ROICalculator() {
       ctx.stroke();
       ctx.setLineDash([]);
 
-      ctx.fillStyle   = 'rgba(255,255,255,0.5)';
-      ctx.font        = `bold 8px 'DM Sans', sans-serif`;
-      ctx.textAlign   = 'center';
-      ctx.fillText('Breakeven', bx, pad.top - 5);
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font      = `bold 8px 'DM Sans', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('ROI Positive', bx, pad.top - 5);
     }
 
     // Draw a line helper
-    const drawLine = (data: number[], color: string, lw = 1.5) => {
+    const drawLine = (
+      data: number[],
+      color: string,
+      lw = 1.5,
+      dashed = false,
+    ) => {
       ctx.beginPath();
       ctx.strokeStyle = color;
       ctx.lineWidth   = lw;
       ctx.lineJoin    = 'round';
+      if (dashed) ctx.setLineDash([4, 3]);
+      else ctx.setLineDash([]);
       data.forEach((v, i) => {
         const x = toX(i);
         const y = toY(v);
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
       ctx.stroke();
+      ctx.setLineDash([]);
     };
 
-    // Investment line (red-ish)
-    drawLine(investData, 'rgba(255,100,100,0.8)');
-    // Cost Savings (yellow)
-    drawLine(savingsData, '#f9ca00');
-    // Revenue Impact (green)
-    drawLine(revenueData, '#00ff9d');
+    // 1. Investment Cost — red/orange, dashed
+    drawLine(investmentData, 'rgba(255,100,80,0.9)', 1.5, true);
+    // 2. Cost Savings — yellow, solid
+    drawLine(costSavingsData, '#f9ca00');
+    // 3. Revenue Impact — green, solid
+    drawLine(revenueImpactData, '#00ff9d');
+    // 4. Cumulative ROI — blue/cyan, solid, thicker
+    drawLine(cumulativeROIData, '#00c8ff', 2.5);
 
     // Dots at last point
     const dotEnd = (data: number[], color: string) => {
-      const x = toX(months - 1);
-      const y = toY(data[months - 1]);
+      const x = toX(monthCount - 1);
+      const y = toY(data[monthCount - 1]);
       ctx.beginPath();
       ctx.arc(x, y, 3, 0, Math.PI * 2);
       ctx.fillStyle = color;
       ctx.fill();
     };
-    dotEnd(investData, 'rgba(255,100,100,0.9)');
-    dotEnd(savingsData, '#f9ca00');
-    dotEnd(revenueData, '#00ff9d');
+    dotEnd(investmentData,   'rgba(255,100,80,0.9)');
+    dotEnd(costSavingsData,  '#f9ca00');
+    dotEnd(revenueImpactData,'#00ff9d');
+    dotEnd(cumulativeROIData,'#00c8ff');
 
     // X-axis labels
-    ctx.fillStyle  = 'rgba(255,255,255,0.2)';
-    ctx.font       = `9px 'DM Sans', sans-serif`;
-    ctx.textAlign  = 'center';
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font      = `9px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'center';
     [0, 2, 5, 8, 11].forEach(i => {
       ctx.fillText(`M${i + 1}`, toX(i), h - pad.bottom + 14);
     });
@@ -315,8 +337,8 @@ export default function ROICalculator() {
             <span className="roi-chart-title">12-MONTH PROJECTION</span>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <span className="rcl">
-                <span className="rcl-dot" style={{ background: 'rgba(255,100,100,0.85)', display: 'inline-block', width: 6, height: 6 }} />
-                Investment
+                <span className="rcl-dot" style={{ background: 'rgba(255,100,80,0.9)', display: 'inline-block', width: 6, height: 6 }} />
+                Investment Cost
               </span>
               <span className="rcl">
                 <span className="rcl-dot y" />
@@ -326,11 +348,15 @@ export default function ROICalculator() {
                 <span className="rcl-dot g" />
                 Revenue Impact
               </span>
+              <span className="rcl">
+                <span className="rcl-dot" style={{ background: '#00c8ff', display: 'inline-block', width: 6, height: 6 }} />
+                Cumulative ROI
+              </span>
             </div>
           </div>
           <canvas
             ref={canvasRef}
-            style={{ width: '100%', height: '200px', display: 'block' }}
+            style={{ width: '100%', height: '220px', display: 'block' }}
           />
         </div>
 

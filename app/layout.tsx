@@ -22,17 +22,27 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Tergo Media — AI Automation & Custom Software Agency',
-  description:
-    'Tergo Media builds AI automation and custom software that works while you sleep — freeing your team to focus on growth, not admin. Dubai · Bucharest · Milan.',
-  keywords: 'AI automation, custom software, CTO advisory, digital transformation, Dubai, Bucharest, Milan',
+  title: 'Tergo Media — AI Automation & Custom Software',
+  description: 'We build AI automation and custom software that works while you sleep. Tergo Media — Dubai, Bucharest, Milan.',
+  keywords: 'AI automation, custom software, n8n, Make, WhatsApp automation, CRM integration, digital transformation, Dubai, UAE',
   openGraph: {
-    title: 'Tergo Media — AI Automation & Custom Software Agency',
-    description: 'AI · Automation · Custom Software. Based in Dubai, Bucharest & Milan.',
+    title: 'Tergo Media — AI Automation & Custom Software',
+    description: 'We build systems that run your business. AI automation, custom software, fractional CTO. Based in Dubai.',
     url: 'https://tergomedia.com',
     siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    locale: 'en_US',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tergo Media — AI Automation & Custom Software',
+    description: 'We build systems that run your business.',
+    images: ['/og-image.png'],
+  },
+  icons: { icon: '/favicon.png', shortcut: '/favicon.png', apple: '/favicon.png' },
+  robots: { index: true, follow: true },
+  alternates: { canonical: 'https://tergomedia.com' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

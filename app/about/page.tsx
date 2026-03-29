@@ -1,5 +1,6 @@
 /* eslint-disable */
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default function AboutPage() {
           <h2 className="sec-title">Two people. 20+ years<br />of combined experience.</h2>
           <div className="team-grid">
             <div className="team-card">
-              <img src="/Images/IMG-20.png" alt="Maria Terragni" className="team-img" />
+              <Image src="/Images/IMG-19.png" alt="Maria Terragni" className="team-img" width={400} height={400} style={{ aspectRatio: '1/1', objectFit: 'cover', objectPosition: 'top center', filter: 'grayscale(15%)' }} />
               <div className="team-body">
                 <div className="team-roles"><span className="t-role-tag">CEO</span><span className="t-role-tag">Strategy</span><span className="t-role-tag">Client Partnerships</span></div>
                 <h3>Maria Terragni</h3>
@@ -36,7 +37,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="team-card">
-              <img src="/Images/IMG-26.png" alt="Francesco Terragni" className="team-img" />
+              <Image src="/Images/IMG-04.png" alt="Francesco Terragni" className="team-img" width={400} height={400} style={{ aspectRatio: '1/1', objectFit: 'cover', objectPosition: 'top center', filter: 'grayscale(15%)' }} />
               <div className="team-body">
                 <div className="team-roles"><span className="t-role-tag">CTO</span><span className="t-role-tag">Engineering</span><span className="t-role-tag">AI Architecture</span></div>
                 <h3>Francesco Terragni</h3>
@@ -81,7 +82,7 @@ export default function AboutPage() {
                     { big: '10+', label: 'Years shipping', cls: '' },
                     { big: '100+', label: 'Projects live', cls: '' },
                     { big: '40+', label: 'Automations built', cls: '' },
-                    { big: '$7M+', label: 'Revenue impact', cls: '' },
+                    { big: '$28M+', label: 'Revenue impact', cls: '' },
                     { big: '3', label: 'Office locations', cls: '' },
                     { big: '4.9★', label: 'Avg client rating', cls: '' },
                   ].map(m => (

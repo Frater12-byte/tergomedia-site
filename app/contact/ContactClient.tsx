@@ -1,7 +1,7 @@
 /* eslint-disable */
 'use client';
 import { useState } from 'react';
-import Link from 'next/link';
+import Image from 'next/image';
 import WorldMap from '@/components/WorldMap';
 import { submitForm } from '@/lib/submitForm';
 
@@ -161,6 +161,36 @@ export default function ContactClient() {
                 </form>
               )}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TEAM */}
+      <section className="section" style={{ background: 'var(--dark2)' }}>
+        <div className="container">
+          <div style={{ maxWidth: 560, marginBottom: 48 }}>
+            <span className="sec-label">The founders</span>
+            <h2 className="sec-title">The people you'll work with.</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24, maxWidth: 640 }}>
+            {[
+              { img: '/Images/IMG-19.png', name: 'Maria Terragni', role: 'CEO', location: 'Dubai, UAE', linkedin: 'https://www.linkedin.com/in/maria-terragni/', color: '#f9ca00' },
+              { img: '/Images/IMG-04.png', name: 'Francesco Terragni', role: 'CTO', location: 'Bucharest, Romania', linkedin: 'https://www.linkedin.com/in/francescoterragni/', color: '#00FF9D' },
+            ].map(p => (
+              <div key={p.name} style={{ background: 'var(--dark)', border: '1px solid rgba(255,255,255,.07)', overflow: 'hidden' }}>
+                <div style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', background: '#111' }}>
+                  <Image src={p.img} alt={p.name} fill style={{ objectFit: 'cover', objectPosition: 'top center' }} />
+                </div>
+                <div style={{ padding: '20px 24px 24px' }}>
+                  <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{p.name}</div>
+                  <div style={{ fontSize: 12, color: `${p.color}`, fontWeight: 600, letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 8 }}>{p.role}</div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,.35)', marginBottom: 16 }}>{p.location}</div>
+                  <a href={p.linkedin} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'rgba(255,255,255,.45)', textDecoration: 'none', border: '1px solid rgba(255,255,255,.1)', padding: '6px 12px', transition: 'color .2s, border-color .2s' }}>
+                    <span style={{ fontSize: 13, fontWeight: 700 }}>in</span> Connect on LinkedIn
+                  </a>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

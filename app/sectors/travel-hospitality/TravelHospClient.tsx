@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import ROICalculator from '@/components/ROICalculator';
+import SectorTestimonialsSlider from '@/components/SectorTestimonialsSlider';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -17,22 +18,6 @@ function useIsMobile() {
   return v;
 }
 
-function SparkLine({ data }: { data: number[] }) {
-  const W = 300, H = 60;
-  const min = Math.min(...data), max = Math.max(...data);
-  const pts = data.map((v, i) => [(i / (data.length - 1)) * W, H - ((v - min) / (max - min)) * (H - 8) - 4]);
-  let d = `M ${pts[0][0]},${pts[0][1]}`;
-  for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], cpx = (x0 + x1) / 2;
-    d += ` C ${cpx},${y0} ${cpx},${y1} ${x1},${y1}`;
-  }
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 48, display: 'block' }}>
-      <defs><linearGradient id="spk-th" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#f9ca00"/><stop offset="100%" stopColor="rgba(249,202,0,.3)"/></linearGradient></defs>
-      <path d={d} fill="none" stroke="url(#spk-th)" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 function FlowDiagram({ flow }: { flow: { sources: string[]; engine: string; outputs: string[] } }) {
   return (
@@ -84,7 +69,7 @@ function AccordionItem({ item, open, onToggle, isMobile }: { item: Problem; open
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}><span>After</span><span style={{ color: 'var(--y)' }}>{bar.after}</span></div>
                   <div style={{ height: 4, background: 'rgba(255,255,255,.08)', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${afterWidths[bi]}%`, background: 'var(--y)', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
+                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${afterWidths[bi]}%`, background: '#22c55e', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
                   </div>
                 </div>
               </div>
@@ -114,7 +99,6 @@ function StatItem({ val, label }: { val: string; label: string }) {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const SPARKLINE = [10,15,18,14,22,25,20,30,28,35,40,38,45,50,48,56,60,58,65,72];
 
 const PROBLEMS: Problem[] = [
   {
@@ -191,39 +175,23 @@ export default function TravelHospClient() {
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)', backgroundSize: '80px 80px', zIndex: 1 }} />
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 160, background: 'linear-gradient(transparent,#0d0d0d)', zIndex: 2 }} />
         <div className="container" style={{ position: 'relative', zIndex: 3, width: '100%' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 48 : 64, alignItems: 'center' }}>
-            <div>
-              <div className="page-hero-eyebrow">Sector — Travel &amp; Hospitality</div>
-              <h1 style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(32px,4.5vw,60px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '16px 0 24px' }}>
-                Guest experience.<br /><em style={{ color: 'var(--y)', fontStyle: 'normal' }}>Fully automated.</em>
-              </h1>
-              <p style={{ fontSize: 'clamp(15px,1.5vw,18px)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, marginBottom: 36 }}>
-                Booking flows, guest communications, review responses, and revenue dashboards — all running without your team lifting a finger.
-              </p>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 48 }}>
-                <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a discovery call →</a>
-                <Link href="/portfolio" className="btn btn-ol btn-lg">See case studies</Link>
-              </div>
-              <div className="met-row">
-                <div className="met"><div className="met-b">99.9<span>%</span></div><div className="met-s">System uptime<br />across clients</div></div>
-                <div className="met"><div className="met-b">12k<span>+</span></div><div className="met-s">Tasks automated<br />per month</div></div>
-                <div className="met"><div className="met-b">2<span>hr</span></div><div className="met-s">Review response<br />time</div></div>
-                <div className="met"><div className="met-b">0</div><div className="met-s">Double<br />bookings</div></div>
-              </div>
+          <div style={{ maxWidth: 680 }}>
+            <div className="page-hero-eyebrow">Sector — Travel &amp; Hospitality</div>
+            <h1 style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(32px,4.5vw,60px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '16px 0 24px' }}>
+              Guest experience.<br /><em style={{ color: 'var(--y)', fontStyle: 'normal' }}>Fully automated.</em>
+            </h1>
+            <p style={{ fontSize: 'clamp(15px,1.5vw,18px)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, marginBottom: 36 }}>
+              Booking flows, guest communications, review responses, and revenue dashboards — all running without your team lifting a finger.
+            </p>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 48 }}>
+              <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a discovery call →</a>
+              <Link href="/portfolio" className="btn btn-ol btn-lg">See case studies</Link>
             </div>
-            <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.1)', padding: 32 }}>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '.1em', marginBottom: 24 }}>Live impact — Travel &amp; Hospitality</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'rgba(255,255,255,.06)', marginBottom: 24 }}>
-                {[{ val: '99.9%' }, { val: '12k+' }, { val: '<2hr' }, { val: '0' }].map((item, i) => (
-                  <div key={i} style={{ background: '#0d0d0d', padding: '24px 20px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(22px,2.5vw,32px)', fontWeight: 900, color: 'var(--y)', lineHeight: 1 }}>{item.val}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 16 }}>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,.25)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 8 }}>Automation volume over time</div>
-                <SparkLine data={SPARKLINE} />
-              </div>
+            <div className="met-row">
+              <div className="met"><div className="met-b">99.9<span>%</span></div><div className="met-s">System uptime<br />across clients</div></div>
+              <div className="met"><div className="met-b">12k<span>+</span></div><div className="met-s">Tasks automated<br />per month</div></div>
+              <div className="met"><div className="met-b">2<span>hr</span></div><div className="met-s">Review response<br />time</div></div>
+              <div className="met"><div className="met-b">0</div><div className="met-s">Double<br />bookings</div></div>
             </div>
           </div>
         </div>
@@ -341,24 +309,7 @@ export default function TravelHospClient() {
             <span className="sec-label">Client results</span>
             <h2 className="sec-title">From the teams who run the properties.</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 1, background: 'rgba(255,255,255,.04)' }}>
-            {TESTIMONIALS.map((t, i) => (
-              <div key={i} style={{ background: 'var(--dark)', padding: 36, display: 'flex', flexDirection: 'column', gap: 24 }}>
-                <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
-                  <path d="M0 20V12.5C0 5.6 4.2 1.4 12.6 0l1.4 2.1C9.1 3.2 6.7 5.7 6.3 9.5H11V20H0zm17 0V12.5C17 5.6 21.2 1.4 29.6 0L31 2.1C26.1 3.2 23.7 5.7 23.3 9.5H28V20H17z" fill="rgba(249,202,0,.18)" />
-                </svg>
-                <p style={{ fontSize: 15, color: 'rgba(255,255,255,.65)', lineHeight: 1.8, margin: 0, fontStyle: 'italic' }}>&ldquo;{t.quote}&rdquo;</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 20 }}>
-                  <div style={{ width: 40, height: 40, background: 'rgba(249,202,0,.1)', border: '1px solid rgba(249,202,0,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: 'var(--y)', flexShrink: 0 }}>{t.initials}</div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{t.name}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,.35)' }}>{t.role}</div>
-                  </div>
-                  <span style={{ marginLeft: 'auto', padding: '4px 10px', background: 'rgba(249,202,0,.06)', border: '1px solid rgba(249,202,0,.18)', color: 'var(--y)', fontSize: 10, fontWeight: 700, letterSpacing: '.04em', whiteSpace: 'nowrap' }}>{t.tag}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+          <SectorTestimonialsSlider testimonials={TESTIMONIALS} source="sector-travel-hospitality" />
         </div>
       </section>
 

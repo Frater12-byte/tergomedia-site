@@ -2,6 +2,7 @@
 'use client';
 import { useState } from 'react';
 import Image from 'next/image';
+import WorldMap from '@/components/WorldMap';
 
 export default function ContactClient() {
   const [form, setForm] = useState({ name: '', email: '', company: '', message: '' });
@@ -165,6 +166,9 @@ export default function ContactClient() {
             </div>
           </div>
         </div>
+        <div style={{ marginTop: 48, lineHeight: 0 }}>
+          <WorldMap />
+        </div>
       </section>
 
       {/* ── CONTACT FORM ──────────────────────────────────── */}
@@ -206,7 +210,7 @@ export default function ContactClient() {
                 </div>
               ) : (
                 <form onSubmit={send} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                  <div className="form-row-2">
                     <Field label="Name *" name="name" value={form.name} onChange={handle} placeholder="Your name" required />
                     <Field label="Email *" name="email" type="email" value={form.email} onChange={handle} placeholder="you@company.com" required />
                   </div>
@@ -305,7 +309,6 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid rgba(255,255,255,.1)',
   padding: '12px 16px',
   color: '#fff',
-  fontSize: 14,
   outline: 'none',
   width: '100%',
   boxSizing: 'border-box',

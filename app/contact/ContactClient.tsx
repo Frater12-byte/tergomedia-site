@@ -54,9 +54,9 @@ export default function ContactClient() {
           </div>
           <div className="hero-locs reveal reveal-delay-3">
             <div className="hero-loc"><div className="loc-dot" style={{ background: '#f9ca00' }} />Dubai HQ</div>
-            <div className="hero-loc" style={{ color: 'rgba(255,255,255,.2)' }}>·</div>
+            <div className="hero-loc loc-sep">·</div>
             <div className="hero-loc"><div className="loc-dot" style={{ background: '#00ff9d' }} />Bucharest</div>
-            <div className="hero-loc" style={{ color: 'rgba(255,255,255,.2)' }}>·</div>
+            <div className="hero-loc loc-sep">·</div>
             <div className="hero-loc"><div className="loc-dot" style={{ background: '#00c8ff' }} />Milan</div>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function ContactClient() {
       {/* ── CONTACT FORM ──────────────────────────────────── */}
       <section className="section" style={{ background: '#1e1e1e', borderTop: '1px solid rgba(255,255,255,.05)' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }} className="contact-form-grid">
+          <div style={{ alignItems: 'start' }} className="contact-form-grid">
             {/* Left */}
             <div>
               <span className="sec-label reveal">SEND A MESSAGE</span>
@@ -262,7 +262,7 @@ export default function ContactClient() {
               { img: '/Images/IMG-04.png', name: 'Francesco Terragni', role: 'CTO / Co-Founder', location: 'Bucharest, Romania', linkedin: 'https://www.linkedin.com/in/francescoterragni/', color: '#00ff9d' },
             ].map((p, i) => (
               <div key={i} className={`team-card reveal${i === 1 ? ' reveal-delay-1' : ''}`}>
-                <Image src={p.img} alt={p.name} width={480} height={480} className="team-img" />
+                <Image src={p.img} alt={p.name} width={400} height={400} className="team-img" style={{ aspectRatio: '1/1', objectFit: 'cover', objectPosition: 'top center', filter: 'grayscale(15%)' }} />
                 <div className="team-body">
                   <div style={{ marginBottom: 10 }}>
                     <span className="t-role-tag">{p.role}</span>

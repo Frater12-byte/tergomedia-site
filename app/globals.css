@@ -759,10 +759,12 @@ input[type="url"],textarea,select{font-size:16px}
 /* CONTACT PAGE */
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
 @media(max-width:760px){.contact-grid{grid-template-columns:1fr;gap:36px}}
-.contact-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.contact-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 @media(max-width:860px){.contact-form-grid{grid-template-columns:1fr;gap:40px}}
 .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:560px){.form-row-2{grid-template-columns:1fr}}
+.loc-sep{color:rgba(255,255,255,.2)}
+@media(max-width:480px){.loc-sep{display:none}}
 
 
 /* AUTOPILOT SECTION MOBILE */

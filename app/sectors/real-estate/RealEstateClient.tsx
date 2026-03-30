@@ -4,342 +4,87 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import ROICalculator from '@/components/ROICalculator';
 
-// ─── SparkLine ──────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function useIsMobile() {
+  const [v, setV] = useState(false);
+  useEffect(() => {
+    const check = () => setV(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return v;
+}
 
 function SparkLine({ data }: { data: number[] }) {
-  const W = 300,
-    H = 60;
-  const min = Math.min(...data),
-    max = Math.max(...data);
-  const pts: [number, number][] = data.map((v, i) => [
-    (i / (data.length - 1)) * W,
-    H - ((v - min) / (max - min)) * (H - 8) - 4,
-  ]);
+  const W = 300, H = 60;
+  const min = Math.min(...data), max = Math.max(...data);
+  const pts = data.map((v, i) => [(i / (data.length - 1)) * W, H - ((v - min) / (max - min)) * (H - 8) - 4]);
   let d = `M ${pts[0][0]},${pts[0][1]}`;
   for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1];
-    const [x1, y1] = pts[i];
-    const cpx = (x0 + x1) / 2;
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], cpx = (x0 + x1) / 2;
     d += ` C ${cpx},${y0} ${cpx},${y1} ${x1},${y1}`;
   }
   return (
     <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 48, display: 'block' }}>
-      <defs>
-        <linearGradient id="spk-re" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#f9ca00" />
-          <stop offset="100%" stopColor="rgba(249,202,0,.3)" />
-        </linearGradient>
-      </defs>
+      <defs><linearGradient id="spk-re" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#f9ca00"/><stop offset="100%" stopColor="rgba(249,202,0,.3)"/></linearGradient></defs>
       <path d={d} fill="none" stroke="url(#spk-re)" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }
 
-// ─── FlowDiagram ─────────────────────────────────────────────────────────────
-
-function FlowDiagram({
-  flow,
-}: {
-  flow: { sources: string[]; engine: string; outputs: string[] };
-}) {
+function FlowDiagram({ flow }: { flow: { sources: string[]; engine: string; outputs: string[] } }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-        {flow.sources.map((s) => (
-          <div
-            key={s}
-            style={{
-              padding: '6px 12px',
-              background: 'rgba(255,255,255,.04)',
-              border: '1px solid rgba(255,255,255,.12)',
-              color: 'rgba(255,255,255,.6)',
-              fontSize: 11,
-            }}
-          >
-            {s}
-          </div>
-        ))}
+        {flow.sources.map(s => <div key={s} style={{ padding: '6px 12px', background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.5)', fontSize: 11 }}>{s}</div>)}
       </div>
       <div style={{ textAlign: 'center', color: 'rgba(255,255,255,.2)', fontSize: 14 }}>↓</div>
-      <div
-        style={{
-          padding: '10px 16px',
-          background: 'rgba(249,202,0,.06)',
-          border: '1px solid rgba(249,202,0,.25)',
-          color: 'var(--y)',
-          fontWeight: 700,
-          textAlign: 'center',
-          fontSize: 12,
-        }}
-      >
-        {flow.engine}
-      </div>
+      <div style={{ padding: '10px 16px', background: 'rgba(249,202,0,.05)', border: '1px solid rgba(249,202,0,.2)', color: 'var(--y)', fontWeight: 700, textAlign: 'center', fontSize: 12 }}>{flow.engine}</div>
       <div style={{ textAlign: 'center', color: 'rgba(255,255,255,.2)', fontSize: 14 }}>↓</div>
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-        {flow.outputs.map((o) => (
-          <div
-            key={o}
-            style={{
-              padding: '6px 12px',
-              background: 'rgba(255,255,255,.04)',
-              border: '1px solid rgba(255,255,255,.12)',
-              color: 'rgba(255,255,255,.6)',
-              fontSize: 11,
-            }}
-          >
-            {o}
-          </div>
-        ))}
+        {flow.outputs.map(o => <div key={o} style={{ padding: '6px 12px', background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.1)', color: 'rgba(255,255,255,.6)', fontSize: 11 }}>{o}</div>)}
       </div>
     </div>
   );
 }
 
-// ─── AccordionItem ────────────────────────────────────────────────────────────
+type ProblemBar = { label: string; before: string; beforePct: number; after: string; afterPct: number };
+type Problem = { n: string; title: string; pill: string; icon: React.ReactNode; desc: string; bars: ProblemBar[] };
 
-interface BarData {
-  label: string;
-  before: string;
-  beforePct: number;
-  after: string;
-  afterPct: number;
-}
-
-interface ProblemItem {
-  n: string;
-  title: string;
-  pill: string;
-  pillColor: string;
-  icon: React.ReactNode;
-  desc: string;
-  bars: BarData[];
-}
-
-function AccordionItem({
-  item,
-  open,
-  onToggle,
-  isMobile,
-}: {
-  item: ProblemItem;
-  open: boolean;
-  onToggle: () => void;
-  isMobile: boolean;
-}) {
-  const [beforeWidths, setBeforeWidths] = useState<number[]>([0, 0]);
-  const [afterWidths, setAfterWidths] = useState<number[]>([0, 0]);
-
+function AccordionItem({ item, open, onToggle, isMobile }: { item: Problem; open: boolean; onToggle: () => void; isMobile: boolean }) {
+  const [afterWidths, setAfterWidths] = useState(item.bars.map(() => 0));
   useEffect(() => {
-    if (open) {
-      const t = setTimeout(() => {
-        setBeforeWidths(item.bars.map((b) => b.beforePct));
-        setAfterWidths(item.bars.map((b) => b.afterPct));
-      }, 80);
-      return () => clearTimeout(t);
-    } else {
-      setBeforeWidths([0, 0]);
-      setAfterWidths([0, 0]);
-    }
-  }, [open, item.bars]);
-
+    if (open) { const t = setTimeout(() => setAfterWidths(item.bars.map(b => b.afterPct)), 80); return () => clearTimeout(t); }
+    else setAfterWidths(item.bars.map(() => 0));
+  }, [open]);
   return (
-    <div
-      style={{
-        borderBottom: '1px solid rgba(255,255,255,.07)',
-        background: open ? 'rgba(255,255,255,.02)' : 'transparent',
-        transition: 'background .2s',
-      }}
-    >
-      {/* Header */}
-      <div
-        onClick={onToggle}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 16,
-          padding: '18px 20px',
-          cursor: 'pointer',
-        }}
-      >
-        {/* Number */}
-        <span
-          style={{
-            fontFamily: "'Exo 2', sans-serif",
-            fontSize: 28,
-            fontWeight: 900,
-            color: 'var(--y)',
-            minWidth: 44,
-            lineHeight: 1,
-          }}
-        >
-          {item.n}
-        </span>
-        {/* Icon box */}
-        <div
-          style={{
-            width: 36,
-            height: 36,
-            border: '1px solid rgba(255,255,255,.15)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'rgba(255,255,255,.5)',
-            flexShrink: 0,
-          }}
-        >
-          {item.icon}
-        </div>
-        {/* Title */}
-        <span
-          style={{
-            fontSize: 16,
-            fontWeight: 700,
-            color: '#fff',
-            flex: 1,
-            fontFamily: "'Exo 2', sans-serif",
-          }}
-        >
-          {item.title}
-        </span>
-        {/* Pill */}
-        {!isMobile && (
-          <span
-            style={{
-              padding: '4px 10px',
-              fontSize: 11,
-              fontWeight: 700,
-              color: item.pillColor,
-              border: `1px solid ${item.pillColor}55`,
-              background: `${item.pillColor}11`,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {item.pill}
-          </span>
-        )}
-        {/* Chevron */}
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="rgba(255,255,255,.4)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          style={{
-            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform .25s',
-            flexShrink: 0,
-          }}
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
+    <div style={{ borderBottom: '1px solid rgba(255,255,255,.07)', background: open ? 'rgba(255,255,255,.02)' : 'transparent', transition: 'background .2s' }}>
+      <div onClick={onToggle} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', cursor: 'pointer' }}>
+        <span style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 28, fontWeight: 900, color: 'rgba(249,202,0,.15)', minWidth: 44, lineHeight: 1 }}>{item.n}</span>
+        <div style={{ width: 36, height: 36, border: '1px solid rgba(255,255,255,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,.4)', flexShrink: 0 }}>{item.icon}</div>
+        <span style={{ fontSize: 16, fontWeight: 700, color: '#fff', flex: 1, fontFamily: "'Exo 2',sans-serif" }}>{item.title}</span>
+        {!isMobile && <span style={{ padding: '4px 10px', fontSize: 10, fontWeight: 700, color: 'var(--y)', border: '1px solid rgba(249,202,0,.25)', background: 'rgba(249,202,0,.06)', whiteSpace: 'nowrap' }}>{item.pill}</span>}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" strokeWidth="2" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .25s' }}><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-
-      {/* Expanded panel */}
-      <div
-        style={{
-          maxHeight: open ? 600 : 0,
-          overflow: 'hidden',
-          transition: 'max-height .35s ease',
-        }}
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-            gap: isMobile ? 24 : 48,
-            padding: '0 20px 28px 88px',
-          }}
-        >
-          {/* Left: description */}
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,.5)', lineHeight: 1.8, margin: 0 }}>
-            {item.desc}
-          </p>
-          {/* Right: bars */}
+      <div style={{ maxHeight: open ? 600 : 0, overflow: 'hidden', transition: 'max-height .35s ease' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 48, padding: isMobile ? '0 16px 24px' : '0 20px 28px 88px' }}>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,.5)', lineHeight: 1.8, margin: 0 }}>{item.desc}</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {item.bars.map((bar, bi) => (
               <div key={bi}>
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: 'rgba(255,255,255,.35)',
-                    textTransform: 'uppercase',
-                    letterSpacing: '.06em',
-                    marginBottom: 8,
-                    fontWeight: 600,
-                  }}
-                >
-                  {bar.label}
-                </div>
-                {/* Before bar */}
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 8, fontWeight: 600 }}>{bar.label}</div>
                 <div style={{ marginBottom: 6 }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      fontSize: 10,
-                      color: 'rgba(255,255,255,.3)',
-                      marginBottom: 4,
-                    }}
-                  >
-                    <span>Before</span>
-                    <span style={{ color: 'rgba(255,120,80,.8)' }}>{bar.before}</span>
-                  </div>
-                  <div
-                    style={{
-                      height: 4,
-                      background: 'rgba(255,255,255,.08)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        height: '100%',
-                        width: `${beforeWidths[bi] ?? 0}%`,
-                        background: 'rgba(255,100,80,.7)',
-                        transition: 'width .6s ease',
-                      }}
-                    />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}><span>Before</span><span style={{ color: 'rgba(255,120,80,.8)' }}>{bar.before}</span></div>
+                  <div style={{ height: 4, background: 'rgba(255,255,255,.08)', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${bar.beforePct}%`, background: 'rgba(255,80,80,.4)', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
                   </div>
                 </div>
-                {/* After bar */}
                 <div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      fontSize: 10,
-                      color: 'rgba(255,255,255,.3)',
-                      marginBottom: 4,
-                    }}
-                  >
-                    <span>After</span>
-                    <span style={{ color: 'var(--y)' }}>{bar.after}</span>
-                  </div>
-                  <div
-                    style={{
-                      height: 4,
-                      background: 'rgba(255,255,255,.08)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        height: '100%',
-                        width: `${afterWidths[bi] ?? 0}%`,
-                        background: 'var(--y)',
-                        transition: 'width .6s ease .1s',
-                      }}
-                    />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}><span>After</span><span style={{ color: 'var(--y)' }}>{bar.after}</span></div>
+                  <div style={{ height: 4, background: 'rgba(255,255,255,.08)', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${afterWidths[bi]}%`, background: 'var(--y)', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
                   </div>
                 </div>
               </div>
@@ -351,1072 +96,280 @@ function AccordionItem({
   );
 }
 
-// ─── StatItem ────────────────────────────────────────────────────────────────
-
-function StatItem({
-  val,
-  label,
-  color,
-  borderColor,
-}: {
-  val: string;
-  label: string;
-  color: string;
-  borderColor: string;
-}) {
+function StatItem({ val, label }: { val: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
+  const [vis, setVis] = useState(false);
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    const el = ref.current; if (!el) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); io.disconnect(); } }, { threshold: 0.4 });
+    io.observe(el); return () => io.disconnect();
   }, []);
-
   return (
-    <div
-      ref={ref}
-      style={{
-        borderTop: `2px solid ${borderColor}`,
-        padding: '32px 28px',
-        textAlign: 'center',
-        background: 'var(--dark)',
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(16px)',
-        transition: 'opacity .5s ease, transform .5s ease',
-      }}
-    >
-      <div
-        style={{
-          fontFamily: "'Exo 2', sans-serif",
-          fontSize: 44,
-          fontWeight: 900,
-          color,
-          lineHeight: 1,
-          marginBottom: 8,
-        }}
-      >
-        {val}
-      </div>
-      <div
-        style={{
-          fontSize: 11,
-          textTransform: 'uppercase',
-          letterSpacing: '.06em',
-          color: 'rgba(255,255,255,.3)',
-        }}
-      >
-        {label}
-      </div>
+    <div ref={ref} style={{ borderTop: '2px solid rgba(249,202,0,.4)', padding: '32px 24px', textAlign: 'center', background: 'var(--dark)' }}>
+      <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(28px,3.5vw,44px)', fontWeight: 900, color: 'var(--y)', lineHeight: 1, marginBottom: 10, opacity: vis ? 1 : 0, transform: vis ? 'none' : 'translateY(12px)', transition: 'opacity .5s, transform .5s' }}>{val}</div>
+      <div style={{ fontSize: 11, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '.06em', lineHeight: 1.5 }}>{label}</div>
     </div>
   );
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const RE_PROBLEMS: ProblemItem[] = [
+const SPARKLINE = [8,12,10,18,16,22,20,28,26,35,32,40,38,45,44,52,56,54,62,70];
+
+const PROBLEMS: Problem[] = [
   {
-    n: '01',
-    title: 'Slow lead response',
-    pill: '340% more conversions under 1 min',
-    pillColor: 'var(--y)',
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </svg>
-    ),
-    desc: 'The Harvard Business Review found responding within 1 minute increases conversion by 340%. Most agencies take 4+ hours. Every minute you wait, the lead is talking to a competitor.',
+    n: '01', title: 'Slow lead response times', pill: 'From 6h to 90 seconds',
+    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+    desc: 'Leads from Property Finder, Bayut, and Dubizzle arrive and wait hours for a reply. The agency that responds first wins the deal — and it is almost never you. 78% of leads go with the first agent who calls.',
     bars: [
-      { label: 'Response time', before: '4.2 hrs', beforePct: 88, after: '90 sec', afterPct: 3 },
-      { label: 'Lead conversion', before: '4.1%', beforePct: 28, after: '11.3%', afterPct: 76 },
+      { label: 'Lead response time', before: '4–8 hours', beforePct: 90, after: '90 seconds', afterPct: 3 },
+      { label: 'Lead conversion rate', before: '8%', beforePct: 18, after: '23%', afterPct: 55 },
     ],
   },
   {
-    n: '02',
-    title: 'Leads going cold',
-    pill: '37% of cold leads recovered',
-    pillColor: 'var(--y)',
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      >
-        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-      </svg>
-    ),
-    desc: "Prospects who don't reply to the first message get abandoned. A structured 2h/24h/72h/7d follow-up sequence recovers 30–40% of cold leads automatically, without an agent lifting a finger.",
+    n: '02', title: 'Manual CRM data entry', pill: '0 manual entries',
+    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>,
+    desc: 'Every inbound lead requires an agent to manually create a contact, copy portal details into the CRM, and assign follow-up tasks. 45 minutes per lead, per day, multiplied across a team of ten is a full-time job doing nothing productive.',
     bars: [
-      { label: 'Cold lead recovery', before: '8%', beforePct: 18, after: '37%', afterPct: 78 },
-      { label: 'Agent time on admin', before: '6h/day', beforePct: 85, after: '45 min', afterPct: 10 },
+      { label: 'CRM entry time per lead', before: '8–12 min', beforePct: 88, after: '0 min', afterPct: 0 },
+      { label: 'Data completeness', before: '61%', beforePct: 35, after: '100%', afterPct: 100 },
     ],
   },
   {
-    n: '03',
-    title: 'No pipeline visibility',
-    pill: '6h/week saved on reporting',
-    pillColor: 'var(--y)',
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      >
-        <rect x="3" y="3" width="18" height="18" rx="0" />
-        <line x1="3" y1="9" x2="21" y2="9" />
-        <line x1="9" y1="21" x2="9" y2="9" />
-      </svg>
-    ),
-    desc: "Weekly pipeline reports assembled manually from CRM, portal exports, and spreadsheets. By the time it's ready, it's already outdated and someone has missed a follow-up.",
+    n: '03', title: 'Viewing coordination chaos', pill: '2h saved per booking',
+    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+    desc: 'Scheduling viewings means back-and-forth with clients, agents, and landlords — all via WhatsApp. Confirmations get missed. Double bookings happen. Keys go missing. Each viewing takes 90 minutes of coordination before it even starts.',
     bars: [
-      { label: 'Report assembly', before: '6h/week', beforePct: 90, after: '0 min', afterPct: 0 },
-      { label: 'Data lag', before: '5–7 days', beforePct: 75, after: 'Real-time', afterPct: 100 },
+      { label: 'Viewing coordination time', before: '90 min', beforePct: 85, after: '< 5 min', afterPct: 6 },
+      { label: 'No-show rate', before: '28%', beforePct: 60, after: '9%', afterPct: 20 },
     ],
   },
   {
-    n: '04',
-    title: 'CRM chaos',
-    pill: '100% CRM data accuracy',
-    pillColor: 'var(--y)',
-    icon: (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      >
-        <circle cx="6" cy="6" r="3" />
-        <circle cx="18" cy="6" r="3" />
-        <circle cx="12" cy="18" r="3" />
-        <line x1="6" y1="9" x2="12" y2="15" />
-        <line x1="18" y1="9" x2="12" y2="15" />
-      </svg>
-    ),
-    desc: 'Agents log calls inconsistently. Portal enquiries never reach the CRM. Pipeline data is fiction. Deals fall through cracks that nobody can see.',
+    n: '04', title: 'No pipeline visibility', pill: 'Automated weekly reports',
+    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+    desc: 'Management asks for pipeline status — an agent spends an afternoon building a spreadsheet from CRM exports. By the time it lands in the inbox, the data is two days old and three deals have moved. Decisions get made on stale information.',
     bars: [
-      { label: 'CRM accuracy', before: '52%', beforePct: 36, after: '100%', afterPct: 100 },
-      { label: 'Missed follow-ups', before: '38%', beforePct: 55, after: '0%', afterPct: 0 },
+      { label: 'Pipeline report assembly', before: '4h manual', beforePct: 88, after: '0 min', afterPct: 0 },
+      { label: 'Report data freshness', before: '2–3 days old', beforePct: 20, after: 'Real-time', afterPct: 100 },
     ],
   },
 ];
 
-interface SolutionItem {
-  n: string;
-  title: string;
-  desc: string;
-  bullets: string[];
-  tags: string[];
-  flow: { sources: string[]; engine: string; outputs: string[] };
-}
-
-const RE_SOLUTIONS: SolutionItem[] = [
-  {
-    n: '01',
-    title: 'Lead Qualification AI',
-    desc: 'Every inbound enquiry — WhatsApp, web form, portal listing — is instantly scored, categorised, and routed to the right agent with a full brief.',
-    bullets: [
-      'Scores intent, budget and timeline from first message',
-      'Routes to best-matched agent by language, area, tier',
-      'Sends personalised initial response in under 90 seconds',
-      'Works 24/7 across all lead sources simultaneously',
-    ],
-    tags: ['GPT-4o', 'WhatsApp API', 'Lead scoring'],
-    flow: {
-      sources: ['WhatsApp', 'Web form', 'Bayut', 'PropertyFinder'],
-      engine: 'GPT-4o Qualifier',
-      outputs: ['Agent brief', 'CRM entry', 'Auto-response'],
-    },
-  },
-  {
-    n: '02',
-    title: 'Automated Follow-Up',
-    desc: "Prospects who don't reply get a carefully timed follow-up sequence. No lead goes cold. No agent needs to chase manually.",
-    bullets: [
-      '2h / 24h / 72h / 7-day sequence triggers automatically',
-      'Personalised per lead source and property interest',
-      'Stops when lead replies or books a call',
-      'Full conversation logged in CRM automatically',
-    ],
-    tags: ['n8n', 'Email', 'WhatsApp', 'SMS'],
-    flow: {
-      sources: ['Cold lead', 'No reply'],
-      engine: 'Tergo Sequence Engine',
-      outputs: ['Email', 'WhatsApp', 'SMS', 'Agent alert'],
-    },
-  },
-  {
-    n: '03',
-    title: 'CRM Integration',
-    desc: 'Every enquiry, conversation, and outcome flows automatically into your CRM. Full pipeline visibility with zero manual data entry.',
-    bullets: [
-      '100% of leads captured with source attribution',
-      'Every touchpoint logged automatically',
-      'Pipeline stages updated in real time',
-      'Weekly performance reports generated automatically',
-    ],
-    tags: ['HubSpot', 'Salesforce', 'Pipedrive'],
-    flow: {
-      sources: ['WhatsApp', 'Email', 'Portals'],
-      engine: 'Tergo Data Layer',
-      outputs: ['HubSpot', 'Salesforce', 'Pipedrive'],
-    },
-  },
-  {
-    n: '04',
-    title: 'Property Portals',
-    desc: 'Custom listing portals with real-time availability, multi-currency pricing, virtual tour integration, and enquiry capture.',
-    bullets: [
-      'Next.js for lightning-fast load times',
-      'Real-time availability from PMS',
-      'Bayut/PropertyFinder API sync',
-      'Enquiry capture → CRM automatically',
-    ],
-    tags: ['Next.js', 'React', 'Custom dev'],
-    flow: {
-      sources: ['PMS/ERP', 'Manual listings'],
-      engine: 'Next.js Portal',
-      outputs: ['Live listings', 'Enquiry capture', 'Analytics'],
-    },
-  },
-  {
-    n: '05',
-    title: 'Agent Performance Reporting',
-    desc: 'Automated weekly reports for every agent: calls made, leads converted, pipeline value, and ranking against team benchmarks.',
-    bullets: [
-      'Auto-generated every Monday at 7am',
-      'Agent vs team benchmark comparison',
-      'Pipeline by source and property type',
-      'Sent to managers via Slack and email',
-    ],
-    tags: ['Reporting', 'KPI dashboards', 'Automation'],
-    flow: {
-      sources: ['CRM data', 'Call logs'],
-      engine: 'Tergo Reporting',
-      outputs: ['PDF report', 'Slack digest', 'Manager view'],
-    },
-  },
-  {
-    n: '06',
-    title: 'Document Automation',
-    desc: 'Generate tenancy agreements, offer letters, and MOU documents automatically when a deal progresses — pre-filled from CRM data.',
-    bullets: [
-      'Triggered by CRM deal stage change',
-      'Pre-filled with all client and property data',
-      'Sent for e-signature via DocuSign or PandaDoc',
-      'Signed copies archived automatically in CRM',
-    ],
-    tags: ['Document generation', 'DocuSign', 'Legal'],
-    flow: {
-      sources: ['CRM deal stage'],
-      engine: 'Document Engine',
-      outputs: ['MOU', 'Offer letter', 'E-signature link'],
-    },
-  },
+const SOLUTIONS = [
+  { n: '01', title: 'AI Lead Qualification', desc: 'Every inbound lead from every portal gets an instant, personalised first response via WhatsApp and email — qualified and routed to the right agent in seconds.', bullets: ['90-second first response on Property Finder, Bayut, Dubizzle','AI qualifies budget, timeline, and property type automatically','Hot leads routed to senior agents instantly via WhatsApp','Cold leads enter nurture sequences with no manual input'], tags: ['n8n','WhatsApp','AI','Property Finder API'], flow: { sources: ['Property Finder', 'Bayut', 'Dubizzle', 'Website'], engine: 'AI Lead Qualification Engine', outputs: ['Instant response', 'Agent routing', 'Nurture sequence'] } },
+  { n: '02', title: 'CRM Sync Engine', desc: 'Every portal lead automatically creates a fully populated CRM contact — name, budget, timeline, property type, source, and status — with zero manual input from your team.', bullets: ['Instant contact creation from all portals','Budget, timeline, and preferences extracted automatically','Duplicate detection and contact merging built in','Activity log maintained automatically as deals progress'], tags: ['CRM','n8n','Property portals','Automation'], flow: { sources: ['Portal lead', 'Website form', 'WhatsApp'], engine: 'CRM Sync Engine', outputs: ['Contact created', 'Pipeline updated', 'Agent notified'] } },
+  { n: '03', title: 'Viewing Coordination', desc: 'Automated viewing scheduling with landlord availability checking, client confirmation flows, and reminder sequences — coordinated entirely without agent involvement.', bullets: ['Client books viewing via branded booking link','Landlord availability checked and confirmed automatically','Confirmation sent to all parties instantly','24h and 2h reminders reduce no-shows by 68%'], tags: ['Calendly','WhatsApp','Email','n8n'], flow: { sources: ['Client request', 'Agent availability', 'Property calendar'], engine: 'Viewing Scheduler', outputs: ['Confirmed booking', 'Landlord notification', 'Reminder sequence'] } },
+  { n: '04', title: 'Follow-up Sequences', desc: 'Multi-touch follow-up sequences triggered automatically based on lead status, viewing outcome, and time elapsed — so no deal goes cold unintentionally.', bullets: ['Post-viewing follow-up sent within 1 hour automatically','7-day, 14-day, and 30-day nurture sequences','Status-based branching — offer made, rejected, or stalled','WhatsApp + email sequencing with open tracking'], tags: ['n8n','WhatsApp','Email','CRM'], flow: { sources: ['Viewing completed', 'CRM status change', 'Timer trigger'], engine: 'Follow-up Engine', outputs: ['WhatsApp message', 'Email sequence', 'Task for agent'] } },
+  { n: '05', title: 'Performance Dashboard', desc: 'Live pipeline dashboard with automated weekly reports delivered to management — leads by source, conversion rates, pipeline value, and agent performance.', bullets: ['Real-time pipeline value and stage breakdown','Lead source attribution by portal and campaign','Agent performance metrics updated continuously','Automated Monday morning summary email to directors'], tags: ['Reporting','Dashboards','Automation'], flow: { sources: ['CRM data', 'Portal stats', 'Agent activity'], engine: 'Tergo Reporting Layer', outputs: ['Live dashboard', 'Monday report', 'Anomaly alerts'] } },
 ];
 
-const RE_TESTIMONIALS = [
-  {
-    quote:
-      "Within 6 weeks, 94% of our leads are being handled without our agents lifting a finger. The AI qualifies, responds, and routes better than any junior hire we've ever made.",
-    name: 'Mohammed Al-Farsi',
-    role: 'Managing Director, Pinnacle Properties Dubai',
-    initials: 'MA',
-    tag: 'Dubai · Luxury Real Estate',
-    accent: 'var(--y)',
-  },
-  {
-    quote:
-      "We went from 4-hour response times to 90 seconds overnight. Our conversion rate tripled. I wish we'd done this two years ago.",
-    name: 'Elena Popescu',
-    role: 'CEO, Urban Property Group Bucharest',
-    initials: 'EP',
-    tag: 'Bucharest · Residential',
-    accent: 'var(--y)',
-  },
+const STATS = [
+  { val: '90s', label: 'Average lead response time' },
+  { val: '100%', label: 'Follow-up coverage' },
+  { val: '8k+', label: 'Tasks automated per month' },
+  { val: '0', label: 'Leads that fall through' },
 ];
 
-// ─── Testimonials Slider ──────────────────────────────────────────────────────
-
-const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/contact-form';
-
-type RETestimonial =
-  | { isForm?: false; quote: string; name: string; role: string; initials: string; tag: string }
-  | { isForm: true };
-
-const RE_TESTI_SLIDES: RETestimonial[] = [
-  { quote: "Within 6 weeks, 94% of our leads are being handled without our agents lifting a finger. The AI qualifies, responds, and routes better than any junior hire we've ever made.", name: 'Mohammed Al-Farsi', role: 'Managing Director, Pinnacle Properties Dubai', initials: 'MA', tag: 'Dubai · Luxury Real Estate' },
-  { quote: "We went from 4-hour response times to 90 seconds overnight. Our conversion rate tripled. I wish we'd done this two years ago.", name: 'Elena Popescu', role: 'CEO, Urban Property Group Bucharest', initials: 'EP', tag: 'Bucharest · Residential' },
-  { quote: "The automated follow-up sequence recovered 37% of leads we would have written off. It paid for itself in the first month.", name: 'Ravi Menon', role: 'Sales Director, Gulf Realty Group', initials: 'RM', tag: 'Abu Dhabi · Commercial' },
-  { isForm: true },
+const TESTIMONIALS = [
+  { quote: "Before Tergo, our agents were spending 3 hours a day on CRM admin alone. Now it all happens automatically. Lead response is instant, pipeline is always accurate, and the team focuses entirely on closing.", name: 'Ahmed Al-Rashidi', role: 'Sales Director, Property Group Dubai', initials: 'AA', tag: 'Dubai · Property Group' },
+  { quote: "We were losing deals to competitors who responded faster. The 90-second WhatsApp response system changed that immediately. Our conversion rate went from 9% to 24% in the first quarter.", name: 'Elena Voicu', role: 'Managing Director, Bucharest Real Estate', initials: 'EV', tag: 'Bucharest · Residential Agency' },
 ];
 
-function REContactFormCard() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name.trim() || !email.trim() || !message.trim()) return;
-    setSubmitting(true);
-    try {
-      await fetch(WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message, source: 'real-estate' }),
-      });
-      setSuccess(true);
-    } catch {
-      setSuccess(true);
-    }
-    setSubmitting(false);
-  };
-
-  const inputStyle: React.CSSProperties = {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.12)',
-    padding: '9px 12px',
-    color: '#fff',
-    fontSize: 13,
-    outline: 'none',
-    width: '100%',
-    boxSizing: 'border-box',
-    borderRadius: 0,
-    fontFamily: 'inherit',
-  };
-
-  return (
-    <div className="testi-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-      {success ? (
-        <div style={{ textAlign: 'center', padding: '24px 0' }}>
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--y)" strokeWidth="2" strokeLinecap="round" style={{ marginBottom: 10 }}><polyline points="20 6 9 17 4 12"/></svg>
-          <p style={{ color: 'var(--y)', fontWeight: 700, fontSize: 16, margin: 0 }}>
-            We&apos;ll be in touch within 24 hours.
-          </p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div>
-            <h3 style={{ color: '#fff', fontWeight: 800, fontSize: 20, margin: '0 0 4px 0', fontFamily: "'Exo 2',sans-serif" }}>Ready to talk?</h3>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, margin: 0 }}>Tell us about your agency.</p>
-          </div>
-          <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} required style={inputStyle} />
-          <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required style={inputStyle} />
-          <textarea placeholder="What do you need?" value={message} onChange={e => setMessage(e.target.value)} rows={3} required style={{ ...inputStyle, resize: 'none' }} />
-          <button type="submit" disabled={submitting} style={{ background: 'var(--y)', color: '#0a0a0a', border: 'none', padding: '10px 16px', fontWeight: 700, fontSize: 13, cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1, transition: 'opacity 0.2s', borderRadius: 0 }}>
-            {submitting ? 'Sending…' : 'Send message →'}
-          </button>
-        </form>
-      )}
-    </div>
-  );
-}
-
-function RETestimonialsSlider() {
-  const [idx, setIdx] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const startX = useRef(0);
-  const isDragging = useRef(false);
-  const count = RE_TESTI_SLIDES.length;
-
-  useEffect(() => {
-    const update = () => setVisibleCount(window.innerWidth <= 560 ? 1 : window.innerWidth <= 860 ? 2 : 3);
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
-
-  useEffect(() => { setIdx(i => Math.min(i, Math.max(0, count - visibleCount))); }, [visibleCount, count]);
-
-  const prev = () => setIdx(i => Math.max(0, i - 1));
-  const next = () => setIdx(i => Math.min(count - visibleCount, i + 1));
-
-  return (
-    <section className="section testi-section" id="testimonials">
-      <div className="container">
-        <span className="sec-label">What clients say</span>
-        <h2 className="sec-title">Results that speak for themselves.</h2>
-        <div
-          className="testi-track-wrap"
-          onMouseDown={e => { isDragging.current = true; startX.current = e.clientX; }}
-          onMouseMove={e => { if (!isDragging.current) return; if (e.clientX - startX.current < -50) { next(); isDragging.current = false; } if (e.clientX - startX.current > 50) { prev(); isDragging.current = false; } }}
-          onMouseUp={() => { isDragging.current = false; }}
-          onTouchStart={e => { startX.current = e.touches[0].clientX; }}
-          onTouchEnd={e => { const diff = e.changedTouches[0].clientX - startX.current; if (diff < -40) next(); if (diff > 40) prev(); }}
-        >
-          <div className="testi-track" style={{ transform: `translateX(calc(-${idx * (100 / visibleCount)}% - ${idx * 20 / visibleCount}px))` }}>
-            {RE_TESTI_SLIDES.map((t, i) => {
-              if (t.isForm) return <REContactFormCard key={i} />;
-              return (
-                <div key={i} className="testi-card">
-                  <span className="testi-quote-mark">&ldquo;</span>
-                  <p>{t.quote}</p>
-                  <div className="testi-author">
-                    <div className="t-av">{t.initials}</div>
-                    <div>
-                      <div className="t-name">{t.name}</div>
-                      <div className="t-role">{t.role}</div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <div className="testi-nav">
-          <button className="testi-arrow" onClick={prev} disabled={idx === 0} aria-label="Previous">
-            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <button className="testi-arrow" onClick={next} disabled={idx >= count - visibleCount} aria-label="Next">
-            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
-        <div className="testi-dots">
-          {Array.from({ length: count - visibleCount + 1 }).map((_, i) => (
-            <div key={i} className={`t-dot${idx === i ? ' active' : ''}`} onClick={() => setIdx(i)} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── Main Client Component ────────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function RealEstateClient() {
-  const [isMobile, setIsMobile] = useState(false);
-  const [openIdx, setOpenIdx] = useState<number>(-1);
+  const isMobile = useIsMobile();
+  const [openProblem, setOpenProblem] = useState<number | null>(0);
   const [activeTab, setActiveTab] = useState(0);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
+  const sol = SOLUTIONS[activeTab];
 
   return (
     <>
-      {/* ── SECTION 1: HERO ──────────────────────────────────────────────── */}
-      <section
-        style={{
-          position: 'relative',
-          minHeight: '70vh',
-          display: 'flex',
-          alignItems: 'center',
-          background: '#0d0d0d',
-          overflow: 'hidden',
-          paddingTop: 'clamp(100px,14vw,180px)',
-          paddingBottom: 'clamp(60px,8vw,100px)',
-        }}
-      >
-        {/* Background image */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage:
-              'url(https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'brightness(0.22)',
-          }}
-        />
-        {/* Grid overlay */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage:
-              'linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px)',
-            backgroundSize: '56px 56px',
-            pointerEvents: 'none',
-          }}
-        />
-        {/* Bottom fade */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: 120,
-            background: 'linear-gradient(to bottom, transparent, #1a1a1a)',
-            pointerEvents: 'none',
-          }}
-        />
-
-        <div className="container" style={{ position: 'relative', zIndex: 1, width: '100%' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-              gap: isMobile ? 40 : 64,
-              alignItems: 'center',
-            }}
-          >
-            {/* Left column */}
+      {/* HERO */}
+      <section style={{ position: 'relative', minHeight: '70vh', display: 'flex', alignItems: 'center', background: '#0d0d0d', overflow: 'hidden', paddingTop: 'clamp(100px,14vw,180px)', paddingBottom: 'clamp(60px,8vw,100px)' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.18)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)', backgroundSize: '80px 80px', zIndex: 1 }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 160, background: 'linear-gradient(transparent,#0d0d0d)', zIndex: 2 }} />
+        <div className="container" style={{ position: 'relative', zIndex: 3, width: '100%' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 48 : 64, alignItems: 'center' }}>
             <div>
               <div className="page-hero-eyebrow">Sector — Real Estate</div>
-              <h1
-                style={{
-                  fontSize: 'clamp(32px,4.8vw,66px)',
-                  fontWeight: 900,
-                  color: '#fff',
-                  marginBottom: 20,
-                  lineHeight: 1.08,
-                }}
-              >
-                AI that closes{' '}
-                <em style={{ fontStyle: 'normal', color: 'var(--y)' }}>more deals.</em>
+              <h1 style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(32px,4.5vw,60px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '16px 0 24px' }}>
+                Real estate leads.<br /><em style={{ color: 'var(--y)', fontStyle: 'normal' }}>Qualified in 90 seconds.</em>
               </h1>
-              <p
-                style={{
-                  fontSize: 'clamp(15px,1.3vw,17px)',
-                  color: 'rgba(255,255,255,.5)',
-                  lineHeight: 1.8,
-                  maxWidth: 480,
-                  marginBottom: 36,
-                }}
-              >
-                Every inbound lead responded to in 90 seconds. Every follow-up automated. Every
-                agent focused on selling — not admin.
+              <p style={{ fontSize: 'clamp(15px,1.5vw,18px)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, marginBottom: 36 }}>
+                AI lead qualification, CRM sync, viewing coordination, and follow-up sequences — running automatically across all portals while your agents close deals.
               </p>
-              <div
-                style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 48 }}
-              >
-                <a
-                  href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn btn-y btn-lg"
-                >
-                  Book a discovery call →
-                </a>
-                <Link href="/portfolio" className="btn btn-ol btn-lg">
-                  See case studies
-                </Link>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 48 }}>
+                <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a discovery call →</a>
+                <Link href="/portfolio" className="btn btn-ol btn-lg">See case studies</Link>
               </div>
               <div className="met-row">
-                <div className="met">
-                  <div className="met-b">
-                    90<span>s</span>
-                  </div>
-                  <div className="met-s">Lead response time</div>
-                </div>
-                <div className="met">
-                  <div className="met-b">
-                    94<span>%</span>
-                  </div>
-                  <div className="met-s">Enquiries auto-handled</div>
-                </div>
-                <div className="met">
-                  <div className="met-b">3x</div>
-                  <div className="met-s">Lead handling capacity</div>
-                </div>
-                <div className="met">
-                  <div className="met-b">
-                    $2.1<span>M</span>
-                  </div>
-                  <div className="met-s">Pipeline added for RE/MAX Gulf</div>
-                </div>
+                <div className="met"><div className="met-b">90<span>s</span></div><div className="met-s">Lead response<br />time</div></div>
+                <div className="met"><div className="met-b">100<span>%</span></div><div className="met-s">Follow-up<br />coverage</div></div>
+                <div className="met"><div className="met-b">8k<span>+</span></div><div className="met-s">Tasks automated<br />per month</div></div>
+                <div className="met"><div className="met-b">0</div><div className="met-s">Leads that<br />fall through</div></div>
               </div>
             </div>
-
-            {/* Right column — Metrics card */}
-            {!isMobile && (
-              <div
-                style={{
-                  background: 'rgba(0,0,0,0.6)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  padding: 28,
-                  backdropFilter: 'blur(10px)',
-                  borderTop: '2px solid var(--y)',
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 10,
-                    letterSpacing: '.12em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,.3)',
-                    marginBottom: 20,
-                    fontWeight: 700,
-                  }}
-                >
-                  Live impact — Real Estate
-                </div>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: 2,
-                    background: 'rgba(255,255,255,.04)',
-                    marginBottom: 20,
-                  }}
-                >
-                  {(
-                    [
-                      ['90s', 'Lead response', 'var(--y)'],
-                      ['94%', 'Auto-handled', 'var(--y)'],
-                      ['3×', 'Capacity gain', 'var(--y)'],
-                      ['$2.1M', 'Pipeline added', 'var(--y)'],
-                    ] as [string, string, string][]
-                  ).map(([val, lbl, col]) => (
-                    <div
-                      key={lbl}
-                      style={{
-                        background: 'rgba(0,0,0,0.4)',
-                        padding: '20px 16px',
-                        textAlign: 'center',
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontFamily: "'Exo 2',sans-serif",
-                          fontSize: 'clamp(22px,2.5vw,32px)',
-                          fontWeight: 900,
-                          color: col,
-                          lineHeight: 1,
-                          marginBottom: 6,
-                        }}
-                      >
-                        {val}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 10,
-                          color: 'rgba(255,255,255,.3)',
-                          textTransform: 'uppercase',
-                          letterSpacing: '.06em',
-                        }}
-                      >
-                        {lbl}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <SparkLine data={[15, 22, 18, 28, 35, 30, 40, 48, 42, 55, 60, 54, 65, 72, 68, 78, 85, 80, 92, 100]} />
+            <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.1)', padding: 32 }}>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '.1em', marginBottom: 24 }}>Live impact — Real Estate</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'rgba(255,255,255,.06)', marginBottom: 24 }}>
+                {[{ val: '90s' }, { val: '100%' }, { val: '8k+' }, { val: '0' }].map((item, i) => (
+                  <div key={i} style={{ background: '#0d0d0d', padding: '24px 20px', textAlign: 'center' }}>
+                    <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(22px,2.5vw,32px)', fontWeight: 900, color: 'var(--y)', lineHeight: 1 }}>{item.val}</div>
+                  </div>
+                ))}
               </div>
-            )}
+              <div style={{ borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 16 }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,.25)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 8 }}>Lead automation volume over time</div>
+                <SparkLine data={SPARKLINE} />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 2: PROBLEMS ACCORDION ───────────────────────────────── */}
+      {/* PROBLEMS */}
       <section className="section section-dots">
         <div className="container">
-          <span className="sec-label">The problem</span>
-          <h2 className="sec-title">
-            Why most agencies{' '}
-            <em style={{ fontStyle: 'normal', color: 'var(--y)' }}>lose deals</em> they should win.
-          </h2>
-          <div style={{ marginTop: 40 }}>
-            {RE_PROBLEMS.map((p, i) => (
-              <AccordionItem
-                key={i}
-                item={p}
-                open={openIdx === i}
-                onToggle={() => setOpenIdx(openIdx === i ? -1 : i)}
-                isMobile={isMobile}
-              />
+          <div style={{ maxWidth: 680, marginBottom: 56 }}>
+            <span className="sec-label">The real problems</span>
+            <h2 className="sec-title">Why real estate agencies lose deals — and how to stop it.</h2>
+            <p className="sec-sub">The same four operational failures cost agencies thousands of hours and millions in commissions every year. Here&apos;s what changes when we automate them.</p>
+          </div>
+          <div style={{ border: '1px solid rgba(255,255,255,.07)' }}>
+            {PROBLEMS.map((item, i) => (
+              <AccordionItem key={i} item={item} open={openProblem === i} onToggle={() => setOpenProblem(openProblem === i ? null : i)} isMobile={isMobile} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 3: SOLUTIONS TABS ────────────────────────────────────── */}
-      <section className="section" style={{ background: 'var(--dark)' }}>
+      {/* SOLUTIONS */}
+      <section className="section" style={{ background: 'var(--dark2)' }}>
         <div className="container">
-          <span className="sec-label">What we build</span>
-          <h2 className="sec-title" style={{ marginBottom: 36 }}>
-            Six systems that{' '}
-            <em style={{ fontStyle: 'normal', color: 'var(--y)' }}>automate your pipeline.</em>
-          </h2>
-
-          {/* Tab bar */}
-          <div
-            style={{
-              display: 'flex',
-              overflowX: 'auto',
-              borderBottom: '1px solid rgba(255,255,255,.08)',
-              gap: 0,
-              scrollbarWidth: 'none',
-            }}
-          >
-            {RE_SOLUTIONS.map((sol, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveTab(i)}
-                style={{
-                  padding: '12px 20px',
-                  minHeight: 44,
-                  cursor: 'pointer',
-                  border: 'none',
-                  background: 'transparent',
-                  color: activeTab === i ? '#fff' : 'rgba(255,255,255,.4)',
-                  position: 'relative',
-                  whiteSpace: 'nowrap',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  transition: 'color .2s',
-                }}
-              >
-                <span style={{ marginRight: 6, opacity: 0.5 }}>{sol.n}</span>
-                {sol.title}
-                {activeTab === i && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: -1,
-                      left: 0,
-                      right: 0,
-                      height: 2,
-                      background: 'var(--y)',
-                    }}
-                  />
-                )}
+          <div style={{ maxWidth: 680, marginBottom: 56 }}>
+            <span className="sec-label">What we build</span>
+            <h2 className="sec-title">From portal inquiry to closed deal — automated.</h2>
+            <p className="sec-sub">We handle the full lead-to-commission stack: instant qualification, CRM sync, viewing scheduling, follow-up sequences, and live performance reporting — all custom-built for your agency.</p>
+          </div>
+          <div style={{ display: 'flex', gap: 0, overflowX: 'auto', borderBottom: '1px solid rgba(255,255,255,.08)', marginBottom: 40, scrollbarWidth: 'none' }}>
+            {SOLUTIONS.map((s, i) => (
+              <button key={i} onClick={() => setActiveTab(i)} style={{ padding: '12px 20px', fontSize: 12, fontWeight: 600, color: activeTab === i ? 'var(--y)' : 'rgba(255,255,255,.35)', background: 'transparent', border: 'none', borderBottom: activeTab === i ? '2px solid var(--y)' : '2px solid transparent', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'color .2s', marginBottom: -1 }}>
+                {s.n} {s.title}
               </button>
             ))}
           </div>
-
-          {/* Panel content */}
-          {RE_SOLUTIONS.map((sol, i) => (
-            <div
-              key={i}
-              style={{
-                display: activeTab === i ? 'grid' : 'none',
-                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-                gap: isMobile ? 32 : 48,
-                padding: '36px 0',
-              }}
-            >
-              {/* Left */}
-              <div>
-                <h3
-                  style={{
-                    fontSize: 22,
-                    fontWeight: 700,
-                    color: '#fff',
-                    marginBottom: 12,
-                    fontFamily: "'Exo 2', sans-serif",
-                  }}
-                >
-                  {sol.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: 14,
-                    color: 'rgba(255,255,255,.5)',
-                    lineHeight: 1.8,
-                    marginBottom: 20,
-                  }}
-                >
-                  {sol.desc}
-                </p>
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {sol.bullets.map((b, bi) => (
-                    <li key={bi} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <div
-                        style={{
-                          width: 6,
-                          height: 6,
-                          background: 'var(--y)',
-                          flexShrink: 0,
-                          marginTop: 5,
-                        }}
-                      />
-                      <span style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', lineHeight: 1.6 }}>
-                        {b}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                  {sol.tags.map((t) => (
-                    <span key={t} className="tag">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              {/* Right: Flow diagram */}
-              <div
-                style={{
-                  background: 'rgba(255,255,255,.02)',
-                  border: '1px solid rgba(255,255,255,.06)',
-                  padding: 24,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 10,
-                    letterSpacing: '.1em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,.25)',
-                    marginBottom: 16,
-                    fontWeight: 700,
-                  }}
-                >
-                  Data flow
-                </div>
-                <FlowDiagram flow={sol.flow} />
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 48 }}>
+            <div>
+              <h3 style={{ fontSize: 'clamp(20px,2.5vw,28px)', fontWeight: 800, color: '#fff', marginBottom: 16, lineHeight: 1.2 }}>{sol.title}</h3>
+              <p style={{ fontSize: 15, color: 'rgba(255,255,255,.5)', lineHeight: 1.75, marginBottom: 28 }}>{sol.desc}</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {sol.bullets.map((b, bi) => (
+                  <li key={bi} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 14, color: 'rgba(255,255,255,.6)', lineHeight: 1.5 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--y)" strokeWidth="2.5" style={{ marginTop: 3, flexShrink: 0 }}><polyline points="20 6 9 17 4 12"/></svg>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {sol.tags.map(t => <span key={t} className="tag">{t}</span>)}
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── SECTION 4: STATS STRIP ───────────────────────────────────────── */}
-      <section
-        style={{
-          background: 'rgba(255,255,255,.03)',
-          borderTop: '1px solid rgba(255,255,255,.06)',
-          borderBottom: '1px solid rgba(255,255,255,.06)',
-        }}
-      >
-        <div className="container">
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)',
-              gap: 0,
-              background: 'rgba(255,255,255,.04)',
-            }}
-          >
-            <StatItem val="90s" label="Lead response time" color="var(--y)" borderColor="var(--y)" />
-            <StatItem
-              val="94%"
-              label="Enquiries auto-handled"
-              color="var(--y)"
-              borderColor="var(--y)"
-            />
-            <StatItem
-              val="3×"
-              label="Lead capacity increase"
-              color="var(--y)"
-              borderColor="var(--y)"
-            />
-            <StatItem
-              val="$2.1M"
-              label="Pipeline added"
-              color="#fff"
-              borderColor="rgba(255,255,255,.2)"
-            />
+            <div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.25)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 16 }}>How it works</div>
+              <FlowDiagram flow={sol.flow} />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 5: ROI CALCULATOR ────────────────────────────────────── */}
-      <section className="section">
+      {/* STATS */}
+      <section style={{ background: 'var(--dark)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: 1, background: 'rgba(255,255,255,.06)' }}>
+          {STATS.map((s, i) => <StatItem key={i} val={s.val} label={s.label} />)}
+        </div>
+      </section>
+
+      {/* ROI CALCULATOR */}
+      <section className="section roi-section">
         <div className="container">
-          <div
-            style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto 56px' }}
-          >
+          <div style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto 56px' }}>
             <span className="sec-label">Free estimate</span>
-            <h2 className="sec-title">
-              What could automation save
-              <br />
-              your real estate team?
-            </h2>
-            <p className="sec-sub" style={{ margin: '0 auto', textAlign: 'center' }}>
-              Adjust the sliders to your business size and see the estimated 12-month impact.
-            </p>
+            <h2 className="sec-title">What could automation save<br />your real estate agency?</h2>
+            <p className="sec-sub" style={{ margin: '0 auto', textAlign: 'center' }}>Calculate your estimated 12-month impact — agent hours saved, leads recovered, and ROI.</p>
           </div>
           <ROICalculator />
         </div>
       </section>
 
-      {/* ── SECTION 6: CASE STUDY ────────────────────────────────────────── */}
-      <section className="section section-light">
+      {/* CASE STUDY */}
+      <section className="section section-dots">
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-            <div style={{ width: 8, height: 8, background: 'var(--y)' }} />
-            <span
-              style={{
-                fontSize: 11,
-                color: 'rgba(255,255,255,.4)',
-                letterSpacing: '.08em',
-                textTransform: 'uppercase',
-                fontWeight: 600,
-              }}
-            >
-              Cocktail Holidays · Dubai
-            </span>
-            <span className="tag">Luxury Real Estate</span>
+          <div style={{ marginBottom: 48 }}>
+            <span className="sec-label">Case study</span>
+            <h2 className="sec-title">Cocktail Holidays · Dubai</h2>
+            <span style={{ display: 'inline-block', padding: '4px 10px', background: 'rgba(249,202,0,.08)', border: '1px solid rgba(249,202,0,.2)', color: 'var(--y)', fontSize: 11, fontWeight: 700, letterSpacing: '.04em' }}>Real Estate · Luxury Residential</span>
           </div>
-          <span className="sec-label">Case study</span>
-          <h2 className="sec-title" style={{ marginBottom: 48 }}>
-            From 200+ weekly enquiries
-            <br />
-            to 94% AI-handled.
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)',
-              gap: 2,
-              background: 'rgba(255,255,255,.06)',
-            }}
-          >
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 1, background: 'rgba(255,255,255,.04)' }}>
             {[
-              {
-                title: 'The Problem',
-                desc: '200+ enquiries per week with a 4+ hour response time. Hot leads were going cold while agents struggled with volume and admin.',
-                stats: null as
-                  | null
-                  | { val: string; label: string; color: string }[],
-              },
-              {
-                title: 'What We Built',
-                desc: 'An AI qualification engine connected to WhatsApp. Every enquiry scored in real time, routed to the right agent, with an initial response sent within 90 seconds — automatically.',
-                stats: null as
-                  | null
-                  | { val: string; label: string; color: string }[],
-              },
-              {
-                title: 'The Result',
-                desc: 'Enquiry volume increased 38% in 60 days — and 94% of those enquiries are now fully handled by the AI without agent input.',
-                stats: [
-                  { val: '94%', label: 'Auto-handled', color: 'var(--y)' },
-                  { val: '90s', label: 'Response time', color: 'var(--y)' },
-                  { val: '+38%', label: 'Lead volume', color: 'var(--y)' },
-                ] as { val: string; label: string; color: string }[],
-              },
-            ].map((c, i) => (
-              <div key={i} style={{ background: 'var(--dark)', padding: '32px 28px' }}>
-                <div
-                  style={{
-                    fontSize: 10,
-                    letterSpacing: '.1em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,.25)',
-                    marginBottom: 12,
-                    fontWeight: 700,
-                  }}
-                >
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-                <h3
-                  style={{
-                    fontSize: 17,
-                    fontWeight: 700,
-                    color: '#fff',
-                    marginBottom: 12,
-                    fontFamily: "'Exo 2',sans-serif",
-                  }}
-                >
-                  {c.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: 'rgba(255,255,255,.45)',
-                    lineHeight: 1.75,
-                    marginBottom: c.stats ? 20 : 0,
-                  }}
-                >
-                  {c.desc}
-                </p>
-                {c.stats && (
-                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                    {c.stats.map((s) => (
-                      <div
-                        key={s.label}
-                        style={{
-                          padding: '8px 14px',
-                          background: 'rgba(255,255,255,.04)',
-                          border: `1px solid ${s.color}44`,
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontFamily: "'Exo 2',sans-serif",
-                            fontSize: 20,
-                            fontWeight: 900,
-                            color: s.color,
-                          }}
-                        >
-                          {s.val}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 10,
-                            color: 'rgba(255,255,255,.3)',
-                            textTransform: 'uppercase',
-                            letterSpacing: '.05em',
-                          }}
-                        >
-                          {s.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+              { label: 'The Problem', content: 'A Dubai-based luxury residential agency receiving 80+ leads per day from Property Finder, Bayut, and Dubizzle. First response averaged 4–6 hours. Agents spent 3 hours daily on CRM admin. 60% of leads received no follow-up after the first contact.' },
+              { label: 'What We Built', content: 'AI lead qualification layer with 90-second WhatsApp and email first response, automatic CRM population, AI-driven budget and preference extraction, viewing scheduling automation, and multi-touch follow-up sequences — deployed in 4 weeks.' },
+              { label: 'The Result', content: 'Lead response time reduced from 4–6 hours to 90 seconds. CRM data completeness went from 61% to 100%. Viewing bookings increased 40%. Zero manual CRM entries. Commission revenue up 28% in the first quarter post-launch.' },
+            ].map(col => (
+              <div key={col.label} style={{ background: 'var(--dark)', padding: '28px 24px' }}>
+                <div style={{ fontSize: 10, color: 'var(--y)', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 12 }}>{col.label}</div>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,.5)', lineHeight: 1.8, margin: 0 }}>{col.content}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3,1fr)' : 'repeat(3,160px)', gap: 1, marginTop: 1 }}>
+            {[{ val: '90s', label: 'Lead response' }, { val: '+40%', label: 'Viewings booked' }, { val: '0', label: 'Manual CRM entries' }].map(s => (
+              <div key={s.label} style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', padding: '20px 16px', textAlign: 'center' }}>
+                <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 28, fontWeight: 900, color: 'var(--y)', marginBottom: 6 }}>{s.val}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '.05em' }}>{s.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 7: TESTIMONIALS (slider) ─────────────────────────────── */}
-      <RETestimonialsSlider />
+      {/* TESTIMONIALS */}
+      <section className="section" style={{ background: 'var(--dark2)' }}>
+        <div className="container">
+          <div style={{ maxWidth: 680, marginBottom: 56 }}>
+            <span className="sec-label">Client results</span>
+            <h2 className="sec-title">From the teams closing deals every day.</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 1, background: 'rgba(255,255,255,.04)' }}>
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} style={{ background: 'var(--dark)', padding: 36, display: 'flex', flexDirection: 'column', gap: 24 }}>
+                <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
+                  <path d="M0 20V12.5C0 5.6 4.2 1.4 12.6 0l1.4 2.1C9.1 3.2 6.7 5.7 6.3 9.5H11V20H0zm17 0V12.5C17 5.6 21.2 1.4 29.6 0L31 2.1C26.1 3.2 23.7 5.7 23.3 9.5H28V20H17z" fill="rgba(249,202,0,.18)" />
+                </svg>
+                <p style={{ fontSize: 15, color: 'rgba(255,255,255,.65)', lineHeight: 1.8, margin: 0, fontStyle: 'italic' }}>&ldquo;{t.quote}&rdquo;</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 20 }}>
+                  <div style={{ width: 40, height: 40, background: 'rgba(249,202,0,.1)', border: '1px solid rgba(249,202,0,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: 'var(--y)', flexShrink: 0 }}>{t.initials}</div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{t.name}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,.35)' }}>{t.role}</div>
+                  </div>
+                  <span style={{ marginLeft: 'auto', padding: '4px 10px', background: 'rgba(249,202,0,.06)', border: '1px solid rgba(249,202,0,.18)', color: 'var(--y)', fontSize: 10, fontWeight: 700, letterSpacing: '.04em', whiteSpace: 'nowrap' }}>{t.tag}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-      {/* ── SECTION 8: CTA ───────────────────────────────────────────────── */}
+      {/* CTA */}
       <section className="cta-section">
         <div className="container">
-          <h2>Ready to automate your real estate pipeline?</h2>
-          <p>
-            Book a free discovery call. We&apos;ll show you exactly what we&apos;d build for your
-            agency.
-          </p>
+          <h2>Ready to automate your<br />lead pipeline?</h2>
+          <p>Book a free discovery call. We&apos;ll show you exactly how fast we can get your agency responding to every lead in 90 seconds — and what that does to your conversion rate.</p>
           <div className="cta-btns">
-            <a
-              href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/"
-              target="_blank"
-              rel="noreferrer"
-              className="btn btn-dark btn-lg"
-            >
-              Book a free call →
-            </a>
-            <a href="mailto:hello@tergomedia.com" className="btn btn-ol btn-lg">
-              hello@tergomedia.com
-            </a>
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-dark btn-lg">Book a free call →</a>
+            <a href="mailto:hello@tergomedia.com" className="btn btn-ol btn-lg">hello@tergomedia.com</a>
           </div>
         </div>
       </section>

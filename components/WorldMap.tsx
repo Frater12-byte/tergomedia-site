@@ -361,7 +361,7 @@ export default function WorldMap() {
 
   return (
     <div className="world-map-wrap" style={{ lineHeight: 0 }}>
-      <canvas ref={canvasRef} style={{ display: 'block', width: '100%', maxWidth: W }} />
+      <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import ROICalculator from '@/components/ROICalculator';
+import SectorTestimonialsSlider from '@/components/SectorTestimonialsSlider';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -17,22 +18,6 @@ function useIsMobile() {
   return v;
 }
 
-function SparkLine({ data }: { data: number[] }) {
-  const W = 300, H = 60;
-  const min = Math.min(...data), max = Math.max(...data);
-  const pts = data.map((v, i) => [(i / (data.length - 1)) * W, H - ((v - min) / (max - min)) * (H - 8) - 4]);
-  let d = `M ${pts[0][0]},${pts[0][1]}`;
-  for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], cpx = (x0 + x1) / 2;
-    d += ` C ${cpx},${y0} ${cpx},${y1} ${x1},${y1}`;
-  }
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 48, display: 'block' }}>
-      <defs><linearGradient id="spk-ag" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#f9ca00"/><stop offset="100%" stopColor="rgba(249,202,0,.3)"/></linearGradient></defs>
-      <path d={d} fill="none" stroke="url(#spk-ag)" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 function FlowDiagram({ flow }: { flow: { sources: string[]; engine: string; outputs: string[] } }) {
   return (
@@ -82,9 +67,9 @@ function AccordionItem({ item, open, onToggle, isMobile }: { item: Problem; open
                   </div>
                 </div>
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}><span>After</span><span style={{ color: 'var(--y)' }}>{bar.after}</span></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}><span>After</span><span style={{ color: '#22c55e' }}>{bar.after}</span></div>
                   <div style={{ height: 4, background: 'rgba(255,255,255,.08)', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${afterWidths[bi]}%`, background: 'var(--y)', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
+                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${afterWidths[bi]}%`, background: '#22c55e', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
                   </div>
                 </div>
               </div>
@@ -114,7 +99,6 @@ function StatItem({ val, label }: { val: string; label: string }) {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const SPARKLINE = [5,9,7,14,12,18,16,22,20,28,26,34,32,40,38,46,44,52,50,60];
 
 const PROBLEMS: Problem[] = [
   {
@@ -187,12 +171,11 @@ export default function AgricultureClient() {
     <>
       {/* HERO */}
       <section style={{ position: 'relative', minHeight: '70vh', display: 'flex', alignItems: 'center', background: '#0d0d0d', overflow: 'hidden', paddingTop: 'clamp(100px,14vw,180px)', paddingBottom: 'clamp(60px,8vw,100px)' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.18)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.18)', zIndex: 0 }} />
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)', backgroundSize: '80px 80px', zIndex: 1 }} />
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 160, background: 'linear-gradient(transparent,#0d0d0d)', zIndex: 2 }} />
         <div className="container" style={{ position: 'relative', zIndex: 3, width: '100%' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 48 : 64, alignItems: 'center' }}>
-            <div>
+          <div style={{ maxWidth: 680 }}>
               <div className="page-hero-eyebrow">Sector — Agriculture</div>
               <h1 style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(32px,4.5vw,60px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '16px 0 24px' }}>
                 Precision farming.<br /><em style={{ color: 'var(--y)', fontStyle: 'normal' }}>Monitored. Automated.</em>
@@ -210,21 +193,6 @@ export default function AgricultureClient() {
                 <div className="met"><div className="met-b">0</div><div className="met-s">Critical events<br />missed</div></div>
                 <div className="met"><div className="met-b">24<span>/7</span></div><div className="met-s">Active<br />monitoring</div></div>
               </div>
-            </div>
-            <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.1)', padding: 32 }}>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '.1em', marginBottom: 24 }}>Live impact — Agriculture</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: 'rgba(255,255,255,.06)', marginBottom: 24 }}>
-                {[{ val: '400ha' }, { val: '<3min' }, { val: '0' }, { val: '24/7' }].map((item, i) => (
-                  <div key={i} style={{ background: '#0d0d0d', padding: '24px 20px', textAlign: 'center' }}>
-                    <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(22px,2.5vw,32px)', fontWeight: 900, color: 'var(--y)', lineHeight: 1 }}>{item.val}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 16 }}>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,.25)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 8 }}>Sensor events processed over time</div>
-                <SparkLine data={SPARKLINE} />
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -337,28 +305,11 @@ export default function AgricultureClient() {
       {/* TESTIMONIALS */}
       <section className="section" style={{ background: 'var(--dark2)' }}>
         <div className="container">
-          <div style={{ maxWidth: 680, marginBottom: 56 }}>
+          <div style={{ maxWidth: 680, marginBottom: 48 }}>
             <span className="sec-label">Client results</span>
             <h2 className="sec-title">From the teams running the land.</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 1, background: 'rgba(255,255,255,.04)' }}>
-            {TESTIMONIALS.map((t, i) => (
-              <div key={i} style={{ background: 'var(--dark)', padding: 36, display: 'flex', flexDirection: 'column', gap: 24 }}>
-                <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
-                  <path d="M0 20V12.5C0 5.6 4.2 1.4 12.6 0l1.4 2.1C9.1 3.2 6.7 5.7 6.3 9.5H11V20H0zm17 0V12.5C17 5.6 21.2 1.4 29.6 0L31 2.1C26.1 3.2 23.7 5.7 23.3 9.5H28V20H17z" fill="rgba(249,202,0,.18)" />
-                </svg>
-                <p style={{ fontSize: 15, color: 'rgba(255,255,255,.65)', lineHeight: 1.8, margin: 0, fontStyle: 'italic' }}>&ldquo;{t.quote}&rdquo;</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14, borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 20 }}>
-                  <div style={{ width: 40, height: 40, background: 'rgba(249,202,0,.1)', border: '1px solid rgba(249,202,0,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: 'var(--y)', flexShrink: 0 }}>{t.initials}</div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{t.name}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,.35)' }}>{t.role}</div>
-                  </div>
-                  <span style={{ marginLeft: 'auto', padding: '4px 10px', background: 'rgba(249,202,0,.06)', border: '1px solid rgba(249,202,0,.18)', color: 'var(--y)', fontSize: 10, fontWeight: 700, letterSpacing: '.04em', whiteSpace: 'nowrap' }}>{t.tag}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+          <SectorTestimonialsSlider testimonials={TESTIMONIALS} source="sector-agriculture" />
         </div>
       </section>
 

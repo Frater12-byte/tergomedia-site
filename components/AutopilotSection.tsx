@@ -815,10 +815,6 @@ export default function AutopilotSection() {
 
         <div className="auto-master">
           <div className="auto-pipeline" style={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-            {/* Stage indicator */}
-            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '.08em', marginBottom: 8 }}>
-              STAGE {stage + 1} / 5
-            </div>
             {STAGES.map((st, i) => (
               <div
                 key={i}

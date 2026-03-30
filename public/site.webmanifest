@@ -1,0 +1,23 @@
+{
+  "name": "Tergo Media",
+  "short_name": "Tergo",
+  "description": "AI Automation & Custom Software — Dubai, Bucharest, Milan",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#F9CA00",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ]
+}

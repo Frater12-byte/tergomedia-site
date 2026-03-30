@@ -76,7 +76,27 @@ export default function Chatbot() {
     }, 50);
   }, [msgs, loading, open]);
 
-  // Visual viewport — push chat window up when software keyboard opens
+  // Mobile fullscreen: lock body scroll when chat is open
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    if (open && isMobile) {
+      const scrollY = window.scrollY;
+      document.body.dataset.chatScrollY = String(scrollY);
+      document.body.classList.add('chat-open');
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      const scrollY = document.body.dataset.chatScrollY;
+      document.body.classList.remove('chat-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY));
+    }
+  }, [open, isMobile]);
+
+  // Visual viewport — handle keyboard on mobile (fullscreen) and desktop (floating)
   useEffect(() => {
     if (!open || typeof window === 'undefined' || !window.visualViewport) return;
     const vv = window.visualViewport!;
@@ -84,8 +104,19 @@ export default function Chatbot() {
     const handleViewport = () => {
       const chatWin = document.getElementById('chatWindow');
       if (!chatWin) return;
-      const offsetFromBottom = window.innerHeight - vv.height - vv.offsetTop;
-      chatWin.style.bottom = (offsetFromBottom + 86) + 'px';
+      if (isMobile) {
+        // Fullscreen mode: constrain height to visual viewport so input stays above keyboard
+        chatWin.style.height = `${vv.height}px`;
+        chatWin.style.top = `${vv.offsetTop}px`;
+        chatWin.style.bottom = 'auto';
+      } else {
+        // Floating mode: push above keyboard
+        chatWin.style.height = '';
+        chatWin.style.top = '';
+        chatWin.style.bottom = '';
+        const offsetFromBottom = window.innerHeight - vv.height - vv.offsetTop;
+        chatWin.style.bottom = (offsetFromBottom + 86) + 'px';
+      }
     };
 
     vv.addEventListener('resize', handleViewport);
@@ -95,11 +126,14 @@ export default function Chatbot() {
     return () => {
       vv.removeEventListener('resize', handleViewport);
       vv.removeEventListener('scroll', handleViewport);
-      // Reset bottom when chat closes
       const chatWin = document.getElementById('chatWindow');
-      if (chatWin) chatWin.style.bottom = '';
+      if (chatWin) {
+        chatWin.style.bottom = '';
+        chatWin.style.height = '';
+        chatWin.style.top = '';
+      }
     };
-  }, [open]);
+  }, [open, isMobile]);
 
   const send = useCallback(async (text: string) => {
     if (!text.trim() || loading) return;

@@ -1,8 +1,7 @@
 /* eslint-disable */
 'use client';
 import { useState, useRef, useEffect } from 'react';
-
-const WEBHOOK = 'https://tergomedia.app.n8n.cloud/webhook/contact-form';
+import { submitForm } from '@/lib/submitForm';
 
 type Testimonial =
   | { isForm?: false; quote: string; name: string; role: string; initials: string }
@@ -17,48 +16,62 @@ const TESTIMONIALS: Testimonial[] = [
   { isForm: true },
 ];
 
+const inputStyle: React.CSSProperties = {
+  background: 'rgba(255,255,255,0.05)',
+  border: '1px solid rgba(255,255,255,0.12)',
+  padding: '9px 12px',
+  color: '#fff',
+  fontSize: 16,
+  outline: 'none',
+  width: '100%',
+  boxSizing: 'border-box',
+  fontFamily: 'inherit',
+  borderRadius: 0,
+};
+
 function ContactFormCard() {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [message, setMessage] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !message.trim()) return;
-    setSubmitting(true);
-    try {
-      await fetch(WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          company,
-          message,
-        }),
-      });
-      setSuccess(true);
-    } catch {
-      setSuccess(true); // Still show success on error to avoid friction
+    setStatus('loading');
+    const result = await submitForm({
+      name,
+      email,
+      company,
+      message,
+      _source: 'testimonials-form',
+    });
+    if (result.ok) {
+      setStatus('success');
+    } else {
+      setStatus('error');
+      setErrorMsg(result.error ?? 'Something went wrong.');
     }
-    setSubmitting(false);
   };
 
   return (
     <div className="testi-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-      {success ? (
+      {status === 'success' ? (
         <div style={{ textAlign: 'center', padding: '24px 0' }}>
-          <div style={{ fontSize: 28, marginBottom: 10 }}>✓</div>
-          <p style={{ color: '#4ade80', fontWeight: 700, fontSize: 16, margin: 0 }}>
-            We'll be in touch within 24 hours ✓
-          </p>
+          <div style={{ width: 48, height: 48, background: 'rgba(249,202,0,.1)', border: '1px solid rgba(249,202,0,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M4 10l4.5 4.5 7.5-9" stroke="var(--y)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <p style={{ color: '#fff', fontFamily: "'Exo 2', sans-serif", fontWeight: 700, fontSize: 17, marginBottom: 6 }}>Message sent</p>
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, margin: 0 }}>We&apos;ll be in touch within 24 hours.</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }} noValidate>
           <div>
             <h3 style={{ color: '#fff', fontWeight: 800, fontSize: 20, margin: '0 0 4px 0' }}>Ready to talk?</h3>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, margin: 0 }}>Tell us what you're working on.</p>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, margin: 0 }}>Tell us what you&apos;re working on.</p>
           </div>
           <input
             type="text"
@@ -66,34 +79,23 @@ function ContactFormCard() {
             value={name}
             onChange={e => setName(e.target.value)}
             required
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: 8,
-              padding: '9px 12px',
-              color: '#fff',
-              fontSize: 13,
-              outline: 'none',
-              width: '100%',
-              boxSizing: 'border-box',
-            }}
+            style={inputStyle}
+          />
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+            style={inputStyle}
           />
           <input
             type="text"
-            placeholder="Company"
+            placeholder="Company (optional)"
             value={company}
             onChange={e => setCompany(e.target.value)}
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: 8,
-              padding: '9px 12px',
-              color: '#fff',
-              fontSize: 13,
-              outline: 'none',
-              width: '100%',
-              boxSizing: 'border-box',
-            }}
+            style={inputStyle}
           />
           <textarea
             placeholder="What do you need?"
@@ -101,38 +103,29 @@ function ContactFormCard() {
             onChange={e => setMessage(e.target.value)}
             rows={3}
             required
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: 8,
-              padding: '9px 12px',
-              color: '#fff',
-              fontSize: 13,
-              outline: 'none',
-              width: '100%',
-              boxSizing: 'border-box',
-              resize: 'none',
-              fontFamily: 'inherit',
-            }}
+            style={{ ...inputStyle, resize: 'none' }}
           />
+          {status === 'error' && (
+            <p style={{ color: '#e05858', fontSize: 12, margin: 0 }}>{errorMsg}</p>
+          )}
           <button
             type="submit"
-            disabled={submitting}
+            disabled={status === 'loading'}
             style={{
-              background: '#f9ca00',
+              background: 'var(--y)',
               color: '#0a0a0a',
               border: 'none',
-              borderRadius: 8,
               padding: '10px 16px',
               fontWeight: 700,
               fontSize: 13,
-              cursor: submitting ? 'not-allowed' : 'pointer',
-              opacity: submitting ? 0.7 : 1,
+              cursor: status === 'loading' ? 'not-allowed' : 'pointer',
+              opacity: status === 'loading' ? 0.7 : 1,
               transition: 'opacity 0.2s',
               textAlign: 'center',
+              fontFamily: 'inherit',
             }}
           >
-            {submitting ? 'Sending…' : 'Send message →'}
+            {status === 'loading' ? 'Sending…' : 'Send message →'}
           </button>
         </form>
       )}
@@ -155,7 +148,6 @@ export default function TestimonialsSection() {
     return () => window.removeEventListener('resize', update);
   }, []);
 
-  // Reset idx if it exceeds new bounds
   useEffect(() => {
     setIdx(i => Math.min(i, Math.max(0, count - visible)));
   }, [visible, count]);

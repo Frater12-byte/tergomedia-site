@@ -40,7 +40,16 @@ export const metadata: Metadata = {
     description: 'We build systems that run your business.',
     images: ['/og-image.png'],
   },
-  icons: { icon: '/favicon.ico', shortcut: '/favicon.ico', apple: '/favicon.ico' },
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
+  manifest: '/site.webmanifest',
   robots: { index: true, follow: true },
   alternates: { canonical: 'https://tergomedia.com' },
 };
@@ -50,6 +59,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${exo2.variable} ${dmSans.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
         <style>{`
           body { font-family: var(--font-dm-sans), 'DM Sans', sans-serif; }
           h1,h2,h3,h4 { font-family: var(--font-exo2), 'Exo 2', sans-serif; }

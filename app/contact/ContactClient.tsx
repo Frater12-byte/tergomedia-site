@@ -17,7 +17,7 @@ export default function ContactClient() {
     if (!form.email.includes('@')) { setErrMsg('A valid email address is required.'); setStatus('error'); return; }
     setStatus('submitting');
     try {
-      const res = await fetch('https://tergomedia.app.n8n.cloud/webhook/tergo-contact-form', {
+      const res = await fetch('https://tergomedia.app.n8n.cloud/webhook/contact-form', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, _source: 'contact-page' }),

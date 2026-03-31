@@ -2,6 +2,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
+import AutopilotSection from '@/components/AutopilotSection';
+import BeforeAfterSlider from '@/components/BeforeAfterSlider';
+import ProjectTimeline from '@/components/ProjectTimeline';
 
 export const metadata: Metadata = {
   title: 'About — Tergo Media',
@@ -92,6 +95,54 @@ export default function AboutPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SEE IT IN ACTION ── */}
+      <AutopilotSection />
+
+      {/* ── HOW WE WORK ── */}
+      <section className="section how-section section-light" id="how">
+        <svg className="poly-bg" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="0,100 200,20 350,200 150,380 0,300" fill="none" stroke="rgba(255,255,255,.06)" strokeWidth="0.5"/>
+          <polygon points="1100,0 1440,100 1440,350 1200,420" fill="none" stroke="rgba(255,255,255,.06)" strokeWidth="0.4"/>
+          <circle cx="200" cy="20" r="2" fill="rgba(255,255,255,1)" fillOpacity="0.12"/>
+          <circle cx="1200" cy="420" r="1.5" fill="rgba(255,255,255,1)" fillOpacity="0.12"/>
+        </svg>
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="how-grid">
+            <div>
+              <span className="sec-label">How we work</span>
+              <h2 className="sec-title">From first call to live system —<br />in weeks, not months.</h2>
+              <p className="sec-sub">Fixed-price proposals. Clear deliverables. No bloated retainers. No surprises.</p>
+              <div className="how-steps">
+                {[
+                  { n: '01', title: 'Automation audit', desc: 'We map your workflows, identify where time is lost, and quantify the impact. Free for qualified leads.', badge: '1–2 DAYS' },
+                  { n: '02', title: 'Design & scoping', desc: 'Architecture decisions, tool selection, and a fixed-price proposal with clear milestones.', badge: '3–5 DAYS' },
+                  { n: '03', title: 'Build & test', desc: 'Iterative sprints with weekly demos. You see progress every week, not after months of silence.', badge: '2–8 WEEKS' },
+                  { n: '04', title: 'Launch & handover', desc: 'Full documentation, team training, and 30-day post-launch support. You own everything.', badge: '1 WEEK' },
+                ].map(s => (
+                  <div key={s.n} className="how-step">
+                    <div className="how-step-n">{s.n}</div>
+                    <div className="how-step-body"><h4>{s.title}</h4><p>{s.desc}</p><span className="step-badge">{s.badge}</span></div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-cta">
+                <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Start a project →</a>
+              </div>
+            </div>
+            <div>
+              <div className="how-outcome">
+                <div className="hoc-glow" />
+                <div className="hoc-label">Real estate brokerage · Dubai · 12 agents</div>
+                <div className="hoc-title">Before vs after automation</div>
+                <div className="hoc-sub">Drag the handle to compare — left is before, right is after</div>
+                <BeforeAfterSlider />
+                <ProjectTimeline />
               </div>
             </div>
           </div>

@@ -1,5 +1,6 @@
 /* eslint-disable */
 'use client';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { PROJECTS } from '@/lib/projects';
@@ -104,6 +105,18 @@ export default function PortfolioPage() {
                     'var(--surface)')
                 }
               >
+                {/* Project image */}
+                {p.image && (
+                  <div style={{ position: 'relative', width: '100%', height: 180, overflow: 'hidden' }}>
+                    <Image
+                      src={p.image}
+                      alt={p.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                )}
+
                 {/* Tag chips */}
                 <div className="port-tags">
                   {p.tags.map((t) => (

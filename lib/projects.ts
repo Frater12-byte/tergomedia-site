@@ -6,6 +6,7 @@ export interface Project {
   client: string;
   desc: string;
   stat: string;
+  image?: string;
   challenge: string;
   solution: string;
   techStack: string[];
@@ -82,6 +83,7 @@ export const PROJECTS: Project[] = [
     tags: ['Digital Transformation'],
     title: 'RE/MAX Gulf',
     client: 'Real estate brokerage, Dubai',
+    image: '/Images/IMG-remax.jpg',
     desc: 'Full digital transformation for a 50-agent brokerage. CRM rollout, lead automation, agent training programme, KPI reporting.',
     stat: '$2.1M pipeline added',
     challenge: 'A 50-agent RE/MAX franchise in Dubai was operating without a CRM, using a mix of personal WhatsApp groups, Excel trackers, and paper files to manage the sales pipeline. Leads from Bayut, PropertyFinder, and direct referrals were landing in five different inboxes with no central routing. Management had no real-time visibility into agent performance, and high-value leads were routinely falling through the gaps.',

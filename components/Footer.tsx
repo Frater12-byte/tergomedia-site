@@ -20,6 +20,7 @@ const SECTORS = [
 const COMPANY = [
   { href: '/about', label: 'About us' },
   { href: '/portfolio', label: 'Portfolio' },
+  { href: '/tools', label: 'Free tools' },
   { href: '/contact', label: 'Contact' },
 ];
 

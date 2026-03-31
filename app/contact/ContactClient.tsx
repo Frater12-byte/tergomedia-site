@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import WorldMap from '@/components/WorldMap';
+import TestimonialsSection from '@/components/TestimonialsSection';
 
 export default function ContactClient() {
   const [form, setForm] = useState({ name: '', email: '', company: '', message: '' });
@@ -296,6 +297,9 @@ export default function ContactClient() {
           </div>
         </div>
       </section>
+
+      {/* ── TESTIMONIALS ──────────────────────────────────── */}
+      <TestimonialsSection />
 
       {/* ── CTA ───────────────────────────────────────────── */}
       <section className="cta-section">

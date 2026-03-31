@@ -250,7 +250,7 @@ export default function Home() {
               { href: '/portfolio', img: '/Images/IMG-03.png', tags: ['Travel','Custom Dev'], title: 'Ranjet Aviation', desc: 'Custom booking and fleet management system for private jet charter.' },
               { href: '/portfolio', img: '/Images/IMG-10.png', tags: ['Automation','CRM'], title: 'HayGuard', desc: 'End-to-end client onboarding automation integrated with HubSpot CRM.' },
               { href: '/portfolio', img: '/Images/IMG-30.png', tags: ['Digital Transformation'], title: 'RE/MAX Gulf', desc: 'Full digital transformation: CRM rollout, automation, agent training programme.' },
-              { href: '/portfolio', img: '/Images/IMG-11.png', tags: ['Custom Dev','AI'], title: 'Tergo AI Suite', desc: 'Proprietary AI tools suite for hospitality and professional services clients.' },
+              { href: '/portfolio', img: '/Images/IMG-31.png', tags: ['Custom Dev','AI'], title: 'Tergo AI Suite', desc: 'Proprietary AI tools suite for hospitality and professional services clients.' },
             ].map((p, i) => (
               <Link key={i} href={p.href} className="port-card">
                 <img src={p.img} alt={p.title} className="port-img" />

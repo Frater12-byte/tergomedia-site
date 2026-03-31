@@ -256,23 +256,43 @@ export default function ContactClient() {
             <span className="sec-label reveal">THE FOUNDERS</span>
             <h2 className="sec-title reveal reveal-delay-1">The people you&apos;ll work with.</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: 24, maxWidth: 640 }}>
-            {[
-              { img: '/Images/IMG-19.png', name: 'Maria Terragni', role: 'CEO / Co-Founder', location: 'Dubai, UAE', linkedin: 'https://www.linkedin.com/in/maria-terragni/', color: '#f9ca00' },
-              { img: '/Images/IMG-04.png', name: 'Francesco Terragni', role: 'CTO / Co-Founder', location: 'Bucharest, Romania', linkedin: 'https://www.linkedin.com/in/francescoterragni/', color: '#00ff9d' },
-            ].map((p, i) => (
-              <div key={i} className={`team-card reveal${i === 1 ? ' reveal-delay-1' : ''}`}>
-                <Image src={p.img} alt={p.name} width={400} height={400} className="team-img" style={{ aspectRatio: '1/1', objectFit: 'cover', objectPosition: 'top center', filter: 'grayscale(15%)' }} />
-                <div className="team-body">
-                  <div style={{ marginBottom: 10 }}>
-                    <span className="t-role-tag">{p.role}</span>
-                  </div>
-                  <h3>{p.name}</h3>
-                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,.4)', marginBottom: 14 }}>{p.location}</p>
-                  <a href={p.linkedin} target="_blank" rel="noreferrer" className="team-li">LinkedIn →</a>
-                </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 56, alignItems: 'start' }}>
+            {/* Company intro */}
+            <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <p style={{ fontSize: 15, color: 'rgba(255,255,255,.75)', lineHeight: 1.8, margin: 0 }}>
+                Tergo Media combines business strategy with technical execution. We identify what actually matters, eliminate waste, and build AI, automation, and software systems that work while you sleep — across Dubai, Bucharest, and Milan.
+              </p>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,.45)', lineHeight: 1.8, margin: 0 }}>
+                Our core focus is harnessing automation — from RPA and low-code solutions to full custom software. We work with businesses across real estate, agriculture, hospitality, and professional services to drive measurable efficiency gains.
+              </p>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,.45)', lineHeight: 1.8, margin: 0 }}>
+                Our mission is to empower companies to embrace technology, elevating their operations to new heights of efficiency and success.
+              </p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 4 }}>
+                {['Dubai', 'Bucharest', 'Milan'].map(city => (
+                  <span key={city} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,.3)', padding: '4px 10px', border: '1px solid rgba(255,255,255,.1)' }}>{city}</span>
+                ))}
               </div>
-            ))}
+            </div>
+            {/* Founder cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 16 }}>
+              {[
+                { img: '/Images/IMG-19.png', name: 'Maria Terragni', role: 'CEO / Co-Founder', location: 'Dubai, UAE', linkedin: 'https://www.linkedin.com/in/maria-terragni/' },
+                { img: '/Images/IMG-04.png', name: 'Francesco Terragni', role: 'CTO / Co-Founder', location: 'Bucharest, Romania', linkedin: 'https://www.linkedin.com/in/francescoterragni/' },
+              ].map((p, i) => (
+                <div key={i} className={`team-card reveal${i === 1 ? ' reveal-delay-1' : ''}`}>
+                  <Image src={p.img} alt={p.name} width={400} height={400} className="team-img" style={{ aspectRatio: '1/1', objectFit: 'cover', objectPosition: 'top center', filter: 'grayscale(15%)' }} />
+                  <div className="team-body">
+                    <div style={{ marginBottom: 10 }}>
+                      <span className="t-role-tag">{p.role}</span>
+                    </div>
+                    <h3>{p.name}</h3>
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,.4)', marginBottom: 14 }}>{p.location}</p>
+                    <a href={p.linkedin} target="_blank" rel="noreferrer" className="team-li">LinkedIn →</a>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

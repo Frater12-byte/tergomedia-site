@@ -635,10 +635,10 @@ footer{background:#111111;color:rgba(255,255,255,.3);padding:56px 0 28px}
 /* FOOTER EU FUNDING */
 .footer-eu{padding:28px 0 20px;border-top:1px solid rgba(255,255,255,.06);margin-bottom:20px}
 .footer-eu-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:14px;font-weight:600}
-.footer-eu-logos{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.footer-eu-logo{height:72px;width:auto;opacity:.85;transition:opacity .2s}
+.footer-eu-logos{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.footer-eu-logo{height:54px;width:auto;opacity:.85;transition:opacity .2s}
 .footer-eu-logo:hover{opacity:1}
-@media(max-width:560px){.footer-eu-logos{flex-direction:row;flex-wrap:wrap;gap:8px}.footer-eu-logo{height:56px}}
+@media(max-width:560px){.footer-eu-logos{flex-direction:row;flex-wrap:wrap;gap:16px}.footer-eu-logo{height:44px}}
 
 /* FOOTER LOGO IMAGE */
 .footer-logo-img{display:inline-block;text-decoration:none}

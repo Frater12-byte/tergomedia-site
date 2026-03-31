@@ -1,6 +1,9 @@
 /* eslint-disable */
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
+
+const toTop = () => window.scrollTo({ top: 0 });
 
 const SERVICES = [
   { href: '/services/ai-automation', label: 'AI & Automation' },
@@ -54,17 +57,17 @@ export default function Footer() {
 
           <div className="footer-col">
             <h4>Services</h4>
-            <ul>{SERVICES.map(l => <li key={l.href}><Link href={l.href}>{l.label}</Link></li>)}</ul>
+            <ul>{SERVICES.map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
           </div>
 
           <div className="footer-col">
             <h4>Sectors</h4>
-            <ul>{SECTORS.map(l => <li key={l.href}><Link href={l.href}>{l.label}</Link></li>)}</ul>
+            <ul>{SECTORS.map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
           </div>
 
           <div className="footer-col">
             <h4>Company</h4>
-            <ul>{COMPANY.map(l => <li key={l.href}><Link href={l.href}>{l.label}</Link></li>)}</ul>
+            <ul>{COMPANY.map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
           </div>
 
           <div className="footer-col">

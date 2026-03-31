@@ -436,10 +436,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
   .roi-cta-row .btn{text-align:center;justify-content:center}
 }
 
-/* PORTFOLIO */
+/* PORTFOLIO — homepage cards (port-card) */
 .port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.06)}
-.port-page-card{padding:32px 28px}
-@media(max-width:560px){.port-page-card{padding:20px 16px}}
 .port-card{background:var(--surface);display:block;transition:background .18s;text-decoration:none;color:var(--ink);overflow:hidden}
 .port-card:hover{background:var(--dark3)}
 .port-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;filter:grayscale(20%);transition:filter .3s}
@@ -451,6 +449,41 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 .port-body p{font-size:12px;color:rgba(255,255,255,.4);line-height:1.6}
 @media(max-width:860px){.port-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.port-grid{grid-template-columns:1fr}.port-img{aspect-ratio:16/9}.port-body{padding:16px}.port-body h3{font-size:15px}.port-body p{font-size:13px}}
+
+/* PORTFOLIO PAGE — redesigned card grid */
+.port-filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:48px}
+.port-filter-btn{padding:8px 16px;font-size:11px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:.05em;cursor:pointer;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);transition:all .15s}
+.port-filter-btn:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.7)}
+.port-filter-btn.pf-active{background:var(--y);border-color:var(--y);color:var(--dark)}
+.ppc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.ppc{background:var(--surface);display:flex;flex-direction:column;overflow:hidden;text-decoration:none;color:inherit;transition:background .2s,transform .2s,box-shadow .2s}
+.ppc:hover{background:var(--dark3);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.ppc-img-wrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;flex-shrink:0}
+.ppc-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease;filter:grayscale(10%)}
+.ppc:hover .ppc-img{transform:scale(1.04);filter:grayscale(0%)}
+.ppc-img-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.ppc-body{padding:22px 24px;display:flex;flex-direction:column;gap:8px;flex:1}
+.ppc-title{font-size:16px;font-weight:800;color:#fff;margin:0;font-family:'Exo 2',sans-serif;line-height:1.3}
+.ppc-client{font-size:10px;color:rgba(255,255,255,.28);letter-spacing:.07em;text-transform:uppercase}
+.ppc-desc{font-size:13px;color:rgba(255,255,255,.42);line-height:1.7;flex:1;margin:0}
+.ppc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)}
+.ppc-stat{font-size:11px;font-weight:700;color:var(--y);font-family:'Exo 2',sans-serif;letter-spacing:.04em;display:flex;align-items:center;gap:6px}
+.ppc-stat::before{content:'';width:5px;height:5px;background:var(--y);flex-shrink:0;display:inline-block}
+.ppc-cta-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:.04em;transition:color .15s}
+.ppc:hover .ppc-cta-label{color:#fff}
+@media(max-width:1024px){.ppc-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.ppc-grid{grid-template-columns:1fr;gap:16px}.ppc-body{padding:18px 20px}.port-filter-bar{gap:6px}.port-filter-btn{padding:6px 12px;font-size:10px}}
+
+/* PORTFOLIO PAGE — engineering team section */
+.port-team-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.port-team-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+.port-team-stat{padding:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+.port-team-stat-n{font-family:'Exo 2',sans-serif;font-size:28px;font-weight:900;color:var(--y);line-height:1}
+.port-team-stat-l{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.07em;margin-top:4px}
+.port-team-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.port-team-card{background:var(--surface);overflow:hidden}
+@media(max-width:1024px){.port-team-grid{grid-template-columns:1fr;gap:40px}.port-team-stats{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:600px){.port-team-grid{gap:32px}.port-team-stats{grid-template-columns:repeat(2,1fr)}.port-team-cards{grid-template-columns:1fr;max-width:320px}}
 
 /* SECTORS */
 .sectors-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.06)}

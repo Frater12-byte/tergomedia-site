@@ -13,7 +13,7 @@ const TOOLS = [
     num: '01',
     label: 'Real Estate ROI Calculator',
     desc: 'Find out exactly how much money your Dubai brokerage is leaving on the table without automation. Answer a few questions about your team, lead volume, and current processes — get an instant breakdown of lost revenue, wasted hours, and missed deals.',
-    img: '/Images/IMG-23.png',
+    img: '/Images/IMG-13.png',
     imgAlt: 'Real Estate Automation ROI Calculator',
     stat: { n: 'AED 2M+', l: 'avg. lost per year per brokerage' },
     bullets: [
@@ -31,7 +31,7 @@ const TOOLS = [
     num: '02',
     label: 'Middle East Threat Tracker',
     desc: 'A live monitoring tool that tracks and reports missile attacks, airstrikes, and security incidents across the Middle East. Aggregates and cross-references dozens of news outlets, official sources, and verified social feeds — updated in real time.',
-    img: '/Images/IMG-13.png',
+    img: '/Images/IMG-23.png',
     imgAlt: 'Middle East Threat Tracker',
     stat: { n: '50+', l: 'sources monitored continuously' },
     bullets: [
@@ -95,7 +95,7 @@ export default function ToolsPage() {
                   <ul className="tool-bullets">
                     {t.bullets.map(b => (
                       <li key={b}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, color: t.color }}><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, color: 'var(--ng)' }}><polyline points="20 6 9 17 4 12"/></svg>
                         {b}
                       </li>
                     ))}
@@ -107,7 +107,6 @@ export default function ToolsPage() {
                     target="_blank"
                     rel="noreferrer"
                     className="btn btn-y btn-lg"
-                    style={t.color === 'var(--ng)' ? { background: 'transparent', border: '1px solid var(--ng)', color: 'var(--ng)' } : {}}
                   >
                     {t.cta}
                   </a>

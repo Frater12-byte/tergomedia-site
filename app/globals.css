@@ -48,8 +48,10 @@ img{max-width:100%;display:block}
     radial-gradient(ellipse 70% 45% at 88% 110%,rgba(176,110,255,.03) 0%,transparent 55%),
     radial-gradient(ellipse 55% 35% at 50% 50%,rgba(255,255,255,.02) 0%,transparent 65%);
   animation:shimmerDrift 12s ease-in-out infinite alternate;
+  will-change:transform;
 }
-@keyframes shimmerDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(20px,-15px) scale(1.04)}}
+@keyframes shimmerDrift{from{transform:translate(0,0)}to{transform:translate(20px,-15px)}}
+@media(max-width:860px){.section-shimmer::before{animation:none}}
 
 /* Subtle grid dot pattern */
 .section-dots{position:relative;overflow:hidden;background:#232323}
@@ -129,8 +131,8 @@ img{max-width:100%;display:block}
 .hero-left>*:nth-child(3){animation-delay:.3s}
 .hero-left>*:nth-child(4){animation-delay:.42s}
 .hero-left>*:nth-child(5){animation-delay:.54s}
-.hero-vw{animation:fadeUp .8s ease .28s backwards}
-@media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:44px}}
+.hero-vw{animation:fadeUp .8s ease .28s backwards;contain:layout}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:44px}.hero-vw{animation:none;opacity:1;transform:none}}
 @media(max-width:560px){.hero h1{font-size:clamp(32px,9vw,48px)}.hero-sub{font-size:15px}.hero-ctas{flex-direction:column;gap:10px}.hero-ctas .btn{justify-content:center;padding:14px 24px;font-size:15px}.hero-locs{gap:14px}.hero-grid{gap:32px}}
 
 /* FLOW CARD */

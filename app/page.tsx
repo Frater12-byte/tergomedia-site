@@ -248,9 +248,9 @@ export default function Home() {
               { href: '/portfolio', img: '/Images/IMG-01.png', tags: ['Real Estate','AI Automation'], title: 'Cocktail Holidays', desc: 'AI lead qualification + WhatsApp automation for Dubai luxury property portal.' },
               { href: '/portfolio', img: '/Images/IMG-02.png', tags: ['Agriculture','IoT'], title: 'Agri Novatex', desc: 'IoT sensor platform + alert automation for precision agriculture in Romania.' },
               { href: '/portfolio', img: '/Images/IMG-03.png', tags: ['Travel','Custom Dev'], title: 'Ranjet Aviation', desc: 'Custom booking and fleet management system for private jet charter.' },
-              { href: '/portfolio', img: '/Images/IMG-04.png', tags: ['Automation','CRM'], title: 'HayGuard', desc: 'End-to-end client onboarding automation integrated with HubSpot CRM.' },
-              { href: '/portfolio', img: '/Images/IMG-05.png', tags: ['Digital Transformation'], title: 'RE/MAX Gulf', desc: 'Full digital transformation: CRM rollout, automation, agent training programme.' },
-              { href: '/portfolio', img: '/Images/IMG-06.png', tags: ['Custom Dev','AI'], title: 'Tergo AI Suite', desc: 'Proprietary AI tools suite for hospitality and professional services clients.' },
+              { href: '/portfolio', img: '/Images/IMG-10.png', tags: ['Automation','CRM'], title: 'HayGuard', desc: 'End-to-end client onboarding automation integrated with HubSpot CRM.' },
+              { href: '/portfolio', img: '/Images/IMG-30.png', tags: ['Digital Transformation'], title: 'RE/MAX Gulf', desc: 'Full digital transformation: CRM rollout, automation, agent training programme.' },
+              { href: '/portfolio', img: '/Images/IMG-11.png', tags: ['Custom Dev','AI'], title: 'Tergo AI Suite', desc: 'Proprietary AI tools suite for hospitality and professional services clients.' },
             ].map((p, i) => (
               <Link key={i} href={p.href} className="port-card">
                 <img src={p.img} alt={p.title} className="port-img" />

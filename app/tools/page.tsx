@@ -15,7 +15,7 @@ const TOOLS = [
     desc: 'Find out exactly how much money your Dubai brokerage is leaving on the table without automation. Answer a few questions about your team, lead volume, and current processes — get an instant breakdown of lost revenue, wasted hours, and missed deals.',
     img: '/Images/IMG-13.png',
     imgAlt: 'Real Estate Automation ROI Calculator',
-    stat: { n: 'AED 2M+', l: 'avg. lost per year per brokerage' },
+    stat: { n: 'AED 2M+', l: 'avg. revenue recovered per brokerage' },
     bullets: [
       'Calculates lost revenue from slow lead response',
       'Estimates hours wasted on manual admin per agent',
@@ -23,7 +23,7 @@ const TOOLS = [
       'Instant results — no sign-up required',
     ],
     cta: 'Calculate my ROI →',
-    color: 'var(--y)',
+    color: 'var(--ng)',
   },
   {
     href: 'https://alerts.tergomedia.com/',

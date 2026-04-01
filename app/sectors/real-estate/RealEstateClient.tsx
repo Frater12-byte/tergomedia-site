@@ -5,6 +5,7 @@ import Link from 'next/link';
 import ROICalculator from '@/components/ROICalculator';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import AutopilotSection from '@/components/AutopilotSection';
+import WhitepaperGate from '@/components/WhitepaperGate';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -299,6 +300,9 @@ export default function RealEstateClient() {
           </div>
         </div>
       </section>
+
+      {/* WHITEPAPER */}
+      <WhitepaperGate />
 
       {/* AUTOPILOT */}
       <AutopilotSection />

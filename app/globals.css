@@ -880,3 +880,10 @@ input[type="url"],textarea,select{font-size:16px}
 .tool-bullets li{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,.5);line-height:1.5}
 @media(max-width:860px){.tools-grid{grid-template-columns:1fr}}
 @media(max-width:560px){.tool-body{padding:24px 20px}.tool-title{font-size:20px}}
+
+/* Whitepaper gate responsive */
+@media(max-width:860px){
+  .wp-two-col{grid-template-columns:1fr !important}
+  .wp-stats{grid-template-columns:repeat(2,1fr) !important}
+  .wp-sticky{position:static !important}
+}

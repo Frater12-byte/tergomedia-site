@@ -22,6 +22,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tergomedia.com'),
   title: 'Tergo Media — AI Automation & Custom Software',
   description: 'We build AI automation and custom software that works while you sleep. Tergo Media — Dubai, Bucharest, Milan.',
   keywords: 'AI automation, custom software, n8n, Make, WhatsApp automation, CRM integration, digital transformation, Dubai, UAE',

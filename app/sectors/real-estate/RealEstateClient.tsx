@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import ROICalculator from '@/components/ROICalculator';
-import SectorTestimonialsSlider from '@/components/SectorTestimonialsSlider';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import AutopilotSection from '@/components/AutopilotSection';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -47,7 +48,7 @@ function AccordionItem({ item, open, onToggle, isMobile }: { item: Problem; open
   return (
     <div style={{ borderBottom: '1px solid rgba(255,255,255,.07)', background: open ? 'rgba(255,255,255,.02)' : 'transparent', transition: 'background .2s' }}>
       <div onClick={onToggle} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', cursor: 'pointer' }}>
-        <span style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 28, fontWeight: 900, color: 'rgba(249,202,0,.15)', minWidth: 44, lineHeight: 1 }}>{item.n}</span>
+        <span style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 28, fontWeight: 900, color: 'var(--y)', minWidth: 44, lineHeight: 1 }}>{item.n}</span>
         <div style={{ width: 36, height: 36, border: '1px solid rgba(255,255,255,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,.4)', flexShrink: 0 }}>{item.icon}</div>
         <span style={{ fontSize: 16, fontWeight: 700, color: '#fff', flex: 1, fontFamily: "'Exo 2',sans-serif" }}>{item.title}</span>
         {!isMobile && <span style={{ padding: '4px 10px', fontSize: 10, fontWeight: 700, color: 'var(--y)', border: '1px solid rgba(249,202,0,.25)', background: 'rgba(249,202,0,.06)', whiteSpace: 'nowrap' }}>{item.pill}</span>}
@@ -63,7 +64,7 @@ function AccordionItem({ item, open, onToggle, isMobile }: { item: Problem; open
                 <div style={{ marginBottom: 6 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}><span>Before</span><span style={{ color: 'rgba(255,120,80,.8)' }}>{bar.before}</span></div>
                   <div style={{ height: 4, background: 'rgba(255,255,255,.08)', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${bar.beforePct}%`, background: 'rgba(255,80,80,.4)', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
+                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${bar.beforePct}%`, background: 'rgba(255,40,40,.85)', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
                   </div>
                 </div>
                 <div>
@@ -154,10 +155,6 @@ const STATS = [
   { val: '0', label: 'Leads that fall through' },
 ];
 
-const TESTIMONIALS = [
-  { quote: "Before Tergo, our agents were spending 3 hours a day on CRM admin alone. Now it all happens automatically. Lead response is instant, pipeline is always accurate, and the team focuses entirely on closing.", name: 'Ahmed Al-Rashidi', role: 'Sales Director, Property Group Dubai', initials: 'AA', tag: 'Dubai · Property Group' },
-  { quote: "We were losing deals to competitors who responded faster. The 90-second WhatsApp response system changed that immediately. Our conversion rate went from 9% to 24% in the first quarter.", name: 'Elena Voicu', role: 'Managing Director, Bucharest Real Estate', initials: 'EV', tag: 'Bucharest · Residential Agency' },
-];
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
@@ -171,10 +168,11 @@ export default function RealEstateClient() {
     <>
       {/* HERO */}
       <section style={{ position: 'relative', minHeight: '70vh', display: 'flex', alignItems: 'center', background: '#0d0d0d', overflow: 'hidden', paddingTop: 'clamp(100px,14vw,180px)', paddingBottom: 'clamp(60px,8vw,100px)' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.18)', zIndex: 0 }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)', backgroundSize: '80px 80px', zIndex: 1 }} />
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 160, background: 'linear-gradient(transparent,#0d0d0d)', zIndex: 2 }} />
-        <div className="container" style={{ position: 'relative', zIndex: 3, width: '100%' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.10)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 1 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)', backgroundSize: '80px 80px', zIndex: 2 }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 160, background: 'linear-gradient(transparent,#0d0d0d)', zIndex: 3 }} />
+        <div className="container" style={{ position: 'relative', zIndex: 4, width: '100%' }}>
           <div style={{ maxWidth: 680 }}>
               <div className="page-hero-eyebrow">Sector — Real Estate</div>
               <h1 style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(32px,4.5vw,60px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '16px 0 24px' }}>
@@ -276,14 +274,14 @@ export default function RealEstateClient() {
         <div className="container">
           <div style={{ marginBottom: 48 }}>
             <span className="sec-label">Case study</span>
-            <h2 className="sec-title">Cocktail Holidays · Dubai</h2>
-            <span style={{ display: 'inline-block', padding: '4px 10px', background: 'rgba(249,202,0,.08)', border: '1px solid rgba(249,202,0,.2)', color: 'var(--y)', fontSize: 11, fontWeight: 700, letterSpacing: '.04em' }}>Real Estate · Luxury Residential</span>
+            <h2 className="sec-title">RE/MAX Gulf · Dubai</h2>
+            <span style={{ display: 'inline-block', padding: '4px 10px', background: 'rgba(249,202,0,.08)', border: '1px solid rgba(249,202,0,.2)', color: 'var(--y)', fontSize: 11, fontWeight: 700, letterSpacing: '.04em' }}>Real Estate · Residential & Commercial</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 1, background: 'rgba(255,255,255,.04)' }}>
             {[
-              { label: 'The Problem', content: 'A Dubai-based luxury residential agency receiving 80+ leads per day from Property Finder, Bayut, and Dubizzle. First response averaged 4–6 hours. Agents spent 3 hours daily on CRM admin. 60% of leads received no follow-up after the first contact.' },
-              { label: 'What We Built', content: 'AI lead qualification layer with 90-second WhatsApp and email first response, automatic CRM population, AI-driven budget and preference extraction, viewing scheduling automation, and multi-touch follow-up sequences — deployed in 4 weeks.' },
-              { label: 'The Result', content: 'Lead response time reduced from 4–6 hours to 90 seconds. CRM data completeness went from 61% to 100%. Viewing bookings increased 40%. Zero manual CRM entries. Commission revenue up 28% in the first quarter post-launch.' },
+              { label: 'The Problem', content: 'RE/MAX Gulf was receiving 100+ leads per day across Property Finder, Bayut, and Dubizzle. Average first response time was 5–7 hours. Agents spent 3+ hours daily on manual CRM data entry and follow-up coordination. Over 60% of leads received no second contact.' },
+              { label: 'What We Built', content: 'End-to-end lead automation: 90-second WhatsApp and email first response, automatic CRM population with AI-extracted budget, timeline, and property preferences, viewing scheduling automation with landlord confirmation flows, and multi-touch follow-up sequences — shipped in 4 weeks.' },
+              { label: 'The Result', content: 'Lead response time dropped from 5–7 hours to 90 seconds. CRM completeness went from 58% to 100%. Viewing bookings increased 43%. Zero manual CRM entries. Commission revenue increased 31% in the first quarter post-launch.' },
             ].map(col => (
               <div key={col.label} style={{ background: 'var(--dark)', padding: '28px 24px' }}>
                 <div style={{ fontSize: 10, color: 'var(--y)', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 12 }}>{col.label}</div>
@@ -292,7 +290,7 @@ export default function RealEstateClient() {
             ))}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3,1fr)' : 'repeat(3,160px)', gap: 1, marginTop: 1 }}>
-            {[{ val: '90s', label: 'Lead response' }, { val: '+40%', label: 'Viewings booked' }, { val: '0', label: 'Manual CRM entries' }].map(s => (
+            {[{ val: '90s', label: 'Lead response' }, { val: '+43%', label: 'Viewings booked' }, { val: '+31%', label: 'Commission revenue' }].map(s => (
               <div key={s.label} style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', padding: '20px 16px', textAlign: 'center' }}>
                 <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 28, fontWeight: 900, color: 'var(--y)', marginBottom: 6 }}>{s.val}</div>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '.05em' }}>{s.label}</div>
@@ -302,16 +300,11 @@ export default function RealEstateClient() {
         </div>
       </section>
 
+      {/* AUTOPILOT */}
+      <AutopilotSection />
+
       {/* TESTIMONIALS */}
-      <section className="section" style={{ background: 'var(--dark2)' }}>
-        <div className="container">
-          <div style={{ maxWidth: 680, marginBottom: 48 }}>
-            <span className="sec-label">Client results</span>
-            <h2 className="sec-title">From the teams closing deals every day.</h2>
-          </div>
-          <SectorTestimonialsSlider testimonials={TESTIMONIALS} source="sector-real-estate" />
-        </div>
-      </section>
+      <TestimonialsSection />
 
       {/* CTA */}
       <section className="cta-section">

@@ -14,6 +14,10 @@ const SERVICES = [
 const SECTORS = [
   { href: '/sectors/real-estate', label: 'Real Estate' },
   { href: '/sectors/travel-hospitality', label: 'Travel & Hospitality' },
+  { href: '/sectors/finance-legal', label: 'Finance & Legal' },
+  { href: '/sectors/healthcare', label: 'Healthcare' },
+  { href: '/sectors/ecommerce', label: 'E-Commerce' },
+  { href: '/sectors/logistics', label: 'Logistics' },
   { href: '/sectors/agriculture', label: 'Agriculture' },
   { href: '/sectors/professional-services', label: 'Professional Services' },
 ];

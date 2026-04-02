@@ -283,7 +283,7 @@ export default function RealEstateClient() {
             <h2 className="sec-title">What could automation save<br />your real estate agency?</h2>
             <p className="sec-sub" style={{ margin: '0 auto', textAlign: 'center' }}>Calculate your estimated 12-month impact — agent hours saved, leads recovered, and ROI.</p>
           </div>
-          <ROICalculator />
+          <ROICalculator defaultSector="Real Estate" />
         </div>
       </section>
 

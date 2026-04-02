@@ -6,6 +6,7 @@ export default function ScrollReveal() {
   const pathname = usePathname();
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     const timer = setTimeout(() => {
       const io = new IntersectionObserver((entries) => {
         entries.forEach((e) => {

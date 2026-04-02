@@ -5,12 +5,13 @@ import { useState, useEffect, useRef } from 'react';
 const SECTORS: Record<string, { hrsFactor: number; revFactor: number; b2bMult: number; b2cMult: number }> = {
   'Real Estate':           { hrsFactor: 0.78, revFactor: 0.18, b2bMult: 1.4, b2cMult: 0.8 },
   'Travel & Hospitality':  { hrsFactor: 0.72, revFactor: 0.14, b2bMult: 1.2, b2cMult: 1.1 },
+  'Finance & Legal':       { hrsFactor: 0.74, revFactor: 0.15, b2bMult: 1.5, b2cMult: 0.7 },
+  'Healthcare':            { hrsFactor: 0.58, revFactor: 0.12, b2bMult: 1.2, b2cMult: 0.9 },
+  'E-commerce':            { hrsFactor: 0.55, revFactor: 0.10, b2bMult: 0.9, b2cMult: 1.4 },
+  'Logistics':             { hrsFactor: 0.70, revFactor: 0.11, b2bMult: 1.4, b2cMult: 0.7 },
   'Agriculture':           { hrsFactor: 0.65, revFactor: 0.11, b2bMult: 1.5, b2cMult: 0.6 },
   'Professional Services': { hrsFactor: 0.68, revFactor: 0.13, b2bMult: 1.6, b2cMult: 0.7 },
-  'E-commerce':            { hrsFactor: 0.55, revFactor: 0.10, b2bMult: 0.9, b2cMult: 1.4 },
   'SaaS / Tech':           { hrsFactor: 0.62, revFactor: 0.16, b2bMult: 1.3, b2cMult: 1.0 },
-  'Healthcare':            { hrsFactor: 0.58, revFactor: 0.12, b2bMult: 1.2, b2cMult: 0.9 },
-  'Logistics':             { hrsFactor: 0.70, revFactor: 0.11, b2bMult: 1.4, b2cMult: 0.7 },
 };
 
 const RESP_OPTIONS: Array<{ label: string; mult: number }> = [
@@ -34,9 +35,9 @@ function fmtDollar(n: number): string {
   return `${sign}$${Math.round(abs)}`;
 }
 
-export default function ROICalculator() {
+export default function ROICalculator({ defaultSector = 'Real Estate' }: { defaultSector?: string }) {
   const [mode, setMode]     = useState<'B2B' | 'B2C'>('B2B');
-  const [sector, setSector] = useState('Real Estate');
+  const [sector, setSector] = useState(defaultSector);
   const [team, setTeam]     = useState(8);
   const [hrs, setHrs]       = useState(15);
   const [salary, setSalary] = useState(60000);

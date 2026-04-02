@@ -261,7 +261,7 @@ export default function ProfServClient() {
             <h2 className="sec-title">What could automation recover<br />for your firm this year?</h2>
             <p className="sec-sub" style={{ margin: '0 auto', textAlign: 'center' }}>Calculate your estimated 12-month impact — billable hours recovered, admin eliminated, and ROI.</p>
           </div>
-          <ROICalculator />
+          <ROICalculator defaultSector="Professional Services" />
         </div>
       </section>
 

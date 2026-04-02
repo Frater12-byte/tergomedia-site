@@ -270,7 +270,7 @@ export default function EcommerceClient() {
             <h2 className="sec-title">What could automation save<br />your e-commerce store?</h2>
             <p className="sec-sub" style={{ margin: '0 auto', textAlign: 'center' }}>Calculate your estimated 12-month impact — ops hours saved, revenue recovered, and ROI.</p>
           </div>
-          <ROICalculator />
+          <ROICalculator defaultSector="E-commerce" />
         </div>
       </section>
 

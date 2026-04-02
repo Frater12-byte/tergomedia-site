@@ -261,7 +261,7 @@ export default function TravelHospClient() {
             <h2 className="sec-title">What could automation save<br />your hospitality operation?</h2>
             <p className="sec-sub" style={{ margin: '0 auto', textAlign: 'center' }}>Calculate your estimated 12-month impact — guest hours saved, revenue recovered, ROI.</p>
           </div>
-          <ROICalculator />
+          <ROICalculator defaultSector="Travel & Hospitality" />
         </div>
       </section>
 

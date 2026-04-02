@@ -74,6 +74,7 @@ img{max-width:100%;display:block}
 .reveal-delay-1{transition-delay:.1s}
 .reveal-delay-2{transition-delay:.2s}
 .reveal-delay-3{transition-delay:.3s}
+@media(max-width:768px){.reveal{transform:none}.reveal.visible{transform:none}}
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:11px 24px;text-decoration:none;transition:all .18s;cursor:pointer;border:none;white-space:nowrap;letter-spacing:.01em}

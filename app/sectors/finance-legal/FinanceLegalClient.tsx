@@ -261,7 +261,7 @@ export default function FinanceLegalClient() {
             <h2 className="sec-title">What could automation save<br />your finance or legal operation?</h2>
             <p className="sec-sub" style={{ margin: '0 auto', textAlign: 'center' }}>Calculate your estimated 12-month impact — compliance hours saved, DSO reduced, ROI.</p>
           </div>
-          <ROICalculator />
+          <ROICalculator defaultSector="Finance & Legal" />
         </div>
       </section>
 

@@ -3,21 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import ROICalculator from '@/components/ROICalculator';
-import SectorTestimonialsSlider from '@/components/SectorTestimonialsSlider';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import AutopilotSection from '@/components/AutopilotSection';
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function useIsMobile() {
-  const [v, setV] = useState(false);
-  useEffect(() => {
-    const check = () => setV(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-  return v;
-}
-
+// ─── Flow diagram ──────────────────────────────────────────────────────────────
 
 function FlowDiagram({ flow }: { flow: { sources: string[]; engine: string; outputs: string[] } }) {
   return (
@@ -35,10 +24,12 @@ function FlowDiagram({ flow }: { flow: { sources: string[]; engine: string; outp
   );
 }
 
+// ─── Accordion ─────────────────────────────────────────────────────────────────
+
 type ProblemBar = { label: string; before: string; beforePct: number; after: string; afterPct: number };
 type Problem = { n: string; title: string; pill: string; icon: React.ReactNode; desc: string; bars: ProblemBar[] };
 
-function AccordionItem({ item, open, onToggle, isMobile }: { item: Problem; open: boolean; onToggle: () => void; isMobile: boolean }) {
+function AccordionItem({ item, open, onToggle }: { item: Problem; open: boolean; onToggle: () => void }) {
   const [afterWidths, setAfterWidths] = useState(item.bars.map(() => 0));
   useEffect(() => {
     if (open) { const t = setTimeout(() => setAfterWidths(item.bars.map(b => b.afterPct)), 80); return () => clearTimeout(t); }
@@ -47,27 +38,31 @@ function AccordionItem({ item, open, onToggle, isMobile }: { item: Problem; open
   return (
     <div style={{ borderBottom: '1px solid rgba(255,255,255,.07)', background: open ? 'rgba(255,255,255,.02)' : 'transparent', transition: 'background .2s' }}>
       <div onClick={onToggle} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', cursor: 'pointer' }}>
-        <span style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 28, fontWeight: 900, color: 'rgba(249,202,0,.15)', minWidth: 44, lineHeight: 1 }}>{item.n}</span>
+        <span style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 28, fontWeight: 900, color: 'var(--y)', minWidth: 44, lineHeight: 1 }}>{item.n}</span>
         <div style={{ width: 36, height: 36, border: '1px solid rgba(255,255,255,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,.4)', flexShrink: 0 }}>{item.icon}</div>
         <span style={{ fontSize: 16, fontWeight: 700, color: '#fff', flex: 1, fontFamily: "'Exo 2',sans-serif" }}>{item.title}</span>
-        {!isMobile && <span style={{ padding: '4px 10px', fontSize: 10, fontWeight: 700, color: 'var(--y)', border: '1px solid rgba(249,202,0,.25)', background: 'rgba(249,202,0,.06)', whiteSpace: 'nowrap' }}>{item.pill}</span>}
+        <span className="acc-pill">{item.pill}</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" strokeWidth="2" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .25s' }}><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div style={{ maxHeight: open ? 600 : 0, overflow: 'hidden', transition: 'max-height .35s ease' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 24 : 48, padding: isMobile ? '0 16px 24px' : '0 20px 28px 88px' }}>
+        <div className="acc-inner">
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,.5)', lineHeight: 1.8, margin: 0 }}>{item.desc}</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {item.bars.map((bar, bi) => (
               <div key={bi}>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 8, fontWeight: 600 }}>{bar.label}</div>
                 <div style={{ marginBottom: 6 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}><span>Before</span><span style={{ color: 'rgba(255,120,80,.8)' }}>{bar.before}</span></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}>
+                    <span>Before</span><span style={{ color: 'rgba(255,100,80,.9)' }}>{bar.before}</span>
+                  </div>
                   <div style={{ height: 4, background: 'rgba(255,255,255,.08)', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${bar.beforePct}%`, background: 'rgba(255,80,80,.4)', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
+                    <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${bar.beforePct}%`, background: 'rgba(255,40,40,.85)', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
                   </div>
                 </div>
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}><span>After</span><span style={{ color: '#22c55e' }}>{bar.after}</span></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(255,255,255,.25)', marginBottom: 4 }}>
+                    <span>After</span><span style={{ color: '#22c55e' }}>{bar.after}</span>
+                  </div>
                   <div style={{ height: 4, background: 'rgba(255,255,255,.08)', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${afterWidths[bi]}%`, background: '#22c55e', transition: 'width .9s cubic-bezier(.4,0,.2,1)' }} />
                   </div>
@@ -80,6 +75,8 @@ function AccordionItem({ item, open, onToggle, isMobile }: { item: Problem; open
     </div>
   );
 }
+
+// ─── Stat item ─────────────────────────────────────────────────────────────────
 
 function StatItem({ val, label }: { val: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -97,8 +94,7 @@ function StatItem({ val, label }: { val: string; label: string }) {
   );
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
+// ─── Data ──────────────────────────────────────────────────────────────────────
 
 const PROBLEMS: Problem[] = [
   {
@@ -130,7 +126,7 @@ const PROBLEMS: Problem[] = [
   },
   {
     n: '04', title: 'Fragmented supplier comms', pill: 'Automated procurement',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><path d="M16 16l3-8 3 8-6-3-6 3 3-8 3 8z"/><circle cx="12" cy="12" r="10"/></svg>,
+    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
     desc: 'Reordering fertilisers, pesticides, and fuel manually means monitoring stock levels by hand, calling suppliers, and chasing deliveries. A single out-of-stock during peak season can halt operations for days.',
     bars: [
       { label: 'Procurement time per month', before: '8–12 hours', beforePct: 80, after: '< 30 min', afterPct: 6 },
@@ -140,64 +136,62 @@ const PROBLEMS: Problem[] = [
 ];
 
 const SOLUTIONS = [
-  { n: '01', title: 'IoT Sensor Network', desc: 'End-to-end IoT deployment across your land: soil moisture, temperature, humidity, and equipment telemetry — all feeding a live dashboard accessible from anywhere.', bullets: ['Soil moisture, temp, and humidity sensors deployed field by field','Equipment telemetry monitoring pump and irrigation system health','GPS-tagged sensor placement with field map overlay','Dashboard accessible via web and mobile — no app install required'], tags: ['IoT','MQTT','LoRaWAN','Node-RED'], flow: { sources: ['Soil sensors', 'Weather station', 'Equipment telemetry'], engine: 'IoT Data Ingestion Layer', outputs: ['Live dashboard', 'Historical trends', 'Anomaly detection'] } },
-  { n: '02', title: 'Alert & Escalation Engine', desc: 'Configurable threshold alerts sent via SMS, WhatsApp, and email within 3 minutes of any critical event — with automatic escalation if the first responder does not acknowledge.', bullets: ['Soil, temperature, and equipment thresholds set per field zone','SMS and WhatsApp alerts delivered within 3 minutes','Auto-escalation if primary contact does not acknowledge in 10 min','Incident log maintained automatically with resolution tracking'], tags: ['n8n','WhatsApp','SMS','Twilio'], flow: { sources: ['Threshold breach', 'Equipment fault', 'Weather alert'], engine: 'Alert Escalation Engine', outputs: ['WhatsApp alert', 'SMS notification', 'Manager escalation'] } },
-  { n: '03', title: 'Harvest Planning System', desc: 'AI-driven harvest window recommendations combining sensor data, weather forecasts, and historical yield patterns to optimise timing and maximise quality.', bullets: ['7-day harvest window forecast updated daily','Integrates live weather data with in-field sensor readings','Historical yield quality correlation analysis','One-click harvest schedule generation and team notification'], tags: ['AI','Weather API','Sensor data','n8n'], flow: { sources: ['Sensor readings', 'Weather forecast', 'Historical data'], engine: 'Harvest AI Engine', outputs: ['Harvest window', 'Team schedule', 'Market timing'] } },
-  { n: '04', title: 'Supplier Automation', desc: 'Automatic stock level monitoring with supplier order triggers, delivery tracking, and invoice processing — so procurement runs without your involvement.', bullets: ['Stock levels monitored against par thresholds continuously','Automatic purchase orders triggered when stock drops below threshold','Supplier confirmation and ETA tracked in dashboard','Invoice received, matched, and flagged for approval automatically'], tags: ['n8n','Supplier APIs','Email','Automation'], flow: { sources: ['Stock sensor data', 'Consumption tracking', 'Par threshold'], engine: 'Procurement Engine', outputs: ['Purchase order', 'Supplier notification', 'Delivery tracking'] } },
-  { n: '05', title: 'Farm Performance Dashboard', desc: 'Real-time and historical view of every field, crop, and input — with automated weekly reports for management and investors.', bullets: ['Per-field performance metrics updated continuously','Input vs output analysis: water, fertiliser, yield per hectare','Automated weekly PDF summary for management and investors','Anomaly detection and variance alerts built in'], tags: ['Reporting','Dashboards','IoT','Automation'], flow: { sources: ['All sensor feeds', 'Procurement data', 'Yield records'], engine: 'Tergo Reporting Layer', outputs: ['Live dashboard', 'Weekly report', 'Investor summary'] } },
+  { n: '01', title: 'IoT Sensor Network', desc: 'End-to-end IoT deployment across your land: soil moisture, temperature, humidity, and equipment telemetry — all feeding a live dashboard accessible from anywhere.', bullets: ['Soil moisture, temp, and humidity sensors deployed field by field', 'Equipment telemetry monitoring pump and irrigation system health', 'GPS-tagged sensor placement with field map overlay', 'Dashboard accessible via web and mobile — no app install required'], tags: ['IoT', 'MQTT', 'LoRaWAN', 'Node-RED'], flow: { sources: ['Soil sensors', 'Weather station', 'Equipment telemetry'], engine: 'IoT Data Ingestion Layer', outputs: ['Live dashboard', 'Historical trends', 'Anomaly detection'] } },
+  { n: '02', title: 'Alert & Escalation Engine', desc: 'Configurable threshold alerts sent via SMS, WhatsApp, and email within 3 minutes of any critical event — with automatic escalation if the first responder does not acknowledge.', bullets: ['Soil, temperature, and equipment thresholds set per field zone', 'SMS and WhatsApp alerts delivered within 3 minutes', 'Auto-escalation if primary contact does not acknowledge in 10 min', 'Incident log maintained automatically with resolution tracking'], tags: ['n8n', 'WhatsApp', 'SMS', 'Twilio'], flow: { sources: ['Threshold breach', 'Equipment fault', 'Weather alert'], engine: 'Alert Escalation Engine', outputs: ['WhatsApp alert', 'SMS notification', 'Manager escalation'] } },
+  { n: '03', title: 'Harvest Planning System', desc: 'AI-driven harvest window recommendations combining sensor data, weather forecasts, and historical yield patterns to optimise timing and maximise quality.', bullets: ['7-day harvest window forecast updated daily', 'Integrates live weather data with in-field sensor readings', 'Historical yield quality correlation analysis', 'One-click harvest schedule generation and team notification'], tags: ['AI', 'Weather API', 'Sensor data', 'n8n'], flow: { sources: ['Sensor readings', 'Weather forecast', 'Historical data'], engine: 'Harvest AI Engine', outputs: ['Harvest window', 'Team schedule', 'Market timing'] } },
+  { n: '04', title: 'Supplier Automation', desc: 'Automatic stock level monitoring with supplier order triggers, delivery tracking, and invoice processing — so procurement runs without your involvement.', bullets: ['Stock levels monitored against par thresholds continuously', 'Automatic purchase orders triggered when stock drops below threshold', 'Supplier confirmation and ETA tracked in dashboard', 'Invoice received, matched, and flagged for approval automatically'], tags: ['n8n', 'Supplier APIs', 'Email', 'Automation'], flow: { sources: ['Stock sensor data', 'Consumption tracking', 'Par threshold'], engine: 'Procurement Engine', outputs: ['Purchase order', 'Supplier notification', 'Delivery tracking'] } },
+  { n: '05', title: 'Farm Performance Dashboard', desc: 'Real-time and historical view of every field, crop, and input — with automated weekly reports for management and investors.', bullets: ['Per-field performance metrics updated continuously', 'Input vs output analysis: water, fertiliser, yield per hectare', 'Automated weekly PDF summary for management and investors', 'Anomaly detection and variance alerts built in'], tags: ['Reporting', 'Dashboards', 'IoT', 'Automation'], flow: { sources: ['All sensor feeds', 'Procurement data', 'Yield records'], engine: 'Tergo Reporting Layer', outputs: ['Live dashboard', 'Weekly report', 'Investor summary'] } },
 ];
 
 const STATS = [
-  { val: '400ha', label: 'Land monitored per client' },
-  { val: '<3min', label: 'Alert response time' },
-  { val: '0', label: 'Critical events missed' },
-  { val: '24/7', label: 'Active monitoring' },
+  { val: '400ha', label: 'Land monitored\nper client' },
+  { val: '<3min', label: 'Alert response\ntime' },
+  { val: '0', label: 'Critical events\nmissed' },
+  { val: '24/7', label: 'Active\nmonitoring' },
 ];
 
-const TESTIMONIALS = [
-  { quote: "We used to drive 200km a day just to check field conditions. Now I see everything on my phone in real time. When a pump failed last July, I had a WhatsApp alert in 3 minutes and the repair team dispatched before any crop damage occurred.", name: 'Mihai Ionescu', role: 'Farm Manager, Agri Novatex Bucharest', initials: 'MI', tag: 'Bucharest · Precision Farm' },
-  { quote: "The harvest timing system paid for itself in the first season. We used to guess based on experience. Now the system shows us the optimal 3-day window with sensor data to back it up. Our wheat quality score improved by 18 points.", name: 'Radu Constantin', role: 'Operations Director, Agricultural Group Romania', initials: 'RC', tag: 'Romania · Cereal Producer' },
-];
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
+// ─── Main ──────────────────────────────────────────────────────────────────────
 
 export default function AgricultureClient() {
-  const isMobile = useIsMobile();
   const [openProblem, setOpenProblem] = useState<number | null>(0);
   const [activeTab, setActiveTab] = useState(0);
   const sol = SOLUTIONS[activeTab];
 
   return (
     <>
-      {/* HERO */}
-      <section style={{ position: 'relative', minHeight: '70vh', display: 'flex', alignItems: 'center', background: '#0d0d0d', overflow: 'hidden', paddingTop: 'clamp(100px,14vw,180px)', paddingBottom: 'clamp(60px,8vw,100px)' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.18)', zIndex: 0 }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px)', backgroundSize: '80px 80px', zIndex: 1 }} />
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 160, background: 'linear-gradient(transparent,#0d0d0d)', zIndex: 2 }} />
-        <div className="container" style={{ position: 'relative', zIndex: 3, width: '100%' }}>
-          <div style={{ maxWidth: 680 }}>
-              <div className="page-hero-eyebrow">Sector — Agriculture</div>
-              <h1 style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(32px,4.5vw,60px)', fontWeight: 900, color: '#fff', lineHeight: 1.1, margin: '16px 0 24px' }}>
-                Precision farming.<br /><em style={{ color: 'var(--y)', fontStyle: 'normal' }}>Monitored. Automated.</em>
-              </h1>
-              <p style={{ fontSize: 'clamp(15px,1.5vw,18px)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, marginBottom: 36 }}>
-                IoT sensor networks, real-time monitoring dashboards, and automated alert escalation — so you know what is happening across every hectare, at all times.
-              </p>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 48 }}>
-                <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a discovery call →</a>
-                <Link href="/portfolio" className="btn btn-ol btn-lg">See case studies</Link>
-              </div>
-              <div className="met-row">
-                <div className="met"><div className="met-b">400<span>ha</span></div><div className="met-s">Land monitored<br />per client</div></div>
-                <div className="met"><div className="met-b">3<span>min</span></div><div className="met-s">Alert response<br />time</div></div>
-                <div className="met"><div className="met-b">0</div><div className="met-s">Critical events<br />missed</div></div>
-                <div className="met"><div className="met-b">24<span>/7</span></div><div className="met-s">Active<br />monitoring</div></div>
-              </div>
+      {/* ── HERO ── */}
+      <section className="page-hero" style={{ background: '#0d0d0d', overflow: 'hidden' }}>
+        <svg className="poly-bg" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="850,0 1440,140 1440,400 1080,500 720,260 780,0" fill="rgba(249,202,0,0.03)" stroke="#f9ca00" strokeWidth="0.6" strokeOpacity="0.12"/>
+          <polygon points="1150,0 1440,0 1440,210 1320,170" fill="none" stroke="#f9ca00" strokeWidth="0.5" strokeOpacity="0.1"/>
+          <circle cx="850" cy="0" r="2.5" fill="#f9ca00" fillOpacity="0.35"/>
+          <circle cx="1080" cy="500" r="2" fill="#f9ca00" fillOpacity="0.2"/>
+          <circle cx="720" cy="260" r="1.5" fill="#f9ca00" fillOpacity="0.15"/>
+        </svg>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center', filter: 'brightness(0.12)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(13,13,13,0.92) 30%, rgba(13,13,13,0.55) 100%)', zIndex: 1 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 72% 38%, rgba(249,202,0,0.18) 0%, transparent 52%)', zIndex: 2 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 85% 75%, rgba(249,202,0,0.08) 0%, transparent 40%)', zIndex: 2 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px)', backgroundSize: '80px 80px', zIndex: 3 }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 180, background: 'linear-gradient(transparent,#0d0d0d)', zIndex: 4 }} />
+        <div className="container">
+          <div className="page-hero-eyebrow">Sector — Agriculture</div>
+          <h1>Precision farming.<br /><em>Monitored. Automated.</em></h1>
+          <p>IoT sensor networks, real-time monitoring dashboards, and automated alert escalation — so you know what is happening across every hectare, at all times.</p>
+          <div className="hero-ctas">
+            <a href="https://outlook.office.com/book/TergoMedia1@tergomedia.com/" target="_blank" rel="noreferrer" className="btn btn-y btn-lg">Book a discovery call →</a>
+            <Link href="/portfolio" className="btn btn-ol btn-lg">See case studies</Link>
+          </div>
+          <div className="met-row">
+            <div className="met"><div className="met-b">400<span>ha</span></div><div className="met-s">Land monitored<br />per client</div></div>
+            <div className="met"><div className="met-b">3<span>min</span></div><div className="met-s">Alert response<br />time</div></div>
+            <div className="met"><div className="met-b">0</div><div className="met-s">Critical events<br />missed</div></div>
+            <div className="met"><div className="met-b">24<span>/7</span></div><div className="met-s">Active<br />monitoring</div></div>
           </div>
         </div>
       </section>
 
-      {/* PROBLEMS */}
+      {/* ── PROBLEMS ── */}
       <section className="section section-dots">
         <div className="container">
           <div style={{ maxWidth: 680, marginBottom: 56 }}>
@@ -207,28 +201,28 @@ export default function AgricultureClient() {
           </div>
           <div style={{ border: '1px solid rgba(255,255,255,.07)' }}>
             {PROBLEMS.map((item, i) => (
-              <AccordionItem key={i} item={item} open={openProblem === i} onToggle={() => setOpenProblem(openProblem === i ? null : i)} isMobile={isMobile} />
+              <AccordionItem key={i} item={item} open={openProblem === i} onToggle={() => setOpenProblem(openProblem === i ? null : i)} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* SOLUTIONS */}
-      <section className="section" style={{ background: 'var(--dark2)' }}>
+      {/* ── SOLUTIONS ── */}
+      <section className="section section-light">
         <div className="container">
           <div style={{ maxWidth: 680, marginBottom: 56 }}>
             <span className="sec-label">What we build</span>
             <h2 className="sec-title">From sensors in the ground to insight on your phone.</h2>
             <p className="sec-sub">We design and deploy the full precision agriculture stack: IoT sensor networks, real-time dashboards, automated alerting, harvest planning, and procurement automation — built for your land.</p>
           </div>
-          <div style={{ display: 'flex', gap: 0, overflowX: 'auto', borderBottom: '1px solid rgba(255,255,255,.08)', marginBottom: 40, scrollbarWidth: 'none' }}>
+          <div className="re-sol-tabs">
             {SOLUTIONS.map((s, i) => (
-              <button key={i} onClick={() => setActiveTab(i)} style={{ padding: '12px 20px', fontSize: 12, fontWeight: 600, color: activeTab === i ? 'var(--y)' : 'rgba(255,255,255,.35)', background: 'transparent', border: 'none', borderBottom: activeTab === i ? '2px solid var(--y)' : '2px solid transparent', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'color .2s', marginBottom: -1 }}>
+              <button key={i} onClick={() => setActiveTab(i)} className={`re-sol-tab${activeTab === i ? ' active' : ''}`}>
                 {s.n} {s.title}
               </button>
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 48 }}>
+          <div className="re-sol-grid">
             <div>
               <h3 style={{ fontSize: 'clamp(20px,2.5vw,28px)', fontWeight: 800, color: '#fff', marginBottom: 16, lineHeight: 1.2 }}>{sol.title}</h3>
               <p style={{ fontSize: 15, color: 'rgba(255,255,255,.5)', lineHeight: 1.75, marginBottom: 28 }}>{sol.desc}</p>
@@ -252,14 +246,14 @@ export default function AgricultureClient() {
         </div>
       </section>
 
-      {/* STATS */}
+      {/* ── STATS ── */}
       <section style={{ background: 'var(--dark)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: 1, background: 'rgba(255,255,255,.06)' }}>
+        <div className="re-stats-bar">
           {STATS.map((s, i) => <StatItem key={i} val={s.val} label={s.label} />)}
         </div>
       </section>
 
-      {/* ROI CALCULATOR */}
+      {/* ── ROI CALCULATOR ── */}
       <section className="section roi-section">
         <div className="container">
           <div style={{ textAlign: 'center', maxWidth: 600, margin: '0 auto 56px' }}>
@@ -271,7 +265,7 @@ export default function AgricultureClient() {
         </div>
       </section>
 
-      {/* CASE STUDY */}
+      {/* ── CASE STUDY ── */}
       <section className="section section-dots">
         <div className="container">
           <div style={{ marginBottom: 48 }}>
@@ -279,7 +273,7 @@ export default function AgricultureClient() {
             <h2 className="sec-title">Agri Novatex · Bucharest</h2>
             <span style={{ display: 'inline-block', padding: '4px 10px', background: 'rgba(249,202,0,.08)', border: '1px solid rgba(249,202,0,.2)', color: 'var(--y)', fontSize: 11, fontWeight: 700, letterSpacing: '.04em' }}>Precision Farming · Cereal Production</span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 1, background: 'rgba(255,255,255,.04)' }}>
+          <div className="re-case-grid">
             {[
               { label: 'The Problem', content: 'A 400-hectare cereal farm outside Bucharest with no real-time monitoring infrastructure. Field checks required daily manual visits consuming 3 staff-days per week. Two irrigation failures in the previous season went undetected for 18+ hours, causing significant crop damage.' },
               { label: 'What We Built', content: 'Full IoT sensor deployment across all 400 hectares: soil moisture, temperature, and humidity sensors in each field zone. Real-time dashboard, SMS/WhatsApp alert escalation with auto-escalation logic, AI harvest timing system, and automated supplier procurement triggers.' },
@@ -291,7 +285,7 @@ export default function AgricultureClient() {
               </div>
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(3,1fr)' : 'repeat(3,160px)', gap: 1, marginTop: 1 }}>
+          <div className="re-case-nums">
             {[{ val: '400ha', label: 'Monitored' }, { val: '<3min', label: 'Alert response' }, { val: '0', label: 'Events missed' }].map(s => (
               <div key={s.label} style={{ background: 'rgba(255,255,255,.03)', border: '1px solid rgba(255,255,255,.07)', padding: '20px 16px', textAlign: 'center' }}>
                 <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 28, fontWeight: 900, color: 'var(--y)', marginBottom: 6 }}>{s.val}</div>
@@ -302,18 +296,13 @@ export default function AgricultureClient() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="section" style={{ background: 'var(--dark2)' }}>
-        <div className="container">
-          <div style={{ maxWidth: 680, marginBottom: 48 }}>
-            <span className="sec-label">Client results</span>
-            <h2 className="sec-title">From the teams running the land.</h2>
-          </div>
-          <SectorTestimonialsSlider testimonials={TESTIMONIALS} source="sector-agriculture" />
-        </div>
-      </section>
+      {/* ── AUTOPILOT ── */}
+      <AutopilotSection />
 
-      {/* CTA */}
+      {/* ── TESTIMONIALS ── */}
+      <TestimonialsSection />
+
+      {/* ── CTA ── */}
       <section className="cta-section">
         <div className="container">
           <h2>Ready to monitor every hectare<br />in real time?</h2>

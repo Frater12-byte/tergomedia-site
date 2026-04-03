@@ -150,16 +150,16 @@ export default function SectorsPage() {
           <div className="page-hero-eyebrow">Where we work</div>
           <h1>8 industries.<br /><em>Deep expertise.</em></h1>
           <p>We don&apos;t sell generic AI. We work in specific sectors where we know the workflows, the tools, and the real bottlenecks — before we even start.</p>
-          <div className="re-stats-bar reveal" style={{ marginTop: 40 }}>
+          <div className="re-stats-bar reveal" style={{ marginTop: 48, maxWidth: 680 }}>
             {[
               { b: '8', s: 'Sectors' },
               { b: '30+', s: 'Projects shipped' },
               { b: '4', s: 'Countries' },
               { b: '100%', s: 'In production' },
             ].map(st => (
-              <div key={st.s} className="re-stat">
-                <div className="re-stat-b">{st.b}</div>
-                <div className="re-stat-s">{st.s}</div>
+              <div key={st.s} style={{ borderTop: '2px solid rgba(249,202,0,.4)', padding: '28px 20px', textAlign: 'center', background: 'var(--dark)' }}>
+                <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: 'clamp(28px,3.5vw,42px)', fontWeight: 900, color: 'var(--y)', lineHeight: 1, marginBottom: 8 }}>{st.b}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,.3)', textTransform: 'uppercase', letterSpacing: '.06em', lineHeight: 1.5 }}>{st.s}</div>
               </div>
             ))}
           </div>

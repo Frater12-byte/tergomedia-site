@@ -67,7 +67,12 @@ export default function Footer() {
 
           <div className="footer-col">
             <h4>Sectors</h4>
-            <ul>{SECTORS.map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
+            <ul>{SECTORS.slice(0, 4).map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>&nbsp;</h4>
+            <ul>{SECTORS.slice(4).map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
           </div>
 
           <div className="footer-col">

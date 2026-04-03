@@ -75,14 +75,6 @@ export default function Footer() {
             <ul>{COMPANY.map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
           </div>
 
-          <div className="footer-col">
-            <h4>Offices</h4>
-            <div className="footer-offices">
-              <div className="f-off"><div className="f-dot" /><div><strong>Dubai, UAE</strong><span>HQ · Gulf operations</span></div></div>
-              <div className="f-off"><div className="f-dot" /><div><strong>Bucharest, Romania</strong><span>Engineering hub</span></div></div>
-              <div className="f-off"><div className="f-dot" /><div><strong>Milan, Italy</strong><span>European clients</span></div></div>
-            </div>
-          </div>
         </div>
 
         {/* EU Funding logos */}

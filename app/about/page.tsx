@@ -7,8 +7,25 @@ import BeforeAfterSlider from '@/components/BeforeAfterSlider';
 import ProjectTimeline from '@/components/ProjectTimeline';
 
 export const metadata: Metadata = {
-  title: 'About — Tergo Media',
-  description: 'Tergo Media is an AI automation and custom software agency founded by Maria and Francesco Terragni. Dubai · Bucharest · Milan.',
+  title: 'About Tergo Media — AI Automation Agency | Dubai, Bucharest, Milan',
+  description: 'Tergo Media is an AI automation and custom software agency founded by Maria and Francesco Terragni. We build systems that run your business — Dubai, Bucharest, Milan.',
+  keywords: 'Tergo Media, AI automation agency Dubai, custom software agency, Maria Terragni, Francesco Terragni, digital transformation agency',
+  openGraph: {
+    title: 'About Tergo Media — AI Automation Agency',
+    description: 'Founded by Maria and Francesco Terragni. We build AI automation and custom software that works while you sleep.',
+    url: 'https://tergomedia.com/about',
+    siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Tergo Media — AI Automation Agency',
+    description: 'Founded by Maria and Francesco Terragni. AI automation & custom software — Dubai, Bucharest, Milan.',
+    images: ['/og-image.png'],
+  },
+  alternates: { canonical: 'https://tergomedia.com/about' },
+  robots: { index: true, follow: true },
 };
 
 export default function AboutPage() {

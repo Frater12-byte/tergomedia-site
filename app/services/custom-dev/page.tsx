@@ -2,8 +2,25 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Custom Web & Mobile Development — Tergo Media',
-  description: 'React, Next.js, Node.js, Python, PHP, iOS and Android — production-grade custom software shipped in weeks.',
+  title: 'Custom Web & Mobile App Development Dubai — React, Next.js, iOS | Tergo Media',
+  description: 'React, Next.js, Node.js, Python, PHP, iOS and Android — production-grade custom software shipped in weeks, not months. Tergo Media, Dubai.',
+  keywords: 'custom web development Dubai, mobile app development, React Next.js, iOS Android development, custom software agency Dubai, Node.js Python PHP',
+  openGraph: {
+    title: 'Custom Web & Mobile Development — Tergo Media',
+    description: 'React, Next.js, Node.js, Python, PHP, iOS, Android. Production-grade software shipped in weeks.',
+    url: 'https://tergomedia.com/services/custom-dev',
+    siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Custom Web & Mobile Development — Tergo Media',
+    description: 'React, Next.js, iOS, Android. Production-grade software shipped in weeks.',
+    images: ['/og-image.png'],
+  },
+  alternates: { canonical: 'https://tergomedia.com/services/custom-dev' },
+  robots: { index: true, follow: true },
 };
 
 export default function CustomDevPage() {

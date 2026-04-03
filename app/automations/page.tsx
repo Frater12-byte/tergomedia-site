@@ -4,9 +4,25 @@ import type { Metadata } from 'next';
 import { AUTOMATIONS } from '@/lib/automations';
 
 export const metadata: Metadata = {
-  title: 'Automation Library — Tergo Media',
-  description: 'Hundreds of automations built and deployed in production across every industry. Browse our automation library.',
+  title: 'Automation Library — Live Production Automations | Tergo Media',
+  description: 'Hundreds of automations built and deployed in production across real estate, healthcare, e-commerce, logistics, finance, and more. Browse Tergo Media\'s automation library.',
+  keywords: 'automation library, n8n automations, Make automations, AI workflows, business automation examples, real estate automation, healthcare automation',
+  openGraph: {
+    title: 'Automation Library — Tergo Media',
+    description: 'Hundreds of automations live in production. Browse by industry and see what\'s possible.',
+    url: 'https://tergomedia.com/automations',
+    siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Automation Library — Tergo Media',
+    description: 'Hundreds of automations live in production across every industry.',
+    images: ['/og-image.png'],
+  },
   alternates: { canonical: 'https://tergomedia.com/automations' },
+  robots: { index: true, follow: true },
 };
 
 const ALL_FILTERS = ['All', 'Real Estate', 'Finance', 'Travel', 'Agriculture', 'Professional Services', 'E-commerce', 'Healthcare', 'Logistics', 'SaaS', 'Marketing', 'HR'];

@@ -4,6 +4,22 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Free Tools — Tergo Media',
   description: 'Two free tools built by Tergo Media — a real estate automation ROI calculator for Dubai brokerages, and a live Middle East threat tracker.',
+  openGraph: {
+    title: 'Free Tools — Tergo Media',
+    description: 'Two free tools built by Tergo Media. No sign-up, no credit card, no catch.',
+    url: 'https://tergomedia.com/tools',
+    siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Free Tools — Tergo Media',
+    description: 'Two free tools built by Tergo Media. No sign-up, no credit card.',
+    images: ['/og-image.png'],
+  },
+  alternates: { canonical: 'https://tergomedia.com/tools' },
+  robots: { index: true, follow: true },
 };
 
 const TOOLS = [
@@ -72,7 +88,14 @@ export default function ToolsPage() {
 
           <div className="tools-grid">
             {TOOLS.map(t => (
-              <div key={t.href} className="tool-card">
+              <a
+                key={t.href}
+                href={t.href}
+                target="_blank"
+                rel="noreferrer"
+                className="tool-card"
+                style={{ textDecoration: 'none', display: 'block' }}
+              >
                 {/* Image */}
                 <div className="tool-img-wrap">
                   <img src={t.img} alt={t.imgAlt} className="tool-img" />
@@ -102,16 +125,9 @@ export default function ToolsPage() {
                   </ul>
 
                   {/* CTA */}
-                  <a
-                    href={t.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn btn-y btn-lg"
-                  >
-                    {t.cta}
-                  </a>
+                  <div className="btn btn-y btn-lg" style={{ display: 'inline-block', marginTop: 8 }}>{t.cta}</div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>

@@ -2,8 +2,25 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'AI & Automation Services — Tergo Media',
-  description: 'AI agents, lead automation, document processing, CRM integration and reporting — all automated by Tergo Media. Dubai, Bucharest, Milan.',
+  title: 'AI & Automation Services Dubai — Lead Automation, CRM, AI Agents | Tergo Media',
+  description: 'AI agents, lead automation, document processing, CRM integration and reporting — all automated by Tergo Media. n8n, Make, GPT-4o, WhatsApp API. Dubai, Bucharest, Milan.',
+  keywords: 'AI automation services Dubai, n8n automation, Make automation, GPT-4o agents, WhatsApp automation, CRM integration, lead automation, document processing',
+  openGraph: {
+    title: 'AI & Automation Services — Tergo Media',
+    description: 'AI agents, lead automation, CRM integration, document processing — all automated. Your team focuses on growth, not admin.',
+    url: 'https://tergomedia.com/services/ai-automation',
+    siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI & Automation Services — Tergo Media',
+    description: 'AI agents, lead automation, CRM integration. Your team focuses on growth, not admin.',
+    images: ['/og-image.png'],
+  },
+  alternates: { canonical: 'https://tergomedia.com/services/ai-automation' },
+  robots: { index: true, follow: true },
 };
 
 export default function AIAutomationPage() {

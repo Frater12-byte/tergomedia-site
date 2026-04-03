@@ -4,8 +4,25 @@ import AutomationCarousel from '@/components/AutomationCarousel';
 import WorldMap from '@/components/WorldMap';
 
 export const metadata: Metadata = {
-  title: 'Services — Tergo Media',
-  description: 'AI automation, custom software development, CTO advisory, and digital transformation — four ways Tergo Media builds leverage into your business.',
+  title: 'Services — AI Automation, Custom Software & CTO Advisory | Tergo Media',
+  description: 'AI automation, custom software development, CTO advisory, and digital transformation — four ways Tergo Media builds leverage into your business. Based in Dubai.',
+  keywords: 'AI automation services, custom software development Dubai, fractional CTO, digital transformation, n8n automation, Make automation, WhatsApp API',
+  openGraph: {
+    title: 'Services — Tergo Media',
+    description: 'AI automation, custom software, CTO advisory, digital transformation. We build systems that run your business.',
+    url: 'https://tergomedia.com/services',
+    siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Services — Tergo Media',
+    description: 'AI automation, custom software, CTO advisory. We build leverage into your business.',
+    images: ['/og-image.png'],
+  },
+  alternates: { canonical: 'https://tergomedia.com/services' },
+  robots: { index: true, follow: true },
 };
 
 const SERVICES = [

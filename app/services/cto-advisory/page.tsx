@@ -2,8 +2,25 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'CTO Advisory & Fractional CTO — Tergo Media',
-  description: 'Senior technical leadership without a full-time hire. Architecture, team building, and technology strategy from an experienced CTO.',
+  title: 'Fractional CTO & CTO Advisory Dubai — Tech Strategy & Architecture | Tergo Media',
+  description: 'Senior technical leadership without a full-time hire. Technology architecture, team building, vendor selection, and tech strategy from an experienced CTO. Dubai.',
+  keywords: 'fractional CTO Dubai, CTO advisory, tech strategy, software architecture, technical leadership, startup CTO, scale-up CTO advisory',
+  openGraph: {
+    title: 'Fractional CTO & CTO Advisory — Tergo Media',
+    description: 'Senior technical leadership without a full-time hire. Architecture, team, strategy.',
+    url: 'https://tergomedia.com/services/cto-advisory',
+    siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fractional CTO & CTO Advisory — Tergo Media',
+    description: 'Senior technical leadership without a full-time hire.',
+    images: ['/og-image.png'],
+  },
+  alternates: { canonical: 'https://tergomedia.com/services/cto-advisory' },
+  robots: { index: true, follow: true },
 };
 
 export default function CTOAdvisoryPage() {

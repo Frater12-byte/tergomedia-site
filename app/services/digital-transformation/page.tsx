@@ -2,8 +2,25 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Digital Transformation — Tergo Media',
-  description: 'Full-scope digital transformation: audits, process redesign, technology implementation and change management across all business functions.',
+  title: 'Digital Transformation Services Dubai — Process Redesign & Tech Implementation | Tergo Media',
+  description: 'Full-scope digital transformation: digital audits, process redesign, technology implementation, and change management across all business functions. Tergo Media, Dubai.',
+  keywords: 'digital transformation Dubai, business process redesign, digital audit, technology implementation, change management, operational efficiency',
+  openGraph: {
+    title: 'Digital Transformation — Tergo Media',
+    description: 'Full-scope digital transformation: audits, process redesign, tech implementation, change management.',
+    url: 'https://tergomedia.com/services/digital-transformation',
+    siteName: 'Tergo Media',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Digital Transformation — Tergo Media',
+    description: 'Full-scope digital transformation. Audits, redesign, implementation.',
+    images: ['/og-image.png'],
+  },
+  alternates: { canonical: 'https://tergomedia.com/services/digital-transformation' },
+  robots: { index: true, follow: true },
 };
 
 export default function DigitalTransformationPage() {

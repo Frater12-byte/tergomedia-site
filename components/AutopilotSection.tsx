@@ -200,7 +200,7 @@ function QualificationVisual({ stageKey }: { stageKey: number }) {
             <div style={{ color: '#f9ca00', fontWeight: 700 }}>HOT</div>
           </div>
         </div>
-        <div style={{ padding: '10px 10px', maxHeight: 220, overflowY: 'auto', scrollBehavior: 'smooth', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div style={{ padding: '10px 10px', maxHeight: 340, overflowY: 'auto', scrollBehavior: 'smooth', display: 'flex', flexDirection: 'column', gap: 6 }}>
           {WA_MESSAGES.slice(0, visibleMsgs).map((msg, i) => (
             <div key={i} style={{
               display: 'flex',

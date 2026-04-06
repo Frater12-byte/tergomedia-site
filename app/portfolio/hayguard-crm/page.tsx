@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import HayGuardFlowClient from '@/components/HayGuardFlowClient';
 
 export const metadata: Metadata = {
   title: 'HayGuard CRM — Client Onboarding Automation | Tergo Media',
@@ -79,103 +80,6 @@ export default function HayGuardCRMPage() {
           .hg-results-grid { grid-template-columns:1fr; }
         }
 
-        /* ── flow diagram ── */
-        .hg-flow {
-          display: flex;
-          align-items: stretch;
-          width: 100%;
-          gap: 0;
-        }
-        .hg-node {
-          background: var(--surface);
-          border: 1px solid rgba(255,255,255,.08);
-          padding: 22px 18px;
-          flex: 1;
-          min-width: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-        .hg-node-trigger {
-          border-top: 2px solid rgba(249,202,0,.65);
-        }
-        .hg-node-result {
-          background: rgba(249,202,0,.07);
-          border: 1px solid rgba(249,202,0,.25);
-        }
-        .hg-role {
-          display: block;
-          font-size: 8px;
-          letter-spacing: .12em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,.22);
-          margin-bottom: 8px;
-          font-weight: 700;
-        }
-        .hg-node-trigger .hg-role { color: rgba(249,202,0,.7); }
-        .hg-node-result  .hg-role { color: rgba(249,202,0,.7); }
-        .hg-nname {
-          font-family: 'Exo 2', var(--font-exo2), sans-serif;
-          font-size: 14px;
-          font-weight: 700;
-          color: #fff;
-          margin-bottom: 5px;
-          line-height: 1.2;
-        }
-        .hg-node-result .hg-nname {
-          font-size: 24px;
-          font-weight: 900;
-          color: var(--y);
-          line-height: 1;
-          margin-bottom: 4px;
-        }
-        .hg-nsub {
-          font-size: 10px;
-          color: rgba(255,255,255,.28);
-          line-height: 1.45;
-        }
-        .hg-node-result .hg-nsub { color: rgba(255,255,255,.35); }
-
-        /* parallel wrapper */
-        .hg-parallel {
-          display: flex;
-          flex-direction: column;
-          flex: 1.2;
-          background: rgba(255,255,255,.06);
-          gap: 1px;
-          min-width: 0;
-        }
-        .hg-parallel .hg-node {
-          flex: 1;
-          padding: 14px 18px;
-        }
-
-        /* arrow connector */
-        .hg-arrow {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          width: 30px;
-          color: rgba(255,255,255,.18);
-          font-size: 13px;
-          background: var(--surface);
-          border-top: 1px solid rgba(255,255,255,.06);
-          border-bottom: 1px solid rgba(255,255,255,.06);
-          position: relative;
-        }
-        .hg-arrow::before { content: '→'; }
-
-        /* mobile: vertical flow */
-        @media(max-width:860px){
-          .hg-flow { flex-direction: column; align-items: stretch; }
-          .hg-arrow { width: auto; height: 28px; border-top: none; border-bottom: none; border-left: 1px solid rgba(255,255,255,.06); border-right: 1px solid rgba(255,255,255,.06); }
-          .hg-arrow::before { content: '↓'; }
-          .hg-parallel { flex-direction: column; }
-          .hg-parallel .hg-node { padding: 18px; }
-          .hg-node { padding: 20px 18px; }
-          .hg-node-result .hg-nname { font-size: 28px; }
-        }
       `}</style>
 
       {/* ── HERO ── */}
@@ -282,66 +186,7 @@ export default function HayGuardCRMPage() {
           <h2 className="sec-title">How the workflow runs</h2>
           <p className="sec-sub">Every step fires automatically the moment a deal is marked Won in HubSpot.</p>
 
-          <div className="hg-flow">
-            {/* 1 — HubSpot trigger */}
-            <div className="hg-node hg-node-trigger">
-              <span className="hg-role">Trigger</span>
-              <div className="hg-nname">HubSpot</div>
-              <div className="hg-nsub">Deal marked Won</div>
-            </div>
-
-            <div className="hg-arrow" />
-
-            {/* 2 — n8n orchestrator */}
-            <div className="hg-node">
-              <span className="hg-role">Orchestrator</span>
-              <div className="hg-nname">n8n</div>
-              <div className="hg-nsub">Parallel execution<br />Retry + error handling</div>
-            </div>
-
-            <div className="hg-arrow" />
-
-            {/* 3 — Parallel outputs */}
-            <div className="hg-parallel">
-              <div className="hg-node">
-                <span className="hg-role">Workspace</span>
-                <div className="hg-nname">Notion</div>
-                <div className="hg-nsub">Client workspace created</div>
-              </div>
-              <div className="hg-node">
-                <span className="hg-role">Contract</span>
-                <div className="hg-nname">DocuSign</div>
-                <div className="hg-nsub">Envelope dispatched</div>
-              </div>
-              <div className="hg-node">
-                <span className="hg-role">Scheduling</span>
-                <div className="hg-nname">Calendar</div>
-                <div className="hg-nsub">Kick-off invite sent</div>
-              </div>
-            </div>
-
-            <div className="hg-arrow" />
-
-            {/* 4 — Slack notify */}
-            <div className="hg-node">
-              <span className="hg-role">Notify</span>
-              <div className="hg-nname">Slack</div>
-              <div className="hg-nsub">Account manager alerted with full brief</div>
-            </div>
-
-            <div className="hg-arrow" />
-
-            {/* 5 — Result */}
-            <div className="hg-node hg-node-result">
-              <span className="hg-role">Result</span>
-              <div className="hg-nname">≤ 2 min</div>
-              <div className="hg-nsub">Zero manual steps</div>
-            </div>
-          </div>
-
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,.28)', marginTop: 12, letterSpacing: '.04em' }}>
-            Notion, DocuSign, and Calendar execute in parallel — not sequentially.
-          </p>
+          <HayGuardFlowClient />
         </div>
       </section>
 

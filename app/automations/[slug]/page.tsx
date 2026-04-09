@@ -16,10 +16,28 @@ export async function generateMetadata({
   const { slug } = await params;
   const a = AUTOMATIONS.find(x => x.slug === slug);
   if (!a) return {};
+  const description = `${a.desc} Result: ${a.stat}. Built for ${a.industry}.`.slice(0, 155);
+  const ogImage = 'https://tergomedia.com/og-image.png';
   return {
     title: `${a.title} Automation — Tergo Media`,
-    description: `${a.desc} Result: ${a.stat}. Built for ${a.industry}.`,
+    description,
+    keywords: [a.title, a.industry, 'automation', 'AI automation', 'Tergo Media', ...a.techStack],
+    openGraph: {
+      title: `${a.title} Automation — Tergo Media`,
+      description,
+      url: `https://tergomedia.com/automations/${slug}`,
+      siteName: 'Tergo Media',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${a.title} — Tergo Media` }],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${a.title} Automation — Tergo Media`,
+      description,
+      images: [ogImage],
+    },
     alternates: { canonical: `https://tergomedia.com/automations/${slug}` },
+    robots: { index: true, follow: true },
   };
 }
 

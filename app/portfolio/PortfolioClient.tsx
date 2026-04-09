@@ -82,8 +82,19 @@ export default function PortfolioClient() {
       <section className="section section-dots">
         <div className="container">
 
-          {/* Filter bar — category */}
-          <div className="port-filter-bar">
+          {/* Filter styles */}
+          <style>{`
+            .port-filter-btn.pf-tech { font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: .02em; }
+            .port-filter-btn.pf-tech:hover { border-color: rgba(0,200,255,.3); color: rgba(0,200,255,.65); background: rgba(0,200,255,.04); }
+            .port-filter-btn.pf-tech.pf-tech-active { background: rgba(0,200,255,.1); border-color: rgba(0,200,255,.5); color: #00c8ff; }
+          `}</style>
+
+          {/* Filter — Industry */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <span style={{ fontSize: 9, color: 'rgba(249,202,0,.5)', letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, flexShrink: 0 }}>Industry</span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(249,202,0,.1)' }} />
+          </div>
+          <div className="port-filter-bar" style={{ marginBottom: 24 }}>
             {ALL_TAGS.map((tag) => (
               <button
                 key={tag}
@@ -95,14 +106,17 @@ export default function PortfolioClient() {
             ))}
           </div>
 
-          {/* Filter bar — tech stack */}
-          <div className="port-filter-bar" style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,.05)' }}>
-            <span style={{ fontSize: 10, color: 'rgba(255,255,255,.22)', letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, alignSelf: 'center', whiteSpace: 'nowrap', marginRight: 4 }}>Tech:</span>
+          {/* Filter — Tech stack */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <span style={{ fontSize: 9, color: 'rgba(0,200,255,.45)', letterSpacing: '.14em', textTransform: 'uppercase', fontWeight: 700, flexShrink: 0 }}>Tech stack</span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(0,200,255,.1)' }} />
+          </div>
+          <div className="port-filter-bar">
             {ALL_TECH.map((tech) => (
               <button
                 key={tech}
                 onClick={() => setActiveTech(tech)}
-                className={`port-filter-btn${activeTech === tech ? ' pf-active' : ''}`}
+                className={`port-filter-btn pf-tech${activeTech === tech ? ' pf-tech-active' : ''}`}
               >
                 {tech}
               </button>

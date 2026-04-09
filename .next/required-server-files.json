@@ -290,7 +290,34 @@
     "configFileName": "next.config.ts",
     "turbopack": {
       "root": "/Users/francescoterragni"
-    }
+    },
+    "_originalRedirects": [
+      {
+        "source": "/industries/finance-legal",
+        "destination": "/sectors/finance-legal",
+        "permanent": true
+      },
+      {
+        "source": "/industries/healthcare",
+        "destination": "/sectors/healthcare",
+        "permanent": true
+      },
+      {
+        "source": "/industries/ecommerce",
+        "destination": "/sectors/ecommerce",
+        "permanent": true
+      },
+      {
+        "source": "/industries/logistics",
+        "destination": "/sectors/logistics",
+        "permanent": true
+      },
+      {
+        "source": "/industries/:slug",
+        "destination": "/sectors/:slug",
+        "permanent": true
+      }
+    ]
   },
   "appDir": "/Users/francescoterragni/Desktop/tergo-next",
   "relativeAppDir": "Desktop/tergo-next",

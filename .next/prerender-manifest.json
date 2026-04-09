@@ -1,6 +1,179 @@
 {
   "version": 4,
   "routes": {
+    "/portfolio": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/portfolio",
+      "dataRoute": "/portfolio.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/",
+      "dataRoute": "/index.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/sectors/agriculture": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/sectors/agriculture",
+      "dataRoute": "/sectors/agriculture.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/favicon.ico": {
+      "initialHeaders": {
+        "cache-control": "public, max-age=0, must-revalidate",
+        "content-type": "image/x-icon",
+        "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico"
+      },
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/favicon.ico",
+      "dataRoute": null,
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/sectors/ecommerce": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/sectors/ecommerce",
+      "dataRoute": "/sectors/ecommerce.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/portfolio/hayguard-crm": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/portfolio/hayguard-crm",
+      "dataRoute": "/portfolio/hayguard-crm.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/sectors/finance-legal": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/sectors/finance-legal",
+      "dataRoute": "/sectors/finance-legal.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/automations/ai-lead-response": {
       "experimentalBypassFor": [
         {
@@ -121,6 +294,78 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/automations/ecommerce-abandoned-cart": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/ecommerce-abandoned-cart.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/ecommerce-returns-automation": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/ecommerce-returns-automation.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/finance-expense-approval": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/finance-expense-approval.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/automations/guest-review-response": {
       "experimentalBypassFor": [
         {
@@ -136,6 +381,54 @@
       "initialRevalidateSeconds": false,
       "srcRoute": "/automations/[slug]",
       "dataRoute": "/automations/guest-review-response.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/healthcare-patient-intake": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/healthcare-patient-intake.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/hr-leave-management": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/hr-leave-management.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -241,6 +534,102 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/automations/legal-document-automation": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/legal-document-automation.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/logistics-shipment-tracking": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/logistics-shipment-tracking.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/make-social-listening": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/make-social-listening.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/manufacturing-quality-alert": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/manufacturing-quality-alert.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/automations/marketplace-price-sync": {
       "experimentalBypassFor": [
         {
@@ -289,6 +678,30 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/automations/real-estate-deal-pipeline": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/real-estate-deal-pipeline.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/automations/regulatory-compliance-monitor": {
       "experimentalBypassFor": [
         {
@@ -328,6 +741,30 @@
       "initialRevalidateSeconds": false,
       "srcRoute": "/automations/[slug]",
       "dataRoute": "/automations/revenue-leakage-detector.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/saas-trial-conversion": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/saas-trial-conversion.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -433,7 +870,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/industries/agriculture": {
+    "/automations/travel-itinerary-builder": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -446,8 +883,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/industries/[slug]",
-      "dataRoute": "/industries/agriculture.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/travel-itinerary-builder.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -457,7 +894,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/industries/ecommerce": {
+    "/automations/uipath-agriculture-subsidy": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -470,8 +907,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/industries/[slug]",
-      "dataRoute": "/industries/ecommerce.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-agriculture-subsidy.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -481,7 +918,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/industries/finance-legal": {
+    "/automations/uipath-bank-reconciliation": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -494,8 +931,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/industries/[slug]",
-      "dataRoute": "/industries/finance-legal.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-bank-reconciliation.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -505,7 +942,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/industries/healthcare": {
+    "/automations/uipath-ecommerce-catalogue": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -518,8 +955,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/industries/[slug]",
-      "dataRoute": "/industries/healthcare.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-ecommerce-catalogue.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -529,7 +966,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/industries/logistics": {
+    "/automations/uipath-healthcare-records": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -542,8 +979,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/industries/[slug]",
-      "dataRoute": "/industries/logistics.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-healthcare-records.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -553,7 +990,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/industries/professional-services": {
+    "/automations/uipath-hr-payroll-processing": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -566,8 +1003,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/industries/[slug]",
-      "dataRoute": "/industries/professional-services.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-hr-payroll-processing.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -577,7 +1014,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/industries/real-estate": {
+    "/automations/uipath-insurance-claims": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -590,8 +1027,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/industries/[slug]",
-      "dataRoute": "/industries/real-estate.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-insurance-claims.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -601,7 +1038,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/industries/travel-hospitality": {
+    "/automations/uipath-logistics-customs": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -614,8 +1051,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/industries/[slug]",
-      "dataRoute": "/industries/travel-hospitality.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-logistics-customs.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -625,7 +1062,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/sectors": {
+    "/automations/uipath-manufacturing-erp": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -638,8 +1075,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/sectors",
-      "dataRoute": "/sectors.rsc",
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-manufacturing-erp.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -649,12 +1086,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/favicon.ico": {
-      "initialHeaders": {
-        "cache-control": "public, max-age=0, must-revalidate",
-        "content-type": "image/x-icon",
-        "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico"
-      },
+    "/automations/uipath-real-estate-due-diligence": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -667,8 +1099,272 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/favicon.ico",
-      "dataRoute": null,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-real-estate-due-diligence.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/uipath-travel-visa-processing": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/uipath-travel-visa-processing.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-agriculture-weather": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-agriculture-weather.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-crm-lead-routing": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-crm-lead-routing.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-ecommerce-inventory-alert": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-ecommerce-inventory-alert.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-ecommerce-review-request": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-ecommerce-review-request.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-healthcare-appointment": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-healthcare-appointment.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-job-applicant-screening": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-job-applicant-screening.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-logistics-pod": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-logistics-pod.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-news-digest": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-news-digest.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-payment-reminder": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-payment-reminder.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations/zapier-real-estate-valuation": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations/[slug]",
+      "dataRoute": "/automations/zapier-real-estate-valuation.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -726,31 +1422,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/sectors/travel-hospitality": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/sectors/travel-hospitality",
-      "dataRoute": "/sectors/travel-hospitality.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/agri-novatex-iot": {
+    "/portfolio/aerolink": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -764,7 +1436,31 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/agri-novatex-iot.rsc",
+      "dataRoute": "/portfolio/aerolink.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/portfolio/agri-novatex-worldwide": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/portfolio/[slug]",
+      "dataRoute": "/portfolio/agri-novatex-worldwide.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -798,7 +1494,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/bayut-premium-ai": {
+    "/portfolio/bayut-premium-ai-connector": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -812,7 +1508,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/bayut-premium-ai.rsc",
+      "dataRoute": "/portfolio/bayut-premium-ai-connector.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -822,7 +1518,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/buildright": {
+    "/portfolio/deigma": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -836,7 +1532,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/buildright.rsc",
+      "dataRoute": "/portfolio/deigma.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -846,7 +1542,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/claimsfast": {
+    "/portfolio/getfastclaim": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -860,127 +1556,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/claimsfast.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/coastal-villas": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/coastal-villas.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/dubaidevs": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/dubaidevs.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/edupath": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/edupath.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/finvault": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/finvault.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/fleetwise": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/fleetwise.rsc",
+      "dataRoute": "/portfolio/getfastclaim.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1014,7 +1590,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/guestiq": {
+    "/portfolio/law-nexus": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1028,7 +1604,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/guestiq.rsc",
+      "dataRoute": "/portfolio/law-nexus.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1038,7 +1614,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/hayguard-crm": {
+    "/portfolio/luxstay": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1052,79 +1628,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/hayguard-crm.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/logichain": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/logichain.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/luxstay-dubai": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/luxstay-dubai.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/marketpulse": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/marketpulse.rsc",
+      "dataRoute": "/portfolio/luxstay.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1158,7 +1662,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/nexus-law": {
+    "/portfolio/novatex-italia": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1172,7 +1676,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/nexus-law.rsc",
+      "dataRoute": "/portfolio/novatex-italia.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1182,7 +1686,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/pharmatrack": {
+    "/portfolio/proptrack": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1196,7 +1700,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/pharmatrack.rsc",
+      "dataRoute": "/portfolio/proptrack.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1206,7 +1710,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/portalmax": {
+    "/portfolio/ranjet": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1220,79 +1724,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/portalmax.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/primeclinics": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/primeclinics.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/proptrack-uae": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/proptrack-uae.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/ranjet-aviation": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/ranjet-aviation.rsc",
+      "dataRoute": "/portfolio/ranjet.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1326,30 +1758,6 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/retailsync": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/retailsync.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/portfolio/skyroute": {
       "experimentalBypassFor": [
         {
@@ -1365,30 +1773,6 @@
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
       "dataRoute": "/portfolio/skyroute.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/portfolio/solargrid": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/solargrid.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1446,7 +1830,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio/tergo-ai-suite": {
+    "/portfolio/tergo-suite": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1460,7 +1844,7 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/portfolio/[slug]",
-      "dataRoute": "/portfolio/tergo-ai-suite.rsc",
+      "dataRoute": "/portfolio/tergo-suite.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1470,7 +1854,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/contact": {
+    "/services/custom-dev": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1483,8 +1867,32 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/contact",
-      "dataRoute": "/contact.rsc",
+      "srcRoute": "/services/custom-dev",
+      "dataRoute": "/services/custom-dev.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/automations": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/automations",
+      "dataRoute": "/automations.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1519,7 +1927,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/portfolio": {
+    "/sectors": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1532,32 +1940,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/portfolio",
-      "dataRoute": "/portfolio.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/services": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/services",
-      "dataRoute": "/services.rsc",
+      "srcRoute": "/sectors",
+      "dataRoute": "/sectors.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1591,7 +1975,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/services/cto-advisory": {
+    "/about": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1604,8 +1988,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/services/cto-advisory",
-      "dataRoute": "/services/cto-advisory.rsc",
+      "srcRoute": "/about",
+      "dataRoute": "/about.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1615,7 +1999,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/": {
+    "/sectors/logistics": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1628,32 +2012,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/",
-      "dataRoute": "/index.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/sectors/agriculture": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/sectors/agriculture",
-      "dataRoute": "/sectors/agriculture.rsc",
+      "srcRoute": "/sectors/logistics",
+      "dataRoute": "/sectors/logistics.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1687,7 +2047,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/services/custom-dev": {
+    "/tools": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1700,8 +2060,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/services/custom-dev",
-      "dataRoute": "/services/custom-dev.rsc",
+      "srcRoute": "/tools",
+      "dataRoute": "/tools.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1711,7 +2071,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/about": {
+    "/services/cto-advisory": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1724,8 +2084,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/about",
-      "dataRoute": "/about.rsc",
+      "srcRoute": "/services/cto-advisory",
+      "dataRoute": "/services/cto-advisory.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1735,7 +2095,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/automations": {
+    "/sectors/travel-hospitality": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1748,8 +2108,80 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/automations",
-      "dataRoute": "/automations.rsc",
+      "srcRoute": "/sectors/travel-hospitality",
+      "dataRoute": "/sectors/travel-hospitality.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/sectors/healthcare": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/sectors/healthcare",
+      "dataRoute": "/sectors/healthcare.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/services": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/services",
+      "dataRoute": "/services.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/contact": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/contact",
+      "dataRoute": "/contact.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1777,31 +2209,6 @@
       "dataRoute": "/automations/[slug].rsc",
       "fallback": null,
       "dataRouteRegex": "^/automations/([^/]+?)\\.rsc$",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/industries/[slug]": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "next-action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "routeRegex": "^/industries/([^/]+?)(?:/)?$",
-      "dataRoute": "/industries/[slug].rsc",
-      "fallback": null,
-      "dataRouteRegex": "^/industries/([^/]+?)\\.rsc$",
       "allowHeader": [
         "host",
         "x-matched-path",

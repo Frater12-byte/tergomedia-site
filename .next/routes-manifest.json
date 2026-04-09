@@ -10,6 +10,36 @@
       "internal": true,
       "statusCode": 308,
       "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    },
+    {
+      "source": "/industries/finance-legal",
+      "destination": "/sectors/finance-legal",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/industries/finance-legal(?:/)?$"
+    },
+    {
+      "source": "/industries/healthcare",
+      "destination": "/sectors/healthcare",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/industries/healthcare(?:/)?$"
+    },
+    {
+      "source": "/industries/ecommerce",
+      "destination": "/sectors/ecommerce",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/industries/ecommerce(?:/)?$"
+    },
+    {
+      "source": "/industries/logistics",
+      "destination": "/sectors/logistics",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/industries/logistics(?:/)?$"
+    },
+    {
+      "source": "/industries/:slug",
+      "destination": "/sectors/:slug",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/industries(?:/([^/]+?))(?:/)?$"
     }
   ],
   "headers": [],
@@ -26,14 +56,6 @@
         "nxtPslug": "nxtPslug"
       },
       "namedRegex": "^/automations/(?<nxtPslug>[^/]+?)(?:/)?$"
-    },
-    {
-      "page": "/industries/[slug]",
-      "regex": "^/industries/([^/]+?)(?:/)?$",
-      "routeKeys": {
-        "nxtPslug": "nxtPslug"
-      },
-      "namedRegex": "^/industries/(?<nxtPslug>[^/]+?)(?:/)?$"
     },
     {
       "page": "/portfolio/[slug]",
@@ -88,6 +110,12 @@
       "namedRegex": "^/portfolio(?:/)?$"
     },
     {
+      "page": "/portfolio/hayguard-crm",
+      "regex": "^/portfolio/hayguard\\-crm(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/portfolio/hayguard\\-crm(?:/)?$"
+    },
+    {
       "page": "/sectors",
       "regex": "^/sectors(?:/)?$",
       "routeKeys": {},
@@ -98,6 +126,30 @@
       "regex": "^/sectors/agriculture(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/sectors/agriculture(?:/)?$"
+    },
+    {
+      "page": "/sectors/ecommerce",
+      "regex": "^/sectors/ecommerce(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sectors/ecommerce(?:/)?$"
+    },
+    {
+      "page": "/sectors/finance-legal",
+      "regex": "^/sectors/finance\\-legal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sectors/finance\\-legal(?:/)?$"
+    },
+    {
+      "page": "/sectors/healthcare",
+      "regex": "^/sectors/healthcare(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sectors/healthcare(?:/)?$"
+    },
+    {
+      "page": "/sectors/logistics",
+      "regex": "^/sectors/logistics(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sectors/logistics(?:/)?$"
     },
     {
       "page": "/sectors/professional-services",
@@ -146,6 +198,12 @@
       "regex": "^/services/digital\\-transformation(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/services/digital\\-transformation(?:/)?$"
+    },
+    {
+      "page": "/tools",
+      "regex": "^/tools(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools(?:/)?$"
     }
   ],
   "dataRoutes": [],

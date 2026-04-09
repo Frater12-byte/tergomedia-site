@@ -21,9 +21,11 @@ const ALL_INDUSTRIES = [
 
 const ALL_TECH = [
   'Any tech',
-  ...Array.from(
-    new Set(AUTOMATIONS.flatMap(a => a.techStack))
-  ).sort(),
+  'n8n', 'Make.com', 'Zapier', 'UiPath',
+  'GPT-4o', 'HubSpot', 'Slack',
+  'Google Sheets', 'Airtable', 'Stripe',
+  'WhatsApp API', 'Shopify', 'DocuSign',
+  'Python', 'Salesforce',
 ];
 
 export default function AutomationsClient() {

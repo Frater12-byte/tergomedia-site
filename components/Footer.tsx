@@ -21,6 +21,14 @@ const SECTORS = [
   { href: '/sectors/agriculture', label: 'Agriculture' },
   { href: '/sectors/professional-services', label: 'Professional Services' },
 ];
+const AUTOMATIONS_FOOTER = [
+  { href: '/automations', label: 'All automations' },
+  { href: '/automations/ai-lead-response', label: 'AI Lead Response' },
+  { href: '/automations/crm-deal-won-onboarding', label: 'CRM Onboarding' },
+  { href: '/automations/invoice-document-ai', label: 'Invoice AI' },
+  { href: '/automations/kpi-dashboard-report', label: 'KPI Reporting' },
+  { href: '/automations/tenant-screening', label: 'Tenant Screening' },
+];
 const COMPANY = [
   { href: '/about', label: 'About us' },
   { href: '/portfolio', label: 'Portfolio' },
@@ -73,6 +81,11 @@ export default function Footer() {
           <div className="footer-col">
             <h4>&nbsp;</h4>
             <ul>{SECTORS.slice(4).map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>Automations</h4>
+            <ul>{AUTOMATIONS_FOOTER.map(l => <li key={l.href}><Link href={l.href} onClick={toTop}>{l.label}</Link></li>)}</ul>
           </div>
 
           <div className="footer-col">

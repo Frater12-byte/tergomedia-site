@@ -11,6 +11,7 @@ import CountUp from '@/components/CountUp';
 import WorldMap from '@/components/WorldMap';
 import Image from 'next/image';
 import ProjectTimeline from '@/components/ProjectTimeline';
+import { PROJECTS } from '@/lib/projects';
 
 // ── FLOW CARD ──
 const FLOW_STEPS = [
@@ -244,23 +245,23 @@ export default function Home() {
           <h2 className="sec-title">Shipped. In production. Working.</h2>
           <p className="sec-sub">A selection of client projects across automation, custom development and digital transformation.</p>
           <div className="port-grid">
-            {[
-              { href: '/portfolio', img: '/Images/IMG-01.png', tags: ['Real Estate','AI Automation'], title: 'Cocktail Holidays', desc: 'AI lead qualification + WhatsApp automation for Dubai luxury property portal.' },
-              { href: '/portfolio', img: '/Images/IMG-02.png', tags: ['Agriculture','IoT'], title: 'Agri Novatex', desc: 'IoT sensor platform + alert automation for precision agriculture in Romania.' },
-              { href: '/portfolio', img: '/Images/IMG-03.png', tags: ['Travel','Custom Dev'], title: 'Ranjet Aviation', desc: 'Custom booking and fleet management system for private jet charter.' },
-              { href: '/portfolio', img: '/Images/IMG-10.png', tags: ['Automation','CRM'], title: 'HayGuard', desc: 'End-to-end client onboarding automation integrated with HubSpot CRM.' },
-              { href: '/portfolio', img: '/Images/IMG-30.png', tags: ['Digital Transformation'], title: 'RE/MAX Gulf', desc: 'Full digital transformation: CRM rollout, automation, agent training programme.' },
-              { href: '/portfolio', img: '/Images/IMG-31.png', tags: ['Custom Dev','AI'], title: 'Tergo AI Suite', desc: 'Proprietary AI tools suite for hospitality and professional services clients.' },
-            ].map((p, i) => (
-              <Link key={i} href={p.href} className="port-card">
-                <img src={p.img} alt={p.title} className="port-img" />
-                <div className="port-body">
-                  <div className="port-tags">{p.tags.map(t => <span key={t} className="port-tag">{t}</span>)}</div>
-                  <h3>{p.title}</h3>
-                  <p>{p.desc}</p>
-                </div>
-              </Link>
-            ))}
+            {(['bayut-premium-ai-connector','getfastclaim','aerolink','greenfield-farms','law-nexus','ranjet'] as const)
+              .map(slug => PROJECTS.find(p => p.slug === slug)!)
+              .filter(Boolean)
+              .map(p => (
+                <Link key={p.slug} href={`/portfolio/${p.slug}`} className="port-card">
+                  <img src={p.image} alt={p.title} className="port-img" />
+                  <div className="port-body">
+                    <div className="port-tags">{p.tags.slice(0,2).map(t => <span key={t} className="port-tag">{t}</span>)}</div>
+                    <h3>{p.title}</h3>
+                    <p>{p.desc}</p>
+                    <div style={{ marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', background: 'rgba(249,202,0,.07)', border: '1px solid rgba(249,202,0,.2)' }}>
+                      <span style={{ width: 4, height: 4, background: 'var(--y)', display: 'inline-block', flexShrink: 0 }} />
+                      <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--y)', fontFamily: "'Exo 2',sans-serif", letterSpacing: '.03em' }}>{p.stat}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
           </div>
           <div className="mt-cta">
             <Link href="/portfolio" className="btn btn-dark btn-lg">View all projects →</Link>

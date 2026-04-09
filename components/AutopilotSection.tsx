@@ -445,10 +445,18 @@ function OutreachVisual({ stageKey }: { stageKey: number }) {
 
 function CRMChart({ stageKey }: { stageKey: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef<number>(0);
+  const hasAnimatedRef = useRef(false);
 
-  useEffect(() => {
+  const leads =    [22, 45, 31, 62, 48, 74, 58, 81];
+  const qualified = [14, 28, 24, 47, 31, 59, 52, 73];
+  const maxV = 88;
+
+  const runAnimation = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    cancelAnimationFrame(rafRef.current);
+
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const W = canvas.offsetWidth || 300;
     const H = 100;
@@ -458,73 +466,118 @@ function CRMChart({ stageKey }: { stageKey: number }) {
     const ctx = canvas.getContext('2d')!;
     ctx.scale(dpr, dpr);
 
-    const leads = [28, 34, 41, 38, 52, 47, 61, 68];
-    const qualified = [16, 21, 28, 25, 38, 34, 48, 55];
-    const maxV = 75;
     const padX = 8, padY = 8;
-
     const px = (i: number) => padX + (i / (leads.length - 1)) * (W - 2 * padX);
     const py = (v: number) => H - padY - (v / maxV) * (H - 2 * padY);
 
-    // Background
-    ctx.fillStyle = 'rgba(255,255,255,0.02)';
-    ctx.fillRect(0, 0, W, H);
+    const drawFrame = (progress: number) => {
+      ctx.clearRect(0, 0, W, H);
 
-    // Grid lines
-    for (let i = 0; i <= 3; i++) {
-      const y = padY + (i / 3) * (H - 2 * padY);
-      ctx.beginPath();
-      ctx.moveTo(padX, y);
-      ctx.lineTo(W - padX, y);
-      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
+      // Background
+      ctx.fillStyle = 'rgba(255,255,255,0.02)';
+      ctx.fillRect(0, 0, W, H);
 
-    const drawArea = (data: number[], color: string, alpha: number) => {
-      // Area fill
-      ctx.beginPath();
-      ctx.moveTo(px(0), H - padY);
-      data.forEach((v, i) => ctx.lineTo(px(i), py(v)));
-      ctx.lineTo(px(data.length - 1), H - padY);
-      ctx.closePath();
-      const grad = ctx.createLinearGradient(0, 0, 0, H);
-      const rgb = color === '#00c8ff' ? '0,200,255' : '74,222,128';
-      grad.addColorStop(0, `rgba(${rgb},${alpha})`);
-      grad.addColorStop(1, `rgba(${rgb},0)`);
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      // Line
-      ctx.beginPath();
-      data.forEach((v, i) => {
-        if (i === 0) ctx.moveTo(px(i), py(v));
-        else {
-          const cpx = (px(i - 1) + px(i)) / 2;
-          ctx.bezierCurveTo(cpx, py(data[i - 1]), cpx, py(v), px(i), py(v));
-        }
-      });
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2;
-      ctx.lineJoin = 'round';
-      ctx.stroke();
-
-      // Dots
-      data.forEach((v, i) => {
+      // Grid lines
+      for (let i = 0; i <= 3; i++) {
+        const y = padY + (i / 3) * (H - 2 * padY);
         ctx.beginPath();
-        ctx.arc(px(i), py(v), 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
+        ctx.moveTo(padX, y);
+        ctx.lineTo(W - padX, y);
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      const revealX = padX + progress * (W - 2 * padX);
+
+      const drawArea = (data: number[], color: string, alpha: number) => {
+        const rgb = color === '#00c8ff' ? '0,200,255' : '74,222,128';
+
+        // Clip to revealed region
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(px(i), py(v), 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = '#fff';
+        ctx.rect(0, 0, revealX, H);
+        ctx.clip();
+
+        // Area fill
+        ctx.beginPath();
+        ctx.moveTo(px(0), H - padY);
+        data.forEach((v, i) => ctx.lineTo(px(i), py(v)));
+        ctx.lineTo(px(data.length - 1), H - padY);
+        ctx.closePath();
+        const grad = ctx.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, `rgba(${rgb},${alpha})`);
+        grad.addColorStop(1, `rgba(${rgb},0)`);
+        ctx.fillStyle = grad;
         ctx.fill();
-      });
+
+        // Line
+        ctx.beginPath();
+        data.forEach((v, i) => {
+          if (i === 0) ctx.moveTo(px(i), py(v));
+          else {
+            const cpx = (px(i - 1) + px(i)) / 2;
+            ctx.bezierCurveTo(cpx, py(data[i - 1]), cpx, py(v), px(i), py(v));
+          }
+        });
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+
+        ctx.restore();
+
+        // Dots — only for points already revealed
+        data.forEach((v, i) => {
+          if (px(i) > revealX + 1) return;
+          ctx.beginPath();
+          ctx.arc(px(i), py(v), 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = color;
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(px(i), py(v), 1.2, 0, Math.PI * 2);
+          ctx.fillStyle = '#fff';
+          ctx.fill();
+        });
+      };
+
+      drawArea(leads, '#00c8ff', 0.15);
+      drawArea(qualified, '#4ade80', 0.12);
     };
 
-    drawArea(leads, '#00c8ff', 0.15);
-    drawArea(qualified, '#4ade80', 0.12);
+    const duration = 1300;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const raw = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - raw, 3);
+      drawFrame(eased);
+      if (raw < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  // Trigger on stageKey change
+  useEffect(() => {
+    runAnimation();
+    return () => cancelAnimationFrame(rafRef.current);
   }, [stageKey]);
+
+  // Trigger once on scroll into view
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimatedRef.current) {
+          hasAnimatedRef.current = true;
+          runAnimation();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    obs.observe(canvas);
+    return () => obs.disconnect();
+  }, []);
 
   return (
     <div style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 8, border: '1px solid rgba(255,255,255,0.07)', padding: '8px 8px 4px' }}>

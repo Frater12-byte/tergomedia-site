@@ -12,14 +12,14 @@ export const metadata: Metadata = {
     description: 'Zero manual steps. Every new client onboarded in under 2 minutes via HubSpot, n8n, Notion, DocuSign and Google Calendar.',
     url: 'https://tergomedia.com/portfolio/hayguard-crm',
     siteName: 'Tergo Media',
-    images: [{ url: 'https://tergomedia.com/portfolio/hayguard-crm-og.jpg', width: 1200, height: 630, alt: 'HayGuard CRM Automation — Tergo Media' }],
+    images: [{ url: 'https://tergomedia.com/Images/IMG-40.png', width: 1200, height: 630, alt: 'HayGuard CRM Automation — Tergo Media' }],
     type: 'article',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'HayGuard CRM — 2-Minute Client Onboarding Automation',
     description: 'Zero manual steps. Every new client onboarded in under 2 minutes.',
-    images: ['https://tergomedia.com/portfolio/hayguard-crm-og.jpg'],
+    images: ['https://tergomedia.com/Images/IMG-40.png'],
   },
   alternates: { canonical: 'https://tergomedia.com/portfolio/hayguard-crm' },
 };

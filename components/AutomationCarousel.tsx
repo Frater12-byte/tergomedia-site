@@ -31,7 +31,7 @@ export default function AutomationCarousel() {
 
   return (
     <div
-      style={{ overflow: 'hidden', width: '100%', cursor: 'default' }}
+      style={{ overflow: 'hidden', width: '100%', cursor: 'default', touchAction: 'pan-y' }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -45,6 +45,10 @@ export default function AutomationCarousel() {
           gap: 16px;
           width: max-content;
           animation: carousel-scroll 40s linear infinite;
+          will-change: transform;
+        }
+        @media (max-width: 768px) {
+          .carousel-track { animation-duration: 60s; }
         }
       `}</style>
 

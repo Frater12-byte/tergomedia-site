@@ -10,8 +10,6 @@ const LINKS = [
   { href: '/sectors', label: 'Sectors' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/automations', label: 'Automations' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Nav() {

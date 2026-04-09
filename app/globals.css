@@ -627,7 +627,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 
 /* FOOTER */
 footer{background:#111111;color:rgba(255,255,255,.3);padding:56px 0 28px}
-.footer-grid{display:grid;grid-template-columns:2fr repeat(3,1fr) 1.5fr;gap:36px;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:28px}
+.footer-grid{display:grid;grid-template-columns:1.5fr repeat(5,1fr);gap:24px;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:28px}
 .footer-logo{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:900;color:#fff;display:block;margin-bottom:10px;letter-spacing:-.05em;text-decoration:none}
 .footer-logo span{color:var(--y)}
 .footer-brand p{font-size:13px;line-height:1.7;max-width:200px}

@@ -74,12 +74,11 @@ export default async function ProjectPage({
         .pg-challenge-grid { display:grid; grid-template-columns:240px 1fr; gap:64px; align-items:start; }
         .pg-solution-grid  { display:grid; grid-template-columns:1fr 1fr; gap:2px; background:rgba(255,255,255,.06); margin-bottom:40px; }
         .pg-results-grid   { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(255,255,255,.06); max-width:720px; }
-        .pg-hero-img       { width:100%; height:380px; object-fit:cover; border:1px solid rgba(255,255,255,.06); margin-bottom:32px; display:block; }
+        .pg-hero-img       { width:100%; height:auto; display:block; border:1px solid rgba(255,255,255,.06); margin-bottom:32px; background:var(--dark); }
 
         @media(max-width:860px){
           .pg-challenge-grid { grid-template-columns:1fr; gap:24px; }
           .pg-solution-grid  { grid-template-columns:1fr; }
-          .pg-hero-img       { height:220px; }
         }
         @media(max-width:560px){
           .pg-results-grid { grid-template-columns:1fr; }

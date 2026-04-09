@@ -24,6 +24,24 @@ const ALL_TAGS = [
   'Hospitality',
 ];
 
+const ALL_TECH = [
+  'Any tech',
+  'n8n',
+  'HubSpot',
+  'GPT-4o',
+  'Claude API',
+  'Python',
+  'Node.js',
+  'Next.js',
+  'PostgreSQL',
+  'WordPress',
+  'Flutter',
+  'Stripe',
+  'MQTT',
+  'WhatsApp Business API',
+  'AWS S3',
+];
+
 const PLACEHOLDER_COLORS = [
   'rgba(249,202,0,.06)',
   'rgba(0,200,255,.06)',
@@ -33,8 +51,13 @@ const PLACEHOLDER_COLORS = [
 
 export default function PortfolioClient() {
   const [active, setActive] = useState('All');
-  const filtered =
-    active === 'All' ? PROJECTS : PROJECTS.filter((p) => p.tags.includes(active));
+  const [activeTech, setActiveTech] = useState('Any tech');
+
+  const filtered = PROJECTS.filter((p) => {
+    const matchTag = active === 'All' || p.tags.includes(active);
+    const matchTech = activeTech === 'Any tech' || p.techStack.some((t) => t.toLowerCase().includes(activeTech.toLowerCase()));
+    return matchTag && matchTech;
+  });
 
   return (
     <>
@@ -59,7 +82,7 @@ export default function PortfolioClient() {
       <section className="section section-dots">
         <div className="container">
 
-          {/* Filter bar */}
+          {/* Filter bar — category */}
           <div className="port-filter-bar">
             {ALL_TAGS.map((tag) => (
               <button
@@ -68,6 +91,20 @@ export default function PortfolioClient() {
                 className={`port-filter-btn${active === tag ? ' pf-active' : ''}`}
               >
                 {tag}
+              </button>
+            ))}
+          </div>
+
+          {/* Filter bar — tech stack */}
+          <div className="port-filter-bar" style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,.05)' }}>
+            <span style={{ fontSize: 10, color: 'rgba(255,255,255,.22)', letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, alignSelf: 'center', whiteSpace: 'nowrap', marginRight: 4 }}>Tech:</span>
+            {ALL_TECH.map((tech) => (
+              <button
+                key={tech}
+                onClick={() => setActiveTech(tech)}
+                className={`port-filter-btn${activeTech === tech ? ' pf-active' : ''}`}
+              >
+                {tech}
               </button>
             ))}
           </div>

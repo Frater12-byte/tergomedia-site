@@ -5,11 +5,11 @@ import { AUTOMATIONS } from '@/lib/automations';
 import { notFound } from 'next/navigation';
 import AutomationFlowClient from '@/components/AutomationFlowClient';
 
-const PLATFORM_META: Record<string, { color: string }> = {
-  'n8n':      { color: '#ea4b71' },
-  'Make.com': { color: '#6d2ef1' },
-  'Zapier':   { color: '#ff4a00' },
-  'UiPath':   { color: '#f4c400' },
+const PLATFORM_META: Record<string, { color: string; bg: string; border: string }> = {
+  'n8n':      { color: '#ea4b71', bg: 'rgba(234,75,113,.1)',  border: 'rgba(234,75,113,.25)' },
+  'Make.com': { color: '#6d2ef1', bg: 'rgba(109,46,241,.1)',  border: 'rgba(109,46,241,.25)' },
+  'Zapier':   { color: '#ff4a00', bg: 'rgba(255,74,0,.1)',    border: 'rgba(255,74,0,.25)'   },
+  'UiPath':   { color: '#f4c400', bg: 'rgba(244,196,0,.1)',   border: 'rgba(244,196,0,.25)'  },
 };
 
 export async function generateStaticParams() {
@@ -89,15 +89,17 @@ export default async function AutomationPage({
           <polygon points="900,0 1440,80 1440,320 1100,420 800,280 850,0" fill="rgba(249,202,0,0.015)" stroke="#f9ca00" strokeWidth="0.5" strokeOpacity="0.08" />
         </svg>
         <div className="container">
-          <Link
-            href="/automations"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 11, color: 'rgba(255,255,255,.35)', letterSpacing: '.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 24, textDecoration: 'none' }}
-          >
-            ← All automations
-          </Link>
+          <div style={{ marginBottom: 24 }}>
+            <Link
+              href="/automations"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 11, color: 'rgba(255,255,255,.35)', letterSpacing: '.06em', textTransform: 'uppercase', fontWeight: 600, textDecoration: 'none' }}
+            >
+              ← All automations
+            </Link>
+          </div>
 
           {/* Platform badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '4px 12px', background: `rgba(${hexToRgb(pm?.color ?? '#f9ca00')},.1)`, border: `1px solid rgba(${hexToRgb(pm?.color ?? '#f9ca00')},.25)`, marginBottom: 14, marginLeft: 0 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '4px 12px', background: pm?.bg ?? 'rgba(249,202,0,.1)', border: `1px solid ${pm?.border ?? 'rgba(249,202,0,.25)'}`, marginBottom: 14 }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: pm?.color, flexShrink: 0, display: 'inline-block' }} />
             <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: pm?.color }}>{a.platform}</span>
           </div>

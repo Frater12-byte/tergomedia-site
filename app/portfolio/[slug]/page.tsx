@@ -16,9 +16,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = PROJECTS.find((p) => p.slug === slug);
   if (!project) return {};
+
+  const description = project.challenge.slice(0, 155);
+  const ogImage = 'https://tergomedia.com' + project.image;
+
   return {
-    title: `${project.title} — Tergo Media Portfolio`,
-    description: project.desc,
+    title: `${project.title} — ${project.stat} | Tergo Media`,
+    description,
+    keywords: [...project.tags, project.sector, 'Tergo Media', 'portfolio'],
+    openGraph: {
+      title: `${project.title} — ${project.stat}`,
+      description,
+      url: project.portfolioUrl,
+      siteName: 'Tergo Media',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${project.title} — Tergo Media` }],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${project.title} — ${project.stat}`,
+      description,
+      images: [ogImage],
+    },
+    alternates: { canonical: project.portfolioUrl },
   };
 }
 
@@ -33,6 +53,39 @@ export default async function ProjectPage({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: `${project.title} — ${project.stat}`,
+            description: project.challenge.slice(0, 155),
+            author: { '@type': 'Organization', name: 'Tergo Media', url: 'https://tergomedia.com' },
+            publisher: { '@type': 'Organization', name: 'Tergo Media', logo: { '@type': 'ImageObject', url: 'https://tergomedia.com/logo.png' } },
+            url: project.portfolioUrl,
+            mainEntityOfPage: project.portfolioUrl,
+          }),
+        }}
+      />
+
+      {/* ── PAGE-SCOPED STYLES ── */}
+      <style>{`
+        .pg-challenge-grid { display:grid; grid-template-columns:240px 1fr; gap:64px; align-items:start; }
+        .pg-solution-grid  { display:grid; grid-template-columns:1fr 1fr; gap:2px; background:rgba(255,255,255,.06); margin-bottom:40px; }
+        .pg-results-grid   { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(255,255,255,.06); max-width:720px; }
+        .pg-hero-img       { width:100%; height:380px; object-fit:cover; border:1px solid rgba(255,255,255,.06); margin-bottom:32px; display:block; }
+
+        @media(max-width:860px){
+          .pg-challenge-grid { grid-template-columns:1fr; gap:24px; }
+          .pg-solution-grid  { grid-template-columns:1fr; }
+          .pg-hero-img       { height:220px; }
+        }
+        @media(max-width:560px){
+          .pg-results-grid { grid-template-columns:1fr; }
+        }
+      `}</style>
+
       {/* ── HERO ── */}
       <section className="page-hero">
         <div className="hero-glow-1" />
@@ -70,6 +123,13 @@ export default async function ProjectPage({
           >
             ← All projects
           </Link>
+
+          {/* Hero image */}
+          <img
+            src={project.image}
+            alt={project.title}
+            className="pg-hero-img"
+          />
 
           {/* Tags */}
           <div className="port-tags" style={{ marginBottom: 18 }}>
@@ -144,14 +204,7 @@ export default async function ProjectPage({
       {/* ── CHALLENGE ── */}
       <section className="section section-light">
         <div className="container">
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '240px 1fr',
-              gap: 64,
-              alignItems: 'start',
-            }}
-          >
+          <div className="pg-challenge-grid">
             <div>
               <span className="sec-label">The challenge</span>
               <h2 className="sec-title" style={{ fontSize: 'clamp(22px,2.4vw,32px)' }}>
@@ -180,15 +233,7 @@ export default async function ProjectPage({
           <span className="sec-label">The solution</span>
           <h2 className="sec-title">What we built</h2>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: 2,
-              background: 'rgba(255,255,255,.06)',
-              marginBottom: 40,
-            }}
-          >
+          <div className="pg-solution-grid">
             <div
               style={{
                 background: 'var(--surface)',
@@ -250,6 +295,25 @@ export default async function ProjectPage({
                     marginBottom: 14,
                   }}
                 >
+                  Sector
+                </span>
+                <div style={{ fontSize: 13, color: 'rgba(255,255,255,.45)', fontWeight: 600 }}>
+                  {project.sector}
+                </div>
+              </div>
+
+              <div>
+                <span
+                  style={{
+                    fontSize: 10,
+                    color: 'rgba(255,255,255,.25)',
+                    letterSpacing: '.1em',
+                    textTransform: 'uppercase',
+                    fontWeight: 700,
+                    display: 'block',
+                    marginBottom: 14,
+                  }}
+                >
                   Category
                 </span>
                 <div className="port-tags">
@@ -274,15 +338,7 @@ export default async function ProjectPage({
             Concrete, measurable outcomes delivered in production.
           </p>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 2,
-              background: 'rgba(255,255,255,.06)',
-              maxWidth: 720,
-            }}
-          >
+          <div className="pg-results-grid">
             {project.results.map((r) => (
               <div
                 key={r.s}

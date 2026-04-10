@@ -158,7 +158,7 @@ function QualificationVisual({ stageKey }: { stageKey: number }) {
         display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10,
         padding: '5px 10px', borderRadius: 20,
         background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
-        width: 'fit-content',
+        width: '100%', flexWrap: 'wrap', boxSizing: 'border-box',
       }}>
         <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em' }}>QUALIFICATION SCORE</span>
         {SCORE_STAGES.map((s, i) => (
@@ -604,7 +604,7 @@ function CRMChart({ stageKey }: { stageKey: number }) {
 const KPI_TARGETS = [
   { label: 'Leads this week', value: 142, prefix: '', suffix: '', color: '#f9ca00' },
   { label: 'Qualification rate', value: 68, prefix: '', suffix: '%', color: '#00c8ff' },
-  { label: 'Pipeline value', value: 42, prefix: 'AED ', suffix: '.2M', color: '#4ade80' },
+  { label: 'Pipeline value', value: 42, prefix: '$', suffix: '.2M', color: '#4ade80' },
   { label: 'Deals in negotiation', value: 14, prefix: '', suffix: '', color: '#ff6b35' },
 ];
 
@@ -734,7 +734,7 @@ function makeStages(stage: number) {
         { big: '100%', cls: 'big-y', desc: 'Sync rate' },
         { big: '0', cls: 'big-g', desc: 'Manual entry' },
         { big: '7am', cls: 'big-b', desc: 'Report time' },
-        { big: 'AED 4.2M', cls: 'big-p', desc: 'Pipeline' },
+        { big: '$4.2M', cls: 'big-p', desc: 'Pipeline' },
       ],
       feed: [
         { dot: 'y', text: 'CRM record auto-created', sub: 'Ahmed M. · All fields populated', time: '1s ago' },

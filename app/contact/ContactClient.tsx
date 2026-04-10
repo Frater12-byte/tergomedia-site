@@ -7,6 +7,8 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 
 export default function ContactClient() {
   const [form, setForm] = useState({ name: '', email: '', company: '', message: '' });
+  const [honeypot, setHoneypot] = useState('');
+  const [loadTime] = useState(() => Date.now());
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errMsg, setErrMsg] = useState('');
 
@@ -15,6 +17,10 @@ export default function ContactClient() {
 
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Honeypot check — bots fill hidden fields
+    if (honeypot) { setStatus('success'); return; }
+    // Timing check — human forms take at least 4s to fill
+    if (Date.now() - loadTime < 4000) { setStatus('success'); return; }
     if (!form.email.includes('@')) { setErrMsg('A valid email address is required.'); setStatus('error'); return; }
     setStatus('submitting');
     try {
@@ -211,6 +217,17 @@ export default function ContactClient() {
                 </div>
               ) : (
                 <form onSubmit={send} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                  {/* Honeypot — hidden from humans, filled by bots */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={honeypot}
+                    onChange={e => setHoneypot(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }}
+                    aria-hidden="true"
+                  />
                   <div className="form-row-2">
                     <Field label="Name *" name="name" value={form.name} onChange={handle} placeholder="Your name" required />
                     <Field label="Email *" name="email" type="email" value={form.email} onChange={handle} placeholder="you@company.com" required />
